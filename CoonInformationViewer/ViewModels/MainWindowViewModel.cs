@@ -8,6 +8,7 @@ using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CoonInformationViewer.Models;
+using CoonInformationViewer.Views;
 using Prism.Commands;
 
 namespace CoonInformationViewer.ViewModels
@@ -23,6 +24,7 @@ namespace CoonInformationViewer.ViewModels
         #region Event Properties
 
         public ICommand RebuildDataBaseCommand { get; set; }
+        public ICommand UpdateTableCommand { get; set; }
 
         #endregion
 
@@ -31,6 +33,7 @@ namespace CoonInformationViewer.ViewModels
             _model = model;
 
             RebuildDataBaseCommand = new DelegateCommand(RebuildDataBase);
+            UpdateTableCommand = new DelegateCommand(UpdateTable);
         }
 
         public void RebuildDataBase()
@@ -39,6 +42,13 @@ namespace CoonInformationViewer.ViewModels
             {
                 var exp = t.Exception;
             }, TaskContinuationOptions.OnlyOnFaulted);
+        }
+
+        public void UpdateTable()
+        {
+            var model = new TableDownloadModel(_model.AvailableTableUpdate, _model.CurrentTableVersion());
+            var vm = new TableDownloadViewModel(new WindowService(), model);
+            WindowManageService.ShowDialog<TableDownloadView>(vm);
         }
     }
 }
