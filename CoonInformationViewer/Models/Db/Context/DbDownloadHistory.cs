@@ -11,10 +11,10 @@ namespace CoonInformationViewer.Models.Db.Context
         public override int Id { get; set; }
 
         [Column("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Column("date")]
-        public string? Date { get; set; }
+        public string Date { get; set; } = string.Empty;
 
         [Column("create_date")]
         public override DateTime? CreateDate { get; set; }

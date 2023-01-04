@@ -489,8 +489,7 @@ namespace CoonInformationViewer.Models.Db
                     {
                         ColumnName = "id",
                         Type = ColumnType.Integer,
-                        PrimaryKey = true,
-                        AutoIncrement = true
+                        PrimaryKey = true
                     },
                     new ColumnInfo
                     {
@@ -543,13 +542,13 @@ namespace CoonInformationViewer.Models.Db
                     {
                         ColumnName = "id",
                         Type = ColumnType.Integer,
-                        PrimaryKey = true
+                        PrimaryKey = true,
+                        AutoIncrement = true
                     },
                     new ColumnInfo
                     {
                         ColumnName = "name",
-                        Type = ColumnType.Text,
-                        PrimaryKey = true
+                        Type = ColumnType.Text
                     },
                     new ColumnInfo
                     {

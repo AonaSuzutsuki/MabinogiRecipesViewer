@@ -18,8 +18,26 @@ namespace CoonInformationViewer.Models
 {
     public class MainWindowModel : ModelBase
     {
-        private readonly CookInfoContext _context = new();
+        public static readonly CookInfoContext Context = new();
+
         private readonly SqlExecutor _executor;
+        private readonly UpdateClient _downloadClient;
+        private SavannahXmlReader _versionReader;
+
+        public Dictionary<string, Tuple<string, bool>> AvailableTableUpdate { get; private set; } = new();
+
+        private readonly Dictionary<string, string> _targetFiles = new()
+        {
+            { "Materials", "Materials.json"},
+            { "Locations", "Locations.json"},
+            { "Categories", "Categories.json"},
+            { "Sellers", "Sellers.json"},
+            { "MaterialDrops", "MaterialDrops.json"},
+            { "MaterialSellers", "MaterialSellers.json"},
+            { "Recipes", "Recipes.json"},
+            { "Additionals", "Additionals.json"},
+            { "Effects", "Effects.json"}
+        };
 
         public MainWindowModel()
         {
@@ -33,39 +51,66 @@ namespace CoonInformationViewer.Models
 
                 _executor.CreateTable(table);
             }
-        }
 
-        public async Task RebuildDataBase()
-        {
             var webClient = new UpdateWebClient
             {
                 BaseUrl = "http://localhost:58415/Export/"
             };
-            var downloadClient = new UpdateClient(webClient);
-            var version = await downloadClient.DownloadFile("version.xml");
-            using var versionStream = new MemoryStream(version);
-            var reader = new SavannahXmlReader(versionStream);
+            _downloadClient = new UpdateClient(webClient);
 
-            await RebuildItems(downloadClient, _context.CookMaterials, "Materials.json", reader);
-            await RebuildItems(downloadClient, _context.CookLocations, "Locations.json", reader);
-            await RebuildItems(downloadClient, _context.CookCategories, "Categories.json", reader);
-            await RebuildItems(downloadClient, _context.CookSellers, "Sellers.json", reader);
-            await RebuildItems(downloadClient, _context.CookMaterialDrops, "MaterialDrops.json", reader);
-            await RebuildItems(downloadClient, _context.CookMaterialSellers, "MaterialSellers.json", reader);
-            await RebuildRecipes(downloadClient, _context.CookRecipes, "Recipes.json", reader);
-            await RebuildItems(downloadClient, _context.Additionals, "Additionals.json", reader);
-            await RebuildItems(downloadClient, _context.CookEffects, "Effects.json", reader);
+            _ = AvailableTableUpdateCheck();
         }
 
-        private async Task RebuildItems<T>(UpdateClient downloadClient, DbSet<T> db, string fileName, SavannahXmlReader versionReader) where T : class
+        public async Task AvailableTableUpdateCheck()
         {
-            var versionNode = versionReader.GetNode($"/versions/version[@id='{fileName}']");
-            if (versionNode == null)
+            var versionData = await _downloadClient.DownloadFile("version.xml");
+            using var versionStream = new MemoryStream(versionData);
+            _versionReader = new SavannahXmlReader(versionStream);
+
+            foreach (var item in _targetFiles)
+            {
+                var fileName = item.Value;
+
+                AvailableTableUpdate.Add(fileName, new Tuple<string, bool>(string.Empty, false));
+
+                var versionNode = _versionReader.GetNode($"/versions/version[@id='{fileName}']");
+                if (versionNode == null)
+                    continue;
+
+                var version = versionNode.InnerText;
+
+                var history = Context.Histories.FirstOrDefault(x => x.Name == fileName);
+                if (history == null || history.Date != version)
+                    AvailableTableUpdate[fileName] = new Tuple<string, bool>(version, true);
+            }
+        }
+
+        public Dictionary<string, string> CurrentTableVersion()
+        {
+            return Context.Histories.ToDictionary(x => x.Name, x => x.Date);
+        }
+
+        public async Task RebuildDataBase()
+        {
+            await RebuildItems(_downloadClient, Context.CookMaterials, _targetFiles["Materials"]);
+            await RebuildItems(_downloadClient, Context.CookLocations, _targetFiles["Locations"]);
+            await RebuildItems(_downloadClient, Context.CookCategories, _targetFiles["Categories"]);
+            await RebuildItems(_downloadClient, Context.CookSellers, _targetFiles["Sellers"]);
+            await RebuildItems(_downloadClient, Context.CookMaterialDrops, _targetFiles["MaterialDrops"]);
+            await RebuildItems(_downloadClient, Context.CookMaterialSellers, _targetFiles["MaterialSellers"]);
+            await RebuildRecipes(_downloadClient, Context.CookRecipes, _targetFiles["Recipes"]);
+            await RebuildItems(_downloadClient, Context.Additionals, _targetFiles["Additionals"]);
+            await RebuildItems(_downloadClient, Context.CookEffects, _targetFiles["Effects"]);
+        }
+
+        private async Task RebuildItems<T>(UpdateClient downloadClient, DbSet<T> db, string fileName) where T : class
+        {
+            if (!AvailableTableUpdate.ContainsKey(fileName))
                 return;
 
-            var version = versionNode.InnerText;
+            var version = AvailableTableUpdate[fileName].Item1;
 
-            var history = _context.Histories.FirstOrDefault(x => x.Name == fileName);
+            var history = Context.Histories.FirstOrDefault(x => x.Name == fileName);
             if (history != null && history.Date == version)
                 return;
 
@@ -85,29 +130,30 @@ namespace CoonInformationViewer.Models
 
             if (history == null)
             {
-                _context.Histories.Add(new DbDownloadHistory
+                Context.Histories.Add(new DbDownloadHistory
                 {
                     Name = fileName,
-                    Date = version
+                    Date = version,
+                    CreateDate = DateTime.Now
                 });
             }
             else
             {
                 history.Date = version;
+                history.UpdateDate = DateTime.Now;
             }
 
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
 
-        private async Task RebuildRecipes(UpdateClient downloadClient, DbSet<DbCookRecipes> db, string fileName, SavannahXmlReader versionReader)
+        private async Task RebuildRecipes(UpdateClient downloadClient, DbSet<DbCookRecipes> db, string fileName)
         {
-            var versionNode = versionReader.GetNode($"/versions/version[@id='{fileName}']");
-            if (versionNode == null)
+            if (!AvailableTableUpdate.ContainsKey(fileName))
                 return;
 
-            var version = versionNode.InnerText;
+            var version = AvailableTableUpdate[fileName].Item1;
 
-            var history = _context.Histories.FirstOrDefault(x => x.Name == fileName);
+            var history = Context.Histories.FirstOrDefault(x => x.Name == fileName);
             if (history != null && history.Date == version)
                 return;
 
@@ -142,24 +188,26 @@ namespace CoonInformationViewer.Models
                         }
                     }
 
-                    _context.Add(material);
+                    Context.Add(material);
                 }
             }
 
             if (history == null)
             {
-                _context.Histories.Add(new DbDownloadHistory
+                Context.Histories.Add(new DbDownloadHistory
                 {
                     Name = fileName,
-                    Date = version
+                    Date = version,
+                    CreateDate = DateTime.Now
                 });
             }
             else
             {
                 history.Date = version;
+                history.UpdateDate = DateTime.Now;
             }
 
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
     }
 }
