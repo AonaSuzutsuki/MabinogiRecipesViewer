@@ -1,0 +1,50 @@
+﻿<Window x:Class="CoonInformationViewer.Views.Overlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:CoonInformationViewer"
+        mc:Ignorable="d"
+        Title="Overlay" Height="200" Width="300px" Background="Transparent" AllowsTransparency="True" WindowStyle="None">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding Closing}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Activated">
+            <i:InvokeCommandAction Command="{Binding Activated}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Deactivated">
+            <i:InvokeCommandAction Command="{Binding Deactivated}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+
+        <Grid Name="Container" Width="244px">
+
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Image Source="/Resources/2.old.png" />
+
+            <Grid Grid.Row="1" Name="PercentageGrid" Height="30">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Name="Item1Column" Width="30*" />
+                    <ColumnDefinition Name="Item2Column" Width="30*" />
+                    <ColumnDefinition Name="Item3Column" Width="40*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Name="Item1" Background="Blue"></Grid>
+                <Grid Grid.Column="1" Name="Item2" Background="Red"></Grid>
+                <Grid Grid.Column="2" Name="Item3" Background="Green"></Grid>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Window>
