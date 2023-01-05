@@ -75,49 +75,55 @@
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
 
-                <ListBox Background="Transparent" ItemsSource="{Binding DownloadList}" Style="{StaticResource NonGridListBox}" ItemContainerStyle="{StaticResource CustomListBoxItem}">
+                <Grid>
+                    <ProgressBar Height="30" Margin="20" Maximum="100" Value="100" Visibility="{Binding LoadingVisibility.Value}" Style="{StaticResource IndeterminateProgressBar}" />
 
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
+                    <ListBox Background="Transparent" ItemsSource="{Binding DownloadList}" Style="{StaticResource NonGridListBox}" ItemContainerStyle="{StaticResource CustomListBoxItem}">
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="130" />
-                                    <ColumnDefinition Width="130" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
 
-                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding UpdateChecked}" />
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
 
-                                <Label Grid.Column="1" Content="{Binding Name}" />
+                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding UpdateChecked}" />
 
-                                <Label Grid.Column="2" Content="{Binding Message}" />
+                                    <Label Grid.Column="1" Content="{Binding Name}" />
 
-                                <ProgressBar Grid.Column="3" Height="20" Value="{Binding Progress}" Maximum="100" Style="{StaticResource ProgressBarStyle}" />
+                                    <Label Grid.Column="2" Content="{Binding Message}" />
 
-                                <Label Grid.Column="3" Content="100%" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                                    <ProgressBar Grid.Column="3" Height="20" Value="{Binding Progress}" Maximum="100" Style="{StaticResource ProgressBarStyle}" />
 
-                <Grid Grid.Row="2">
+                                    <Label Grid.Column="3" Content="{Binding ProgressText}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                
+
+                <Grid Grid.Row="2" IsEnabled="{Binding CanExit.Value}">
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="5" />
+                        <ColumnDefinition />
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Content="Rebuild" Style="{StaticResource FlatButton}" />
+                    <Button Grid.Column="0" Content="Rebuild" Style="{StaticResource FlatButton}" Command="{Binding RebuildCommand}" />
 
-                    <Button Grid.Column="3" Content="Update" Style="{StaticResource FlatButton}" />
+                    <Button Grid.Column="3" Content="Update" Style="{StaticResource FlatButton}" Command="{Binding UpdateCommand}" />
 
-                    <Button Grid.Column="5" Content="Cancel" Style="{StaticResource FlatButton}" />
+                    <Button Grid.Column="5" Content="Cancel" Style="{StaticResource FlatButton}" Command="{Binding MainWindowCloseBtClick}" />
 
                 </Grid>
             </Grid>

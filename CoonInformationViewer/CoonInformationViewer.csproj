@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SavannahXmlLib" Version="1.0.5" />
-    <PackageReference Include="UpdateLib" Version="1.0.0" />
+    <PackageReference Include="UpdateLib" Version="1.0.1" />
   </ItemGroup>
 
 </Project>

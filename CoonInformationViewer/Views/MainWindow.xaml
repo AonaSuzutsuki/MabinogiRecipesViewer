@@ -12,6 +12,9 @@
         Title="MainWindow" Height="450" Width="800" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}" />
+        </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding Closing}" />
         </i:EventTrigger>
@@ -93,7 +96,7 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <ComboBox />
+                    <ComboBox ItemsSource="{Binding  Categories}" />
 
                     <ListBox Grid.Row="2" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox}" ItemContainerStyle="{StaticResource CustomListBoxItem}">
                     </ListBox>

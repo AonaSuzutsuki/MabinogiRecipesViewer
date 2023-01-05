@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommonStyleLib.ExMessageBox;
 using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CoonInformationViewer.Models;
 using CoonInformationViewer.Views;
 using Prism.Commands;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace CoonInformationViewer.ViewModels
 {
@@ -18,6 +21,12 @@ namespace CoonInformationViewer.ViewModels
         #region Fields
 
         private readonly MainWindowModel _model;
+
+        #endregion
+
+        #region Properties
+
+        public ReadOnlyReactiveCollection<string> Categories { get; set; }
 
         #endregion
 
@@ -32,8 +41,30 @@ namespace CoonInformationViewer.ViewModels
         {
             _model = model;
 
+            Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+
             RebuildDataBaseCommand = new DelegateCommand(RebuildDataBase);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
+        }
+
+        protected override void MainWindow_Loaded()
+        {
+            base.MainWindow_Loaded();
+
+            _ = _model.Initialize().ContinueWith(_ =>
+            {
+                if (!_model.AvailableUpdate)
+                    return;
+
+                var dr = WindowManageService.MessageBoxDispatchShow("Available Data Update. Do you want to update?",
+                    "Available Data Update",
+                    ExMessageBoxBase.MessageType.Exclamation, ExMessageBoxBase.ButtonType.YesNo);
+
+                if (dr == ExMessageBoxBase.DialogResult.Yes)
+                {
+                    WindowManageService.Dispatch(UpdateTable);
+                }
+            });
         }
 
         public void RebuildDataBase()
@@ -46,9 +77,16 @@ namespace CoonInformationViewer.ViewModels
 
         public void UpdateTable()
         {
-            var model = new TableDownloadModel(_model.AvailableTableUpdate, _model.CurrentTableVersion());
+            var model = new TableDownloadModel(_model);
             var vm = new TableDownloadViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<TableDownloadView>(vm);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _model.Dispose();
         }
     }
 }
