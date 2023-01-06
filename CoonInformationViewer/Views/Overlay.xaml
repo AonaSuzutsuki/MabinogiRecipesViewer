@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CookInformationViewer"
+        xmlns:commonView="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
+        xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
         mc:Ignorable="d"
-        Title="Overlay" Height="200" Width="300px" Background="Transparent" AllowsTransparency="True" WindowStyle="None">
+        d:DataContext="{d:DesignInstance viewModels:OverlayViewModel}"
+        Title="Overlay" Height="100" Width="300" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -20,30 +23,71 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Window.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
 
-        <Grid Name="Container" Width="244px">
+        <Grid Width="244px" Margin="0,0,0,0">
+            <Grid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Close" Command="{Binding MainWindowCloseBtClick}" />
+                </ContextMenu>
+            </Grid.ContextMenu>
 
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <!--<Image Source="/Resources/gauge_overlay.png" Opacity=".2" />-->
 
-            <Image Source="/Resources/2.old.png" />
-
-            <Grid Grid.Row="1" Name="PercentageGrid" Height="30">
+            <Grid Margin="0,22,0,0" Name="PercentageGrid">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="Item1Column" Width="30*" />
-                    <ColumnDefinition Name="Item2Column" Width="30*" />
+                    <ColumnDefinition Name="Item1Column" Width="25*" />
+                    <ColumnDefinition Name="Item2Column" Width="35*" />
                     <ColumnDefinition Name="Item3Column" Width="40*" />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0" Name="Item1" Background="Blue"></Grid>
-                <Grid Grid.Column="1" Name="Item2" Background="Red"></Grid>
-                <Grid Grid.Column="2" Name="Item3" Background="Green"></Grid>
+                <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000" Opacity=".2"></Grid>
+                <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff" Opacity=".2"></Grid>
+                <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00" Opacity=".2"></Grid>
+
+                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
             </Grid>
 
+            <Grid Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="1" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="3" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="4" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="5" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="6" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="7" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="8" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+            </Grid>
         </Grid>
 
     </Grid>

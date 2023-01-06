@@ -353,11 +353,20 @@ namespace CookInformationViewer.Models.Db.Manager
                 Executor.CreateTable(table);
             }
         }
+
         public IList<DbCookCategories> GetCategories(Func<CookInfoContext, IEnumerable<DbCookCategories>>? whereFunc = null)
         {
             lock (Context)
             {
                 return whereFunc != null ? whereFunc.Invoke(Context).ToList() : Context.CookCategories.ToList();
+            }
+        }
+
+        public IList<DbCookRecipes> GetRecipes(Func<CookInfoContext, IEnumerable<DbCookRecipes>>? whereFunc = null)
+        {
+            lock (Context)
+            {
+                return whereFunc != null ? whereFunc.Invoke(Context).ToList() : Context.CookRecipes.ToList();
             }
         }
 
