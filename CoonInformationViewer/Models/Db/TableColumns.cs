@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CoonInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db
 {
     internal static class TableColumns
     {

@@ -1,8 +1,8 @@
-﻿using CoonInformationViewer.Models.Db.Context;
+﻿using CookInformationViewer.Models.Db.Context;
 using System.Windows;
 using System.Xml.Linq;
 
-namespace CoonInformationViewer.Views
+namespace CookInformationViewer.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

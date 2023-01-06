@@ -6,7 +6,7 @@ using CommonExtensionLib.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace CoonInformationViewer.Models.Db.Context
+namespace CookInformationViewer.Models.Db.Context
 {
     public interface IDbSet
     {

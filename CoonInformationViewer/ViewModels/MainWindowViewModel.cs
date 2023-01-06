@@ -8,13 +8,13 @@ using CommonStyleLib.ExMessageBox;
 using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
-using CoonInformationViewer.Models;
-using CoonInformationViewer.Views;
+using CookInformationViewer.Models;
+using CookInformationViewer.Views;
 using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
-namespace CoonInformationViewer.ViewModels
+namespace CookInformationViewer.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

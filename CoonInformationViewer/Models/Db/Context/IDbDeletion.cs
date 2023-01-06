@@ -1,4 +1,4 @@
-﻿namespace CoonInformationViewer.Models.Db.Context
+﻿namespace CookInformationViewer.Models.Db.Context
 {
     public interface IDbDeletion
     {

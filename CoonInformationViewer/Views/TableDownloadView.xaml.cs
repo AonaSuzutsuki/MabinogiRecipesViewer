@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CoonInformationViewer.Views
+namespace CookInformationViewer.Views
 {
     /// <summary>
     /// TableDownloadView.xaml の相互作用ロジック

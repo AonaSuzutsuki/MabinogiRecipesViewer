@@ -9,14 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
-using CoonInformationViewer.Models.Db.Context;
-using CoonInformationViewer.Models.Db.Manager;
+using CookInformationViewer.Models.Db.Context;
+using CookInformationViewer.Models.Db.Manager;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using UpdateLib.Update;
 using System.Reactive.Subjects;
 
-namespace CoonInformationViewer.Models
+namespace CookInformationViewer.Models
 {
     public class DownloadItemInfo
     {

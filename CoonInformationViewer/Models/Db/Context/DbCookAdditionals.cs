@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CoonInformationViewer.Models.Db.Context
+namespace CookInformationViewer.Models.Db.Context
 {
     [Table(Constants.CookAdditionalsTableName, Schema = Constants.Schema)]
     public class DbCookAdditionals : DbBase

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CoonInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db
 {
     public class ColumnInfo
     {

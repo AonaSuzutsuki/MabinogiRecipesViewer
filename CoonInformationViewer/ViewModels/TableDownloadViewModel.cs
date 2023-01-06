@@ -10,13 +10,13 @@ using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
-using CoonInformationViewer.Models;
+using CookInformationViewer.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
-namespace CoonInformationViewer.ViewModels
+namespace CookInformationViewer.ViewModels
 {
     public class DownloadItemViewInfo : BindableBase
     {

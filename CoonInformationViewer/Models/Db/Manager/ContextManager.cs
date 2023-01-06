@@ -1,4 +1,4 @@
-﻿using CoonInformationViewer.Models.Db.Context;
+﻿using CookInformationViewer.Models.Db.Context;
 using SavannahXmlLib.XmlWrapper;
 using System;
 using System.CodeDom.Compiler;
@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using UpdateLib.Http;
 using UpdateLib.Update;
 
-namespace CoonInformationViewer.Models.Db.Manager
+namespace CookInformationViewer.Models.Db.Manager
 {
     public class UpdateEventArgs : EventArgs
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using CommonCoreLib.Bool;
 
-namespace CoonInformationViewer.Models.Db.Context
+namespace CookInformationViewer.Models.Db.Context
 {
     [Table(Constants.CookRecipesTableName, Schema = Constants.Schema)]
     public class DbCookRecipes : DbBase

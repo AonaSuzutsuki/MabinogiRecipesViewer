@@ -8,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
-using CoonInformationViewer.Models.Db;
-using CoonInformationViewer.Models.Db.Context;
-using CoonInformationViewer.Models.Db.Manager;
+using CookInformationViewer.Models.Db;
+using CookInformationViewer.Models.Db.Context;
+using CookInformationViewer.Models.Db.Manager;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SavannahXmlLib.XmlWrapper;
 using UpdateLib.Http;
 using UpdateLib.Update;
 
-namespace CoonInformationViewer.Models
+namespace CookInformationViewer.Models
 {
     public class MainWindowModel : ModelBase, IDisposable
     {

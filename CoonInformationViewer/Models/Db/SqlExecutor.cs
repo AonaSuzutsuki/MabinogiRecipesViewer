@@ -7,7 +7,7 @@ using System.Reactive.Subjects;
 using CommonExtensionLib.Extensions;
 using Microsoft.Data.Sqlite;
 
-namespace CoonInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db
 {
     public class SqlExecutor : IDisposable
     {

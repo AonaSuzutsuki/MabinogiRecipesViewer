@@ -1,4 +1,4 @@
-﻿namespace CoonInformationViewer
+﻿namespace CookInformationViewer
 {
     public class Constants
     {

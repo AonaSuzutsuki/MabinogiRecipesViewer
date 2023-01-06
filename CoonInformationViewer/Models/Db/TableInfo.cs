@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using CommonCoreLib.Bool;
 
-namespace CoonInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db
 {
     public class TableInfo : ICloneable
     {

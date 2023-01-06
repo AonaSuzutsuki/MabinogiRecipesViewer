@@ -1,4 +1,4 @@
-﻿namespace CoonInformationViewer.Models.Db
+﻿namespace CookInformationViewer.Models.Db
 {
     public class SelectValue
     {

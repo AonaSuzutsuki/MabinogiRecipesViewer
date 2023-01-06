@@ -11,11 +11,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using CommonStyleLib.Views;
-using CoonInformationViewer.Models;
-using CoonInformationViewer.ViewModels;
+using CookInformationViewer.Models;
+using CookInformationViewer.ViewModels;
 
-namespace CoonInformationViewer.Views
+namespace CookInformationViewer.Views
 {
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
