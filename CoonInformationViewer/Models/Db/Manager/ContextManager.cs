@@ -362,11 +362,35 @@ namespace CookInformationViewer.Models.Db.Manager
             }
         }
 
-        public IList<DbCookRecipes> GetRecipes(Func<CookInfoContext, IEnumerable<DbCookRecipes>>? whereFunc = null)
+        public List<T> GetItems<T>(Func<CookInfoContext, IEnumerable<T>> whereFunc)
         {
             lock (Context)
             {
-                return whereFunc != null ? whereFunc.Invoke(Context).ToList() : Context.CookRecipes.ToList();
+                return whereFunc.Invoke(Context).ToList();
+            }
+        }
+
+        public T GetRecipe<T>(Func<CookInfoContext, T> whereFunc)
+        {
+            lock (Context)
+            {
+                return whereFunc.Invoke(Context);
+            }
+        }
+
+        public string? GetRecipeMaterialName(int? id, bool isRecipe)
+        {
+            lock (Context)
+            {
+                if (isRecipe)
+                {
+                    var recipe = Context.CookRecipes.FirstOrDefault(x => x.Id == id);
+
+                    return recipe?.Name;
+                }
+
+                var material = Context.CookMaterials.FirstOrDefault(x => x.Id == id);
+                return material?.Name;
             }
         }
 

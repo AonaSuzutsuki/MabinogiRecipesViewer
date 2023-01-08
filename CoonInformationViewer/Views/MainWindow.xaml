@@ -7,9 +7,10 @@
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
+        xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}" BorderThickness="0"
-        Title="MainWindow" Height="450" Width="800" Style="{DynamicResource WindowStyle}">
+        Title="MainWindow" Height="550" Width="1000" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -36,6 +37,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Window.xaml" />
+                <ResourceDictionary Source="/Styles/Button.xaml" />
+                <ResourceDictionary Source="/Styles/ListBoxItem.xaml" />
+                <ResourceDictionary Source="/Styles/Gauge.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
@@ -93,6 +97,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30" />
                         <RowDefinition Height="5" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="5" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
@@ -110,7 +116,9 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <ListBox Grid.Row="2" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox}">
+                    <TextBox Grid.Row="2" Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+
+                    <ListBox Grid.Row="4" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox}">
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
@@ -137,92 +145,244 @@
 
                 <GridSplitter Grid.Column="0" Background="Transparent" VerticalAlignment="Stretch" Width="5" Margin="0,0,0,0"/>
 
-                <Grid Grid.Column="1">
+                <Grid Grid.Column="1" Margin="5,0,0,0">
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="100" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Image Source="{Binding SelectedRecipe.Value.Image}" Width="80" />
 
-                        <Grid Width="300px" Margin="10,0,0,0">
-                            <Image Source="/Resources/gauge.png" />
-
-                            <Grid Margin="0,35,0,0" Name="PercentageGrid">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Name="Item1Column" Width="25*" />
-                                    <ColumnDefinition Name="Item2Column" Width="35*" />
-                                    <ColumnDefinition Name="Item3Column" Width="40*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000"></Grid>
-                                <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff"></Grid>
-                                <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00"></Grid>
-
-                                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
-                            </Grid>
-
-                            <Grid Margin="0,13,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                    <ColumnDefinition Width="10*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="1" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="2" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="3" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="4" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="5" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="6" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="7" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="8" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-
-                                <!--<Canvas>
-                                    <Line Name="Line1" Fill="White" X1="0" X2="0" Y1="0" Y2="10" Stroke="White" StrokeThickness="1" Width="1" Height="10" />
-                                </Canvas>-->
-                            </Grid>
-                        </Grid>
-
-                        <Button Content="..." Margin="10,0,0,0" Width="30" Height="25" Style="{StaticResource FlatButton}" Command="{Binding OpenOverlayCommand}" />
-                    </StackPanel>
-
-                    <Grid Grid.Row="1">
-
+                    <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="50" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid>
-                            <Label Content="素材1" />
-                        </Grid>
+                        <Button Grid.Column="0" Content="←" IsEnabled="{Binding CanGoBack.Value}" Style="{StaticResource FlatButton}" Command="{Binding NavigateBackCommand}" />
+                        <Button Grid.Column="2" Content="→" IsEnabled="{Binding CanGoForward.Value}" Style="{StaticResource FlatButton}" Command="{Binding NavigateGoCommand}" />
 
-                        <Grid Grid.Column="1">
-                            <Label Content="素材1" />
-                        </Grid>
+                        <TextBox Grid.Column="4" Text="{Binding SelectedRecipe.Value.Url}" VerticalContentAlignment="Center" IsReadOnly="True" />
 
-                        <Grid Grid.Column="2">
-                            <Label Content="素材1" />
-                        </Grid>
-
+                        <Button Grid.Column="6" Content="Open" Style="{StaticResource FlatButton}" Command="{Binding OpenBrowserCommand}" />
                     </Grid>
 
+                    <Border Grid.Row="2" BorderThickness="1" BorderBrush="{StaticResource BorderColor}">
+                        <Grid Visibility="{Binding SelectedRecipe.Value, Converter={converter:ObjectBooleanConverter}}">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{Binding SelectedRecipe.Value.StarText}" Foreground="{Binding SelectedRecipe.Value.StarBrush}" />
+                                    <Label Content="{Binding SelectedRecipe.Value.StarMessage}"></Label>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Image Source="{Binding SelectedRecipe.Value.Image}" Width="80" />
+
+                                <Grid Width="300px" Margin="10,0,0,0">
+                                    <Image Source="/Resources/gauge.png" />
+
+                                    <Grid Margin="0,35,0,0" Name="PercentageGrid">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Name="Item1Column" Width="25*" />
+                                            <ColumnDefinition Name="Item2Column" Width="35*" />
+                                            <ColumnDefinition Name="Item3Column" Width="40*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000"></Grid>
+                                        <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff"></Grid>
+                                        <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00"></Grid>
+
+                                        <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                                        <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                                        <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                                    </Grid>
+
+                                    <Grid Margin="0,13,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Column="0" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="1" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="2" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="3" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="4" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="5" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="6" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="7" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="8" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="9" Width="1" Style="{StaticResource SmallSizeGauge}" />
+
+
+                                        <Image Grid.Column="10" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="11" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="12" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="13" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="14" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="15" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="16" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="17" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="18" Width="1" Style="{StaticResource NormalSizeGauge}" />
+                                        <Image Grid.Column="19" Width="1" Style="{StaticResource SmallSizeGauge}" />
+                                        <Image Grid.Column="19" Width="1" HorizontalAlignment="Right" Style="{StaticResource NormalSizeGauge}"  />
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,5" VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="0" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="2" Text="10" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="4" Text="20" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="6" Text="30" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="8" Text="40" Style="{StaticResource GaugeLabel}" />
+
+
+                                        <TextBlock Grid.Column="10" Text="50" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="12" Text="60" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="14" Text="70" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="16" Text="80" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="18" Text="90" Style="{StaticResource GaugeLabel}" />
+                                        <TextBlock Grid.Column="19" Text="100" Margin="0,0,-10,0" HorizontalAlignment="Right" Style="{StaticResource GaugeLabel}"  />
+                                    </Grid>
+                                </Grid>
+
+                                <Button Content="..." Margin="10,0,0,0" Width="30" Height="25" Style="{StaticResource FlatButton}" Command="{Binding OpenOverlayCommand}" />
+                            </StackPanel>
+
+                            <ScrollViewer Grid.Row="2" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30" />
+                                                <RowDefinition Height="5" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid>
+                                                <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                                    <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item1Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item1RecipeId}" Style="{StaticResource HyperLinkButton}" />
+                                                </Grid>
+
+                                                <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:BooleanVisibilityConverter}}">
+                                                    <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item1Name}" />
+                                                </Grid>
+                                            </Grid>
+
+                                            <ListBox Grid.Row="2" ItemsSource="{Binding SelectedRecipe.Value.Item1Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item1LocationListBox}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Column="1">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30" />
+                                                <RowDefinition Height="5" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid>
+                                                <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                                    <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item2Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item2RecipeId}" Style="{StaticResource HyperLinkButton}" />
+                                                </Grid>
+
+                                                <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:BooleanVisibilityConverter}}">
+                                                    <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item2Name}" />
+                                                </Grid>
+                                            </Grid>
+
+                                            <ListBox Grid.Row="2" ItemsSource="{Binding SelectedRecipe.Value.Item2Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item2LocationListBox}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Column="2">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30" />
+                                                <RowDefinition Height="5" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid>
+                                                <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                                    <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item3Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item3RecipeId}" Style="{StaticResource HyperLinkButton}" />
+                                                </Grid>
+
+                                                <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:BooleanVisibilityConverter}}">
+                                                    <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item3Name}" />
+                                                </Grid>
+                                            </Grid>
+
+                                            <ListBox Grid.Row="2" ItemsSource="{Binding SelectedRecipe.Value.Item3Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item3LocationListBox}" />
+                                        </Grid>
+                                    </Border>
+
+                                </Grid>
+                            </ScrollViewer>
+
+                        </Grid>
+                    </Border>
                 </Grid>
 
             </Grid>
