@@ -14,5 +14,7 @@
         public const string CookEffectsTableName = "cook_effects";
         public const string DownloadHistoriesTableName = "download_histories";
         public const string CookAdditionalsTableName = "cook_additionals";
+
+        public const string DatabaseFileName = "CookInfo.dat";
     }
 }

@@ -345,7 +345,7 @@ namespace CookInformationViewer.Models.Db.Manager
         
         public ContextManager()
         {
-            Executor = new SqlExecutor("test.db");
+            Executor = new SqlExecutor(Constants.DatabaseFileName);
 
             var tables = TableColumns.GetTables().Values.ToList();
             foreach (var table in tables.Where(table => !Executor.ExistsTable(table.TableName)))

@@ -118,7 +118,7 @@ namespace CookInformationViewer.Models.Db.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source=test.db");
+            optionsBuilder.UseSqlite($"Data Source={Constants.DatabaseFileName}");
         }
 
         public static Type ConvertType(ManageType manageType)
