@@ -85,7 +85,7 @@
                     </MenuItem>
                     <MenuItem Header="ヘルプ(_H)">
                         <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
-                        <MenuItem Header="更新プログラムの確認" />
+                        <MenuItem Header="更新プログラムの確認" Command="{Binding OpenUpdateProgramCommand}" />
                     </MenuItem>
                 </Menu>
             </StackPanel>

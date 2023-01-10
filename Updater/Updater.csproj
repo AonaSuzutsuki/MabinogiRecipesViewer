@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Authors>Aona Suzutsuki</Authors>
+    <Company>Kimama Lab.</Company>
+    <Copyright>Copyright (C) Aona Suzutsuki 2014 - 2023</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0.0</Version>
+    <AssemblyName>update</AssemblyName>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="SET TargetUpdateDir=$(SolutionDir)CoonInformationViewer\$(OutDir)Updater&#xD;&#xA;if exist &quot;%25TargetUpdateDir%25&quot; (&#xD;&#xA;    echo &quot;&quot;&#xD;&#xA;) else (&#xD;&#xA;    mkdir &quot;%25TargetUpdateDir%25&quot;&#xD;&#xA;)&#xD;&#xA;xcopy &quot;$(TargetDir)$(TargetName).exe&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y&#xD;&#xA;xcopy &quot;$(TargetDir)*.dll&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y&#xD;&#xA;xcopy &quot;$(TargetDir)*.json&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="CommonCoreLib" Version="1.0.4" />
+    <PackageReference Include="CommonStyleLib" Version="1.0.20" />
+    <PackageReference Include="SavannahXmlLib" Version="1.0.5" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="UpdateLib" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="LangResources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="LangResources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

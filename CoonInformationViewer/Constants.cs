@@ -1,4 +1,6 @@
-﻿namespace CookInformationViewer
+﻿using CommonCoreLib;
+
+namespace CookInformationViewer
 {
     public class Constants
     {
@@ -16,5 +18,11 @@
         public const string CookAdditionalsTableName = "cook_additionals";
 
         public const string DatabaseFileName = "CookInfo.dat";
+        
+        public static string Version => CommonCoreLib.File.Version.GetVersion(); /* + "b";*/
+
+        public const string UpdateUrlFile = "UpdateUrl.xml";
+        public static readonly string AppDirectoryPath = AppInfo.GetAppPath();
+        public static readonly string UpdaterFilePath = AppDirectoryPath + @"\Updater\update.exe";
     }
 }

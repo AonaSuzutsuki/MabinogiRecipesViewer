@@ -13,7 +13,10 @@ using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
 using CookInformationViewer.Models.Db.Context;
+using CookInformationViewer.Models.Update;
+using CookInformationViewer.ViewModels.Update;
 using CookInformationViewer.Views;
+using CookInformationViewer.Views.Update;
 using CookInformationViewer.Views.WindowService;
 using Prism.Commands;
 using Reactive.Bindings;
@@ -53,6 +56,7 @@ namespace CookInformationViewer.ViewModels
         #region Event Properties
         
         public ICommand UpdateTableCommand { get; set; }
+        public ICommand OpenUpdateProgramCommand { get; set; }
 
         public ICommand CategoriesSelectionChangedCommand { get; set; }
         public ICommand RecipesListSelectionChangedCommand { get; set; }
@@ -86,6 +90,7 @@ namespace CookInformationViewer.ViewModels
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
             UpdateTableCommand = new DelegateCommand(UpdateTable);
+            OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeInfo>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
@@ -122,6 +127,13 @@ namespace CookInformationViewer.ViewModels
             WindowManageService.ShowDialog<TableDownloadView>(vm);
 
             _model.Reload();
+        }
+
+        public void OpenUpdateProgram()
+        {
+            var updFormModel = new UpdFormModel();
+            var vm = new UpdFormViewModel(new WindowService(), updFormModel);
+            WindowManageService.ShowNonOwner<UpdForm>(vm);
         }
 
         public void CategoriesSelectionChanged(CategoryInfo? category)
