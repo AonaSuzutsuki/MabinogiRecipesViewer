@@ -51,8 +51,7 @@ namespace CookInformationViewer.ViewModels
         #endregion
 
         #region Event Properties
-
-        public ICommand RebuildDataBaseCommand { get; set; }
+        
         public ICommand UpdateTableCommand { get; set; }
 
         public ICommand CategoriesSelectionChangedCommand { get; set; }
@@ -86,7 +85,6 @@ namespace CookInformationViewer.ViewModels
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
-            RebuildDataBaseCommand = new DelegateCommand(RebuildDataBase);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeInfo>(RecipesListSelectionChanged);
@@ -106,8 +104,8 @@ namespace CookInformationViewer.ViewModels
                 if (!_model.AvailableUpdate)
                     return;
 
-                var dr = WindowManageService.MessageBoxDispatchShow("Available Data Update. Do you want to update?",
-                    "Available Data Update",
+                var dr = WindowManageService.MessageBoxDispatchShow("データベースに更新があります。更新を行いますか？",
+                    "データベースに更新があります",
                     ExMessageBoxBase.MessageType.Exclamation, ExMessageBoxBase.ButtonType.YesNo);
 
                 if (dr == ExMessageBoxBase.DialogResult.Yes)
@@ -115,14 +113,6 @@ namespace CookInformationViewer.ViewModels
                     WindowManageService.Dispatch(UpdateTable);
                 }
             });
-        }
-
-        public void RebuildDataBase()
-        {
-            _ = _model.RebuildDataBase().ContinueWith(t =>
-            {
-                var exp = t.Exception;
-            }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         public void UpdateTable()
@@ -252,6 +242,12 @@ namespace CookInformationViewer.ViewModels
         public void OpenBrowser()
         {
             if (SelectedRecipe.Value == null || string.IsNullOrEmpty(SelectedRecipe.Value.Url)) 
+                return;
+
+            var dr = WindowManageService.MessageBoxShow("選択したレシピをデフォルトブラウザで開きます。よろしいですか？", "ブラウザで開きます",
+                ExMessageBoxBase.MessageType.Asterisk, ExMessageBoxBase.ButtonType.YesNo);
+
+            if (dr == ExMessageBoxBase.DialogResult.No)
                 return;
 
             var processInfo = new ProcessStartInfo

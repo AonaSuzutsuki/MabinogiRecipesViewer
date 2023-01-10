@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommonCoreLib" Version="1.0.4" />
-    <PackageReference Include="CommonStyleLib" Version="1.0.21" />
+    <PackageReference Include="CommonStyleLib" Version="1.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SavannahXmlLib" Version="1.0.5" />

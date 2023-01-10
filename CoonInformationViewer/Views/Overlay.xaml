@@ -9,9 +9,12 @@
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:OverlayViewModel}"
-        Title="Overlay" Height="100" Width="300" Background="Transparent" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True">
+        Title="Overlay" Height="100" Width="300" Background="{Binding WindowBackground.Value, FallbackValue=Transparent}" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True">
 
     <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}" />
+        </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding Closing}" />
         </i:EventTrigger>
@@ -27,6 +30,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Window.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Constants.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
@@ -36,14 +40,17 @@
 
     <Grid>
 
-        <Grid Width="244px" Margin="0,0,0,0">
+        <Grid Width="244px" Margin="0,0,0,0" Background="Transparent">
             <Grid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Close" Command="{Binding MainWindowCloseBtClick}" />
+                    <MenuItem Header="透過" IsCheckable="True" IsChecked="{Binding TransparentChecked.Value}" Command="{Binding ChangeTransparentCommand}" CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                    <MenuItem Header="閉じる" Command="{Binding MainWindowCloseBtClick}" />
                 </ContextMenu>
             </Grid.ContextMenu>
 
             <!--<Image Source="/Resources/gauge_overlay.png" Opacity=".2" />-->
+
+            <Button Content="透過する" Width="100" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding TransparentButtonVisibility.Value}" Style="{StaticResource FlatButton}" Command="{Binding DoTransparentCommand}" />
 
             <Grid Margin="0,22,0,0" Name="PercentageGrid">
 
@@ -53,9 +60,9 @@
                     <ColumnDefinition Name="Item3Column" Width="40*" />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000" Opacity=".2"></Grid>
-                <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff" Opacity=".2"></Grid>
-                <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00" Opacity=".2"></Grid>
+                <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000" Opacity="{Binding Opacity.Value}"></Grid>
+                <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff" Opacity="{Binding Opacity.Value}"></Grid>
+                <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00" Opacity="{Binding Opacity.Value}"></Grid>
 
                 <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
                 <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />

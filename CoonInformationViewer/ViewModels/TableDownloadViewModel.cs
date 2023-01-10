@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommonExtensionLib.Extensions;
+using CommonStyleLib.ExMessageBox;
 using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
@@ -67,6 +69,7 @@ namespace CookInformationViewer.ViewModels
         #region Properties
 
         public ReactiveProperty<bool> CanExit { get; set; }
+        public ReactiveProperty<bool> IsError { get; set; }
 
         public ReactiveProperty<Visibility> LoadingVisibility { get; set; }
 
@@ -97,6 +100,7 @@ namespace CookInformationViewer.ViewModels
                     item.Message = "Completed";
             });
 
+            IsError = new ReactiveProperty<bool>(false);
             CanExit = new ReactiveProperty<bool>(true);
             LoadingVisibility = new ReactiveProperty<Visibility>(Visibility.Visible);
             DownloadList = model.DownloadList.ToReadOnlyReactiveCollection(x =>
@@ -108,10 +112,33 @@ namespace CookInformationViewer.ViewModels
 
             RebuildCommand = new DelegateCommand(Rebuild);
             UpdateCommand = new DelegateCommand(Update);
+        }
 
-            _ = model.Initialize().ContinueWith(_ =>
+        protected override void MainWindow_Loaded()
+        {
+            base.MainWindow_Loaded();
+
+            CanExit.Value = false;
+            _ = _model.Initialize().ContinueWith(t =>
             {
-                LoadingVisibility.Value = Visibility.Collapsed;
+                var ex = t.Exception;
+
+                if (ex == null)
+                {
+                    LoadingVisibility.Value = Visibility.Collapsed;
+                }
+                else
+                {
+                    var exceptions = ex.InnerExceptions;
+                    foreach (var exception in exceptions)
+                    {
+                        IsError.Value = true;
+                        WindowManageService.MessageBoxDispatchShow(exception.Message, "エラー",
+                            ExMessageBoxBase.MessageType.Beep);
+                    }
+                }
+
+                CanExit.Value = true;
             });
         }
 

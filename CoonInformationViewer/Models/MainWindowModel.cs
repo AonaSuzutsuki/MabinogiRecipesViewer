@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
@@ -69,12 +70,19 @@ namespace CookInformationViewer.Models
         public DateTime? UpdateDate { get; set; }
         public BitmapImage? Image { get; set; }
 
+        public bool IsMaterial { get; set; }
+
+        public bool IsNotFestival { get; set; }
+
         public int Star { get; set; }
 
         public string StarText
         {
             get
             {
+                if (IsMaterial)
+                    return "料理素材 専用 (食べられないよ)";
+
                 return Star switch
                 {
                     1 => "★☆☆☆☆",
@@ -83,7 +91,7 @@ namespace CookInformationViewer.Models
                     4 => "★★★★☆",
                     5 => "★★★★★",
                     6 => "★★★★★",
-                    _ => ""
+                    _ => "未確認"
                 };
             }
         }
@@ -92,7 +100,7 @@ namespace CookInformationViewer.Models
         {
             get
             {
-                return Star switch
+                var text = Star switch
                 {
                     1 => "確認済み",
                     2 => "確認済み",
@@ -100,8 +108,13 @@ namespace CookInformationViewer.Models
                     4 => "究極の料理 確認済み",
                     5 => "天国の料理 確認済み",
                     6 => "最高の料理 確認済み",
-                    _ => "未確認"
+                    _ => ""
                 };
+
+                if (IsNotFestival)
+                    text = $"{text} フェスティバルフード不可";
+
+                return text;
             }
         }
 
@@ -119,6 +132,8 @@ namespace CookInformationViewer.Models
         }
 
         public string Url { get; set; }
+
+        public IEnumerable<QualityItemInfo>? Effects { get; set; }
 
         public RecipeInfo(DbCookRecipes recipe)
         {
@@ -155,6 +170,90 @@ namespace CookInformationViewer.Models
         public string? Name { get; set; }
         public string? Type { get; set; }
         public string? Location { get; set; }
+    }
+
+    public class QualityItemInfo
+    {
+        public int Star { get; set; }
+        public string Quality { get; set; }
+        public System.Windows.Media.Brush StarBrush
+        {
+            get
+            {
+                return Star switch
+                {
+                    6 => (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff5307") ??
+                                           new SolidColorBrush(Colors.White)),
+                    _ => new SolidColorBrush(Colors.White)
+                };
+            }
+        }
+
+        public string Hp { get; set; }
+        public string Mp { get; set; }
+        public string Sp { get; set; }
+        public string Str { get; set; }
+        public string Int { get; set; }
+        public string Dex { get; set; }
+        public string Will { get; set; }
+        public string Luck { get; set; }
+        public string MaxDamage { get; set; }
+        public string MinDamage { get; set; }
+        public string MagicDamage { get; set; }
+        public string Protection { get; set; }
+        public string Defense { get; set; }
+        public string MagicProtection { get; set; }
+        public string MagicDefense { get; set; }
+
+        public QualityItemInfo(int star, IEnumerable<DbCookEffects> effects)
+        {
+            var list = effects.ToList();
+
+            Star = star;
+            Quality = star switch
+            {
+                1 => "★☆☆☆☆",
+                2 => "★★☆☆☆",
+                3 => "★★★☆☆",
+                4 => "★★★★☆",
+                5 => "★★★★★",
+                6 => "★★★★★",
+                _ => "",
+            };
+
+            Hp = MinMaxString(list, x => x.Hp);
+            Mp = MinMaxString(list, x => x.Mana);
+            Sp = MinMaxString(list, x => x.Stamina);
+            Str = MinMaxString(list, x => x.Str);
+            Int = MinMaxString(list, x => x.Int);
+            Dex = MinMaxString(list, x => x.Dex);
+            Will = MinMaxString(list, x => x.Will);
+            Luck = MinMaxString(list, x => x.Luck);
+            MaxDamage = MinMaxString(list, x => x.Damage);
+            MinDamage = MinMaxString(list, x => x.MinDamage);
+            MagicDamage = MinMaxString(list, x => x.MagicDamage);
+            Protection = MinMaxString(list, x => x.Protection);
+            Defense = MinMaxString(list, x => x.Defense);
+            MagicProtection = MinMaxString(list, x => x.MagicProtection);
+            MagicDefense = MinMaxString(list, x => x.MagicDefense);
+        }
+
+        private string MinMaxString(List<DbCookEffects> effects, Func<DbCookEffects, int> selector)
+        {
+            var min = effects.MinBy(selector);
+            var max = effects.MaxBy(selector);
+
+            if (min == null || max == null)
+                return string.Empty;
+
+            var minValue = selector(min);
+            var maxValue = selector(max);
+
+            if (minValue == 0 || maxValue == 0)
+                return string.Empty;
+            
+            return minValue.Equals(maxValue) ? minValue.ToString() : $"{minValue}-{maxValue}";
+        }
     }
 
     public class MainWindowModel : ModelBase, IDisposable
@@ -315,6 +414,7 @@ namespace CookInformationViewer.Models
             recipe.Item3Locations = GetMaterialLocation(recipe.Item3Id, recipe.Item3RecipeId);
 
             SetEffects(recipe);
+            SetAdditional(recipe);
 
             return recipe;
         }
@@ -392,11 +492,34 @@ namespace CookInformationViewer.Models
             var max = effects.MaxBy(x => x.Star);
             recipe.Star = max?.Star ?? 0;
 
+            var effectDictionary = effects.OrderByDescending(x => x.Star)
+                .GroupBy(x => x.Star)
+                .ToDictionary(x => x.Key, x => x.ToList());
+
+            var result = new Dictionary<int, QualityItemInfo>();
+            foreach (var (star, list) in effectDictionary)
+            {
+                var item = new QualityItemInfo(star, list);
+                result.Put(star, item);
+            }
+
+            recipe.Effects = result.Values;
         }
 
-        public async Task RebuildDataBase()
+        public void SetAdditional(RecipeInfo recipe)
         {
-            await _contextManager.RebuildDataBase();
+            var item = _contextManager.GetItems(x => (from m in x.Additionals
+                where m.RecipeId == recipe.Id
+                select m)).FirstOrDefault();
+
+            if (item == null)
+                return;
+
+            var isMaterials = item.IsMaterial == 1;
+            var isNotFestival = item.NotFestival == 1;
+
+            recipe.IsMaterial = isMaterials;
+            recipe.IsNotFestival = isNotFestival;
         }
 
         public void Dispose()

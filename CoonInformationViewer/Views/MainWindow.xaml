@@ -7,10 +7,11 @@
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
+        xmlns:models="clr-namespace:CookInformationViewer.Models"
         xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}" BorderThickness="0"
-        Title="MainWindow" Height="550" Width="1000" Style="{DynamicResource WindowStyle}">
+        Title="Mabinogi Cooking Recipes" Height="600" Width="1000" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -43,6 +44,9 @@
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
+                <ResourceDictionary>
+                    
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -76,12 +80,12 @@
 
             <StackPanel Margin="1,25,1,0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                 <Menu IsMainMenu="True" Name="Menu" Height="25" Padding="3" VerticalAlignment="Top">
-                    <MenuItem Header="File(_F)">
-                        <MenuItem Header="Rebuild" Command="{Binding RebuildDataBaseCommand}" />
-                        <MenuItem Header="Exit(_X)" Command="{Binding MainWindowCloseBtClick}" />
+                    <MenuItem Header="ファイル(_F)">
+                        <MenuItem Header="終了(_X)" Command="{Binding MainWindowCloseBtClick}" />
                     </MenuItem>
-                    <MenuItem Header="Tools(_T)">
-                        <MenuItem Header="Update Table" Command="{Binding UpdateTableCommand}" />
+                    <MenuItem Header="ヘルプ(_H)">
+                        <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
+                        <MenuItem Header="更新プログラムの確認" />
                     </MenuItem>
                 </Menu>
             </StackPanel>
@@ -169,7 +173,7 @@
 
                         <TextBox Grid.Column="4" Text="{Binding SelectedRecipe.Value.Url}" VerticalContentAlignment="Center" IsReadOnly="True" />
 
-                        <Button Grid.Column="6" Content="Open" Style="{StaticResource FlatButton}" Command="{Binding OpenBrowserCommand}" />
+                        <Button Grid.Column="6" Content="開く" Style="{StaticResource FlatButton}" Command="{Binding OpenBrowserCommand}" />
                     </Grid>
 
                     <Border Grid.Row="2" BorderThickness="1" BorderBrush="{StaticResource BorderColor}">
@@ -178,6 +182,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="100" />
                                 <RowDefinition Height="30" />
+                                <RowDefinition Height="2*" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
@@ -300,7 +305,7 @@
                                     </Grid>
                                 </Grid>
 
-                                <Button Content="..." Margin="10,0,0,0" Width="30" Height="25" Style="{StaticResource FlatButton}" Command="{Binding OpenOverlayCommand}" />
+                                <Button Content="2" Margin="10,0,0,0" Width="30" Height="25" FontFamily="Marlett" Style="{StaticResource FlatButton}" Command="{Binding OpenOverlayCommand}" />
                             </StackPanel>
 
                             <ScrollViewer Grid.Row="2" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
@@ -380,6 +385,37 @@
 
                                 </Grid>
                             </ScrollViewer>
+
+                            <Grid Grid.Row="3">
+                                <ListView ItemsSource="{Binding SelectedRecipe.Value.Effects}">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Width="80" Header="品質">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate DataType="{x:Type models:QualityItemInfo}">
+                                                        <TextBlock Text="{Binding Quality}" Foreground="{Binding StarBrush}" />
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Width="50" Header="HP" DisplayMemberBinding="{Binding Path=Hp}" />
+                                            <GridViewColumn Width="50" Header="MP" DisplayMemberBinding="{Binding Path=Mp}" />
+                                            <GridViewColumn Width="50" Header="Sp" DisplayMemberBinding="{Binding Path=Sp}" />
+                                            <GridViewColumn Width="50" Header="Str" DisplayMemberBinding="{Binding Path=Str}" />
+                                            <GridViewColumn Width="50" Header="Int" DisplayMemberBinding="{Binding Path=Int}" />
+                                            <GridViewColumn Width="50" Header="Dex" DisplayMemberBinding="{Binding Path=Dex}" />
+                                            <GridViewColumn Width="50" Header="Will" DisplayMemberBinding="{Binding Path=Will}" />
+                                            <GridViewColumn Width="50" Header="Luck" DisplayMemberBinding="{Binding Path=Luck}" />
+                                            <GridViewColumn Width="60" Header="最大攻撃" DisplayMemberBinding="{Binding Path=MaxDamage}" />
+                                            <GridViewColumn Width="60" Header="最小攻撃" DisplayMemberBinding="{Binding Path=MinDamage}" />
+                                            <GridViewColumn Width="60" Header="魔法攻撃" DisplayMemberBinding="{Binding Path=MagicDamage}" />
+                                            <GridViewColumn Width="50" Header="保護" DisplayMemberBinding="{Binding Path=Protection}" />
+                                            <GridViewColumn Width="50" Header="防御" DisplayMemberBinding="{Binding Path=Defense}" />
+                                            <GridViewColumn Width="60" Header="魔法保護" DisplayMemberBinding="{Binding Path=MagicProtection}" />
+                                            <GridViewColumn Width="60" Header="魔法防御" DisplayMemberBinding="{Binding Path=MagicDefense}" />
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
 
                         </Grid>
                     </Border>
