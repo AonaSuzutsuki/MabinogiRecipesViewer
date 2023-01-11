@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
         xmlns:local="clr-namespace:CookInformationViewer.Views"
+        xmlns:behaviors="clr-namespace:CookInformationViewer.Views.Behaviors"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
         xmlns:models="clr-namespace:CookInformationViewer.Models"
         xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
@@ -120,7 +121,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <TextBox Grid.Row="2" Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" />
+                    <TextBox Grid.Row="2" Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" behaviors:PlaceHolderBehavior.PlaceHolder="Filter" />
 
                     <ListBox Grid.Row="4" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox}">
 

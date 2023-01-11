@@ -422,7 +422,11 @@ namespace CookInformationViewer.Models
         public void NarrowDownRecipes(string searchWord)
         {
             if (string.IsNullOrEmpty(searchWord))
+            {
+                Recipes.Clear();
+                Recipes.AddRange(_recipeBaseItems);
                 return;
+            }
 
             var narrowDownItems = _recipeBaseItems.Where(x => x.Name.Contains(searchWord));
 

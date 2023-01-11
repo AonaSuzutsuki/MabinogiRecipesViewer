@@ -81,7 +81,7 @@
                     <ColumnDefinition Width="100" />
                 </Grid.ColumnDefinitions>
 
-                <Button Content="全選択" Command="{Binding AllSelectCommand}"  />
+                <Button Content="全選択" Style="{StaticResource FlatButton}" Command="{Binding AllSelectCommand}"  />
 
                 <Button Grid.Column="2" Content="全選択解除" Height="30" Style="{StaticResource FlatButton}" Command="{Binding AllDeSelectCommand}" />
             </Grid>
