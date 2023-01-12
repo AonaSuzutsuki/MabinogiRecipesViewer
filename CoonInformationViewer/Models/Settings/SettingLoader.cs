@@ -17,7 +17,8 @@ namespace CookInformationViewer.Models.Settings
 
         #region Properties
 
-        public bool IsCheckUpdate { get; set; }
+        public bool IsCheckDataUpdate { get; set; }
+        public bool IsCheckProgramUpdate { get; set; }
 
         #endregion
 
@@ -30,12 +31,14 @@ namespace CookInformationViewer.Models.Settings
 
         public void Load()
         {
-            IsCheckUpdate = _iniLoader.GetValue(MainClassName, nameof(IsCheckUpdate), true);
+            IsCheckDataUpdate = _iniLoader.GetValue(MainClassName, nameof(IsCheckDataUpdate), true);
+            IsCheckProgramUpdate = _iniLoader.GetValue(MainClassName, nameof(IsCheckProgramUpdate), true);
         }
 
         public void Save()
         {
-            _iniLoader.SetValue(MainClassName, nameof(IsCheckUpdate), IsCheckUpdate);
+            _iniLoader.SetValue(MainClassName, nameof(IsCheckDataUpdate), IsCheckDataUpdate);
+            _iniLoader.SetValue(MainClassName, nameof(IsCheckProgramUpdate), IsCheckProgramUpdate);
         }
     }
 }
