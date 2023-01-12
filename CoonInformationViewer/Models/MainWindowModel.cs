@@ -19,6 +19,7 @@ using CookInformationViewer.Models.Db;
 using CookInformationViewer.Models.Db.Context;
 using CookInformationViewer.Models.Db.Manager;
 using CookInformationViewer.Models.Settings;
+using CookInformationViewer.Models.Update;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SavannahXmlLib.XmlWrapper;
@@ -296,10 +297,20 @@ namespace CookInformationViewer.Models
         {
             LoadCategories();
 
-            if (_setting.IsCheckUpdate)
+            if (_setting.IsCheckDataUpdate)
             {
                 await _contextManager.AvailableTableUpdateCheck();
             }
+        }
+
+        public async Task<bool> CheckUpdate()
+        {
+            if (_setting.IsCheckProgramUpdate)
+            {
+                var availableUpdate = await UpdateManager.CheckCanUpdate(UpdateManager.GetUpdateClient());
+                return availableUpdate;
+            }
+            return false;
         }
 
         public void Reload()

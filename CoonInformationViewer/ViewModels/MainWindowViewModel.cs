@@ -13,9 +13,12 @@ using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
 using CookInformationViewer.Models.Db.Context;
+using CookInformationViewer.Models.Settings;
 using CookInformationViewer.Models.Update;
+using CookInformationViewer.ViewModels.Settings;
 using CookInformationViewer.ViewModels.Update;
 using CookInformationViewer.Views;
+using CookInformationViewer.Views.Settings;
 using CookInformationViewer.Views.Update;
 using CookInformationViewer.Views.WindowService;
 using Prism.Commands;
@@ -55,6 +58,7 @@ namespace CookInformationViewer.ViewModels
 
         #region Event Properties
         
+        public ICommand OpenSettingCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
 
@@ -89,6 +93,7 @@ namespace CookInformationViewer.ViewModels
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
+            OpenSettingCommand = new DelegateCommand(OpenSetting);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
@@ -104,20 +109,32 @@ namespace CookInformationViewer.ViewModels
         {
             base.MainWindow_Loaded();
 
-            _ = _model.Initialize().ContinueWith(_ =>
+            Task.Factory.StartNew(async () =>
             {
-                if (!_model.AvailableUpdate)
-                    return;
-
-                var dr = WindowManageService.MessageBoxDispatchShow("データベースに更新があります。更新を行いますか？",
-                    "データベースに更新があります",
-                    ExMessageBoxBase.MessageType.Exclamation, ExMessageBoxBase.ButtonType.YesNo);
-
-                if (dr == ExMessageBoxBase.DialogResult.Yes)
+                await _model.Initialize().ContinueWith(_ =>
                 {
-                    WindowManageService.Dispatch(UpdateTable);
-                }
+                    if (!_model.AvailableUpdate)
+                        return;
+
+                    var dr = WindowManageService.MessageBoxDispatchShow("データベースに更新があります。更新を行いますか？",
+                        "データベースに更新があります",
+                        ExMessageBoxBase.MessageType.Exclamation, ExMessageBoxBase.ButtonType.YesNo);
+
+                    if (dr == ExMessageBoxBase.DialogResult.Yes)
+                    {
+                        WindowManageService.Dispatch(UpdateTable);
+                    }
+                });
+
+                await CheckUpdate();
             });
+        }
+
+        public void OpenSetting()
+        {
+            var model = new SettingModel();
+            var vm = new SettingViewModel(new WindowService(), model);
+            WindowManageService.ShowDialog<SettingView>(vm);
         }
 
         public void UpdateTable()
@@ -281,6 +298,27 @@ namespace CookInformationViewer.ViewModels
             base.Dispose();
 
             _model.Dispose();
+        }
+
+        private async Task CheckUpdate()
+        {
+            var availableUpdate = await _model.CheckUpdate();
+            if (availableUpdate)
+            {
+                var dialogResult = _mainWindowService.MessageBoxShow("更新プログラムがあります。更新しますか？",
+                    "更新プログラムがあります", ExMessageBoxBase.MessageType.Asterisk, ExMessageBoxBase.ButtonType.YesNo);
+                if (dialogResult == ExMessageBoxBase.DialogResult.Yes)
+                {
+                    var updFormModel = new UpdFormModel();
+                    await updFormModel.Initialize();
+
+                    WindowManageService.Dispatch(() =>
+                    {
+                        var vm = new UpdFormViewModel(new WindowService(), updFormModel, true);
+                        WindowManageService.Show<UpdForm>(vm);
+                    });
+                }
+            }
         }
     }
 }

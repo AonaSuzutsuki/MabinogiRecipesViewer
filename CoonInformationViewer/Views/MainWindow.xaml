@@ -85,7 +85,7 @@
                         <MenuItem Header="終了(_X)" Command="{Binding MainWindowCloseBtClick}" />
                     </MenuItem>
                     <MenuItem Header="ツール(_T)">
-                        <MenuItem Header="設定(_O)" />
+                        <MenuItem Header="設定(_O)" Command="{Binding OpenSettingCommand}" />
                     </MenuItem>
                     <MenuItem Header="ヘルプ(_H)">
                         <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
