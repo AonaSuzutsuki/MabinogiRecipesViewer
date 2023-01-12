@@ -61,6 +61,7 @@ namespace CookInformationViewer.ViewModels
         public ICommand OpenSettingCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
+        public ICommand OpenVersionInfoCommand { get; set; }
 
         public ICommand CategoriesSelectionChangedCommand { get; set; }
         public ICommand RecipesListSelectionChangedCommand { get; set; }
@@ -96,6 +97,7 @@ namespace CookInformationViewer.ViewModels
             OpenSettingCommand = new DelegateCommand(OpenSetting);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
+            OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeInfo>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
@@ -151,6 +153,13 @@ namespace CookInformationViewer.ViewModels
             var updFormModel = new UpdFormModel();
             var vm = new UpdFormViewModel(new WindowService(), updFormModel);
             WindowManageService.ShowNonOwner<UpdForm>(vm);
+        }
+
+        public void OpenVersionInfo()
+        {
+            var model = new VersionInfoModel();
+            var vm = new VersionInfoViewModel(new WindowService(), model);
+            WindowManageService.ShowDialog<VersionInfo>(vm);
         }
 
         public void CategoriesSelectionChanged(CategoryInfo? category)

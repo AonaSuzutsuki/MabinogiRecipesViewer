@@ -1,0 +1,91 @@
+﻿<Window x:Class="CookInformationViewer.Views.VersionInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_7dtd_svmanager_fix_mvvm.Views"
+        xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:VersionInfoViewModel}"
+        ShowInTaskbar="True" Topmost="False" WindowStartupLocation="CenterScreen" WindowStyle="None"
+        TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True"
+        Title="Settings" Height="350" Width="550" ResizeMode="CanMinimize"
+        Style="{DynamicResource WindowStyle}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Activated">
+            <i:InvokeCommandAction Command="{Binding Activated}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Deactivated">
+            <i:InvokeCommandAction Command="{Binding Deactivated}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Window.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Style="{DynamicResource ResourceKey=BackgroundGrid}">
+
+        <Grid Margin="{Binding MainWindowMargin}">
+
+            <StackPanel Orientation="Horizontal" Margin="5,0,0,0"
+                        HorizontalAlignment="left"
+                        VerticalAlignment="Top">
+                <Image Source="{StaticResource Icon}" Width="15" Height="15" Stretch="Uniform" WindowChrome.IsHitTestVisibleInChrome="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <commonViews:InteractiveCommand Command="{Binding ImageMouseDown}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
+                <Label Content="Version Information" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                <Button Name="MainWindowMinimumBt" Content="0" Style="{DynamicResource CaptionButtonStyleKey}" Command="{Binding MainWindowMinimumBtClick}" />
+                <Button Name="MainWindowCloseBt" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" Command="{Binding MainWindowCloseBtClick}" />
+            </StackPanel>
+
+            <Grid Margin="15,30,15,15">
+
+                <StackPanel>
+
+                    <Label Content="Mabinogi Cooking Recipes" HorizontalAlignment="Center" FontSize="18" />
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <Label Content="Version: " />
+                            <Label Content="Copyright: " />
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="{Binding VersionLabel.Value}" />
+                            <Label Content="{Binding Copyright.Value}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,20,0,0">
+                        <Label Content="ReactiveProperty: Copyright (c) 2018 neuecc, xin9le, okazuki" />
+                        <Label Content="Prism.Core: Copyright (c) .NET Foundation" />
+                        <Label Content="Microsoft.Xaml.Behaviors.Wpf: Copyright (c) 2015 Microsoft" />
+                        <Label Content="Newtonsoft.Json: Copyright (c) 2007 James Newton-King" />
+                        <Label Content="OpenCover: Copyright (c) 2011-2019 Shaun Wilde " />
+                        <Label  Content="This software includes the work that is distributed in the Apache License 2.0"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
