@@ -328,6 +328,7 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="30" />
                                                 <RowDefinition Height="5" />
+                                                <RowDefinition Height="25" />
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
 
@@ -341,7 +342,13 @@
                                                 </Grid>
                                             </Grid>
 
-                                            <ListBox Grid.Row="2" ItemsSource="{Binding SelectedRecipe.Value.Item1Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item1LocationListBox}" />
+                                            <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
+                                                <TextBlock Text="- " />
+                                                <TextBlock Text="{Binding SelectedRecipe.Value.Item1Amount}" />
+                                                <TextBlock Text="%" />
+                                            </StackPanel>
+
+                                            <ListBox Grid.Row="3" ItemsSource="{Binding SelectedRecipe.Value.Item1Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item1LocationListBox}" />
                                         </Grid>
                                     </Border>
 
@@ -350,6 +357,7 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="30" />
                                                 <RowDefinition Height="5" />
+                                                <RowDefinition Height="25" />
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
 
@@ -363,7 +371,13 @@
                                                 </Grid>
                                             </Grid>
 
-                                            <ListBox Grid.Row="2" ItemsSource="{Binding SelectedRecipe.Value.Item2Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item2LocationListBox}" />
+                                            <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
+                                                <TextBlock Text="- " />
+                                                <TextBlock Text="{Binding SelectedRecipe.Value.Item2Amount}" />
+                                                <TextBlock Text="%" />
+                                            </StackPanel>
+
+                                            <ListBox Grid.Row="3" ItemsSource="{Binding SelectedRecipe.Value.Item2Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item2LocationListBox}" />
                                         </Grid>
                                     </Border>
 
@@ -372,6 +386,7 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="30" />
                                                 <RowDefinition Height="5" />
+                                                <RowDefinition Height="25" />
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
 
@@ -385,7 +400,13 @@
                                                 </Grid>
                                             </Grid>
 
-                                            <ListBox Grid.Row="2" ItemsSource="{Binding SelectedRecipe.Value.Item3Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item3LocationListBox}" />
+                                            <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
+                                                <TextBlock Text="- " />
+                                                <TextBlock Text="{Binding SelectedRecipe.Value.Item3Amount}" />
+                                                <TextBlock Text="%" />
+                                            </StackPanel>
+
+                                            <ListBox Grid.Row="3" ItemsSource="{Binding SelectedRecipe.Value.Item3Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item3LocationListBox}" />
                                         </Grid>
                                     </Border>
 
