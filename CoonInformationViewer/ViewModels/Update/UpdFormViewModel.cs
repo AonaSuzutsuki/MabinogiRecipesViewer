@@ -33,6 +33,7 @@ namespace CookInformationViewer.ViewModels.Update
 
             VersionListView = model.ToReactivePropertyAsSynchronized(m => m.VersionList).AddTo(CompositeDisposable);
             VersionListSelectedIndex = model.ToReactivePropertyAsSynchronized(m => m.VersionListSelectedIndex).AddTo(CompositeDisposable);
+            CleanUpdateBtIsEnabled = model.ToReactivePropertyAsSynchronized(m => m.CanUpdate).AddTo(CompositeDisposable);
             UpdateBtIsEnabled = model.ToReactivePropertyAsSynchronized(m => m.CanUpdate).AddTo(CompositeDisposable);
             CancelBtIsEnabled = model.ToReactivePropertyAsSynchronized(m => m.CanCancel).AddTo(CompositeDisposable);
             RichDetailText = model.ToReactivePropertyAsSynchronized(m => m.RichDetailText).AddTo(CompositeDisposable);
@@ -50,6 +51,7 @@ namespace CookInformationViewer.ViewModels.Update
         public ReactiveProperty<ObservableCollection<string>> VersionListView { get; set; }
         public ReactiveProperty<int> VersionListSelectedIndex { get; set; }
 
+        public ReactiveProperty<bool> CleanUpdateBtIsEnabled { get; set; }
         public ReactiveProperty<bool> UpdateBtIsEnabled { get; set; }
         public ReactiveProperty<bool> CancelBtIsEnabled { get; set; }
 

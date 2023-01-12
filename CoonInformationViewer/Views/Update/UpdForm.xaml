@@ -118,7 +118,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Content="クリーンアップデート" IsEnabled="True" Style="{DynamicResource FlatButton}" Width="100" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding DoCleanUpdateCommand}" />
+                    <Button Content="クリーンアップデート" IsEnabled="{Binding CleanUpdateBtIsEnabled.Value}" Style="{DynamicResource FlatButton}" Width="100" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding DoCleanUpdateCommand}" />
                     <Button Content="アップデート" IsEnabled="{Binding UpdateBtIsEnabled.Value}" Name="UpdateBt" Style="{DynamicResource FlatButton}" Margin="3,0,0,0" Width="90" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding DoUpdateCommand}" />
                     <Button Content="キャンセル" IsEnabled="{Binding CancelBtIsEnabled.Value}" Style="{DynamicResource FlatButton}" Margin="3,0,0,0" Width="80" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding MainWindowCloseBtClick}" />
                 </StackPanel>
