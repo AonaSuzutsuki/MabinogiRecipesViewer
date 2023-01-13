@@ -7,8 +7,11 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
         xmlns:behaviors="clr-namespace:CookInformationViewer.Views.Behaviors"
-        xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
+        xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels.Searchers"
+        xmlns:models="clr-namespace:CookInformationViewer.Models.Searchers"
+        xmlns:controls="clr-namespace:CookInformationViewer.Views.UserControls"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:SearchWindowViewModel}"
         Title="レシピ検索" Height="450" Width="800" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
@@ -74,6 +77,13 @@
             </StackPanel>
 
             <Grid Margin="5,25,5,5">
+                <controls:BindableSelectedItemTreeView ItemsSource="{Binding SearchItems}" Background="Transparent">
+                    <controls:BindableSelectedItemTreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type models:SearchNode}" ItemsSource="{Binding Children}">
+                            <Label Content="{Binding Name}" />
+                        </HierarchicalDataTemplate>
+                    </controls:BindableSelectedItemTreeView.ItemTemplate>
+                </controls:BindableSelectedItemTreeView>
             </Grid>
 
         </Grid>
