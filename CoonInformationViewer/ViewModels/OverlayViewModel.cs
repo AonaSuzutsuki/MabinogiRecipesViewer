@@ -19,7 +19,7 @@ using Reactive.Bindings.Extensions;
 
 namespace CookInformationViewer.ViewModels
 {
-    public class OverlayViewModel : ViewModelBase
+    public class OverlayViewModel : ViewModelWindowStyleBase
     {
         private MainWindowWindowService _mainWindowService;
 
@@ -72,6 +72,7 @@ namespace CookInformationViewer.ViewModels
             Opacity.Value = .2;
             TransparentButtonVisibility.Value = Visibility.Collapsed;
             WindowBackground.Value = new SolidColorBrush(Colors.Transparent);
+            WindowManageService.Owner.BorderBrush = new SolidColorBrush(Colors.Transparent);
             TransparentChecked.Value = true;
         }
 
@@ -95,6 +96,9 @@ namespace CookInformationViewer.ViewModels
                     WindowBackground.Value = brush;
                 else
                     WindowBackground.Value = new SolidColorBrush(Colors.Transparent);
+
+                if (WindowManageService.Owner.FindResource("AroundBorderColor") is SolidColorBrush color)
+                    WindowManageService.Owner.BorderBrush = color;
             }
         }
     }
