@@ -14,11 +14,14 @@ using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
 using CookInformationViewer.Models.Db.Context;
+using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Models.Settings;
 using CookInformationViewer.Models.Update;
+using CookInformationViewer.ViewModels.Searchers;
 using CookInformationViewer.ViewModels.Settings;
 using CookInformationViewer.ViewModels.Update;
 using CookInformationViewer.Views;
+using CookInformationViewer.Views.Searches;
 using CookInformationViewer.Views.Settings;
 using CookInformationViewer.Views.Update;
 using CookInformationViewer.Views.WindowService;
@@ -63,6 +66,7 @@ namespace CookInformationViewer.ViewModels
         #region Event Properties
         
         public ICommand OpenSettingCommand { get; set; }
+        public ICommand OpenSearchWindowCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
         public ICommand OpenVersionInfoCommand { get; set; }
@@ -104,6 +108,7 @@ namespace CookInformationViewer.ViewModels
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
             OpenSettingCommand = new DelegateCommand(OpenSetting);
+            OpenSearchWindowCommand = new DelegateCommand(OpenSearchWindow);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
@@ -162,6 +167,13 @@ namespace CookInformationViewer.ViewModels
             var model = new SettingModel();
             var vm = new SettingViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<SettingView>(vm);
+        }
+
+        public void OpenSearchWindow()
+        {
+            var model = new SearchWindowModel();
+            var vm = new SearchWindowViewModel(new WindowService(), model);
+            WindowManageService.ShowNonOwner<SearchWindow>(vm);
         }
 
         public void UpdateTable()
