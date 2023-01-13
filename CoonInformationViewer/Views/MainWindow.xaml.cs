@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CookInformationViewer.Models;
 using CookInformationViewer.ViewModels;
-using CookInformationViewer.Views.WindowService;
+using CookInformationViewer.Views.WindowServices;
 
 namespace CookInformationViewer.Views
 {

@@ -1,7 +1,4 @@
-﻿using System.Windows;
-using CommonStyleLib.Views;
-
-namespace CookInformationViewer.Views.WindowService;
+﻿namespace CookInformationViewer.Views.WindowServices;
 
 public class MainWindowWindowService : CommonStyleLib.Views.WindowService
 {

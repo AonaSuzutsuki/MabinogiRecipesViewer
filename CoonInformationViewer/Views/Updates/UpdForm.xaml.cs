@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using CookInformationViewer.ViewModels.Update;
+using CookInformationViewer.ViewModels.Updates;
 
-namespace CookInformationViewer.Views.Update
+namespace CookInformationViewer.Views.Updates
 {
     /// <summary>
     /// UpdForm.xaml の相互作用ロジック

@@ -1,6 +1,6 @@
 ﻿using CommonStyleLib.Models;
 
-namespace _7dtd_svmanager_fix_mvvm.Models.Update
+namespace CookInformationViewer.Models.Updates
 {
     public class LoadingModel : ModelBase
     {

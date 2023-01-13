@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using _7dtd_svmanager_fix_mvvm.Models.Update.Node;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
+using CookInformationViewer.Models.Updates.Node;
 
-namespace _7dtd_svmanager_fix_mvvm.Models.Update
+namespace CookInformationViewer.Models.Updates
 {
     public class DirectoryTree
     {

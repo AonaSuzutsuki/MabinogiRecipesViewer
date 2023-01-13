@@ -9,7 +9,7 @@
         xmlns:behaviors="clr-namespace:CookInformationViewer.Views.Behaviors"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
         xmlns:models="clr-namespace:CookInformationViewer.Models"
-        xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
+        xmlns:converters="clr-namespace:CookInformationViewer.Views.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="Mabinogi Cooking Recipes" Height="700" Width="1000" WindowStartupLocation="CenterScreen" Style="{DynamicResource WindowStyle}">
@@ -187,7 +187,7 @@
                         </Grid>
 
                         <Border Grid.Row="2" BorderThickness="1" BorderBrush="{StaticResource BorderColor}">
-                            <Grid Visibility="{Binding SelectedRecipe.Value, Converter={converter:ObjectBooleanConverter}}">
+                            <Grid Visibility="{Binding SelectedRecipe.Value, Converter={converters:ObjectBooleanConverter}}">
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="30" />
@@ -341,11 +341,11 @@
                                         </Grid.RowDefinitions>
 
                                         <Grid>
-                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converters:ReverseBooleanVisibilityConverter}}">
                                                 <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item1Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item1RecipeId}" Style="{StaticResource HyperLinkButton}" />
                                             </Grid>
 
-                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:BooleanVisibilityConverter}}">
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converters:BooleanVisibilityConverter}}">
                                                 <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item1Name}" />
                                             </Grid>
                                         </Grid>
@@ -365,11 +365,11 @@
                                         </Grid.RowDefinitions>
 
                                         <Grid>
-                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converters:ReverseBooleanVisibilityConverter}}">
                                                 <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item2Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item2RecipeId}" Style="{StaticResource HyperLinkButton}" />
                                             </Grid>
 
-                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:BooleanVisibilityConverter}}">
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converters:BooleanVisibilityConverter}}">
                                                 <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item2Name}" />
                                             </Grid>
                                         </Grid>
@@ -389,11 +389,11 @@
                                         </Grid.RowDefinitions>
 
                                         <Grid>
-                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converters:ReverseBooleanVisibilityConverter}}">
                                                 <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item3Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item3RecipeId}" Style="{StaticResource HyperLinkButton}" />
                                             </Grid>
 
-                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:BooleanVisibilityConverter}}">
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converters:BooleanVisibilityConverter}}">
                                                 <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item3Name}" />
                                             </Grid>
                                         </Grid>

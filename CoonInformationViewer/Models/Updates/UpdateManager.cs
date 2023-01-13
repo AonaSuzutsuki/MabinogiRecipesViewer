@@ -13,7 +13,7 @@ using SavannahXmlLib.XmlWrapper.Nodes;
 using UpdateLib.Http;
 using UpdateLib.Update;
 
-namespace CookInformationViewer.Models.Update
+namespace CookInformationViewer.Models.Updates
 {
     public class UpdateManager
     {

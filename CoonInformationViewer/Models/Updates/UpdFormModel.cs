@@ -14,7 +14,7 @@ using CommonStyleLib.ExMessageBox;
 using CommonStyleLib.Models;
 using Path = System.IO.Path;
 
-namespace CookInformationViewer.Models.Update
+namespace CookInformationViewer.Models.Updates
 {
     public class UpdFormModel : ModelBase
     {

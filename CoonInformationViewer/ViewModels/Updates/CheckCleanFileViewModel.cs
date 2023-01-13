@@ -1,13 +1,13 @@
 ﻿using System.Windows.Input;
-using _7dtd_svmanager_fix_mvvm.Models.Update;
-using _7dtd_svmanager_fix_mvvm.Models.Update.Node;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
+using CookInformationViewer.Models.Updates;
+using CookInformationViewer.Models.Updates.Node;
 using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
-namespace _7dtd_svmanager_fix_mvvm.ViewModels.Update
+namespace CookInformationViewer.ViewModels.Updates
 {
     public class CheckCleanFileViewModel : ViewModelWindowStyleBase
     {

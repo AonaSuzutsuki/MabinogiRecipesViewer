@@ -6,8 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
-        xmlns:converters="clr-namespace:CookInformationViewer.Views.Converter"
         xmlns:local="clr-namespace:CookInformationViewer.Views"
+        xmlns:converters1="clr-namespace:CookInformationViewer.Views.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:TableDownloadViewModel}"
         Title="データ更新の確認" Height="450" Width="800" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
@@ -120,9 +120,9 @@
                         <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Content="Rebuild" IsEnabled="{Binding IsError.Value, Converter={converters:ReverseBooleanConverter}}" Style="{StaticResource FlatButton}" Command="{Binding RebuildCommand}" />
+                    <Button Grid.Column="0" Content="Rebuild" IsEnabled="{Binding IsError.Value, Converter={converters1:ReverseBooleanConverter}}" Style="{StaticResource FlatButton}" Command="{Binding RebuildCommand}" />
 
-                    <Button Grid.Column="3" Content="Update" IsEnabled="{Binding IsError.Value, Converter={converters:ReverseBooleanConverter}}" Style="{StaticResource FlatButton}" Command="{Binding UpdateCommand}" />
+                    <Button Grid.Column="3" Content="Update" IsEnabled="{Binding IsError.Value, Converter={converters1:ReverseBooleanConverter}}" Style="{StaticResource FlatButton}" Command="{Binding UpdateCommand}" />
 
                     <Button Grid.Column="5" Content="Cancel" Style="{StaticResource FlatButton}" Command="{Binding MainWindowCloseBtClick}" />
 
