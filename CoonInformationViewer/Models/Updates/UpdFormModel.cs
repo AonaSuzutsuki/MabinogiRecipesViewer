@@ -8,10 +8,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using _7dtd_svmanager_fix_mvvm.Views.UserControls;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.ExMessageBox;
 using CommonStyleLib.Models;
+using CookInformationViewer.Views.UserControls;
 using Path = System.IO.Path;
 
 namespace CookInformationViewer.Models.Updates

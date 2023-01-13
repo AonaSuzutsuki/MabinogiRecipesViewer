@@ -3,7 +3,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
-namespace _7dtd_svmanager_fix_mvvm.Views.UserControls;
+namespace CookInformationViewer.Views.UserControls;
 
 public enum RichTextType
 {

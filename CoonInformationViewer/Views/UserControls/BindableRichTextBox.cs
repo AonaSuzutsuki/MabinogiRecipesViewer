@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -10,7 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace _7dtd_svmanager_fix_mvvm.Views.UserControls
+namespace CookInformationViewer.Views.UserControls
 {
     public class BindableRichTextBox : RichTextBox
     {
