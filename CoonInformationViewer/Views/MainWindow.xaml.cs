@@ -20,8 +20,10 @@ namespace CookInformationViewer.Views
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window , IGaugeResize
+    public partial class MainWindow : Window , IGaugeResize, IDisposable
     {
+        private IDisposable _model;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +31,7 @@ namespace CookInformationViewer.Views
             var model = new MainWindowModel();
             var vm = new MainWindowViewModel(new MainWindowWindowService(this), model);
             DataContext = vm;
+            _model = model;
         }
 
         public void SetGaugeLength(double length, int number)
@@ -54,6 +57,11 @@ namespace CookInformationViewer.Views
 
             scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
             e.Handled = true;
+        }
+
+        public void Dispose()
+        {
+            _model.Dispose();
         }
     }
 }

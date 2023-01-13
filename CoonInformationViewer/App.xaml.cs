@@ -16,14 +16,18 @@ namespace CookInformationViewer
     /// </summary>
     public partial class App : Application
     {
+        private IDisposable? _mainWindow;
+
         private void MyApp_Startup(object sender, StartupEventArgs e)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            DispatcherUnhandledException += Application_DispatcherUnhandledException;
 
             var mainWindow = new MainWindow();
+            _mainWindow = mainWindow;
             mainWindow.Show();
         }
 
@@ -39,7 +43,7 @@ namespace CookInformationViewer
             }
         }
 
-        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        private void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs? e)
         {
             var exception = e.Exception.InnerException;
             ShowAndWriteException(exception);
@@ -48,12 +52,13 @@ namespace CookInformationViewer
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             ShowAndWriteException(e.Exception);
+            _mainWindow?.Dispose();
 
             e.Handled = true;
             Shutdown();
         }
 
-        public static void ShowAndWriteException(Exception exception)
+        public static void ShowAndWriteException(Exception? exception)
         {
             if (exception == null)
                 return;
