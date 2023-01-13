@@ -10,7 +10,7 @@
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:TableDownloadViewModel}"
-        Title="データ更新の確認" Height="450" Width="800" Style="{DynamicResource WindowStyle}">
+        Title="データ更新の確認" Height="450" Width="800" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

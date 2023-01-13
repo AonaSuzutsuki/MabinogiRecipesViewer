@@ -12,7 +12,7 @@
         xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-        Title="Mabinogi Cooking Recipes" Height="700" Width="1000" Style="{DynamicResource WindowStyle}">
+        Title="Mabinogi Cooking Recipes" Height="700" Width="1000" WindowStartupLocation="CenterScreen" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

@@ -9,7 +9,7 @@
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:OverlayViewModel}"
-        Title="Overlay" Height="100" Width="300" Background="{Binding WindowBackground.Value, FallbackValue=Transparent}" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True" Style="{DynamicResource WindowStyle}">
+        Title="Overlay" Height="100" Width="300" Background="{Binding WindowBackground.Value, FallbackValue=Transparent}" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
