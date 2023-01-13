@@ -190,26 +190,25 @@
                             <Grid Visibility="{Binding SelectedRecipe.Value, Converter={converter:ObjectBooleanConverter}}">
 
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
                                     <RowDefinition Height="100" />
                                     <RowDefinition Height="30" />
                                     <RowDefinition Height="2*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <Grid Grid.Row="1">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding SelectedRecipe.Value.StarText}" Foreground="{Binding SelectedRecipe.Value.StarBrush}" />
-                                        <Label Content="{Binding SelectedRecipe.Value.StarMessage}"></Label>
-                                    </StackPanel>
-                                </Grid>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Label Content="{Binding SelectedRecipe.Value.Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
+                                    <Label Content="{Binding SelectedRecipe.Value.Category.Name, FallbackValue=''}" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" />
+                                </StackPanel>
 
-                                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Image Source="{Binding SelectedRecipe.Value.Image}" Width="80" />
 
                                     <Grid Width="300px" Margin="10,0,0,0">
-                                        <Image Source="/Resources/gauge.png" />
+                                        <Image Margin="0,-10,0,0" Source="/Resources/gauge.png" />
 
-                                        <Grid Margin="0,35,0,0" Name="PercentageGrid">
+                                        <Grid Margin="0,25,0,0" Name="PercentageGrid">
 
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Name="Item1Column" Width="25*" />
@@ -226,7 +225,7 @@
                                             <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
                                         </Grid>
 
-                                        <Grid Margin="0,13,0,0">
+                                        <Grid Margin="0,3,0,0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="5*" />
                                                 <ColumnDefinition Width="5*" />
@@ -275,7 +274,7 @@
                                             <Image Grid.Column="19" Width="1" HorizontalAlignment="Right" Style="{StaticResource NormalSizeGauge}"  />
                                         </Grid>
 
-                                        <Grid Margin="0,0,0,5" VerticalAlignment="Bottom">
+                                        <Grid Margin="0,0,0,15" VerticalAlignment="Bottom">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="5*" />
                                                 <ColumnDefinition Width="5*" />
@@ -318,7 +317,15 @@
                                     <Button Content="2" Margin="10,0,0,0" Width="30" Height="25" FontFamily="Marlett" Style="{StaticResource FlatButton}" Command="{Binding OpenOverlayCommand}" />
                                 </StackPanel>
 
-                                <ScrollViewer Grid.Row="2" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+
+                                <Grid Grid.Row="2">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="{Binding SelectedRecipe.Value.StarText}" Foreground="{Binding SelectedRecipe.Value.StarBrush}" />
+                                        <Label Content="{Binding SelectedRecipe.Value.StarMessage}"></Label>
+                                    </StackPanel>
+                                </Grid>
+
+                                <ScrollViewer Grid.Row="3" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
                                     <Grid>
 
                                         <Grid.ColumnDefinitions>
@@ -417,7 +424,7 @@
                                     </Grid>
                                 </ScrollViewer>
 
-                                <Grid Grid.Row="3">
+                                <Grid Grid.Row="4">
                                     <ListView ItemsSource="{Binding SelectedRecipe.Value.Effects}">
                                         <ListView.View>
                                             <GridView>

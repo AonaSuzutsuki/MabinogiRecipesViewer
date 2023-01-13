@@ -64,6 +64,8 @@ namespace CookInformationViewer.Models
         
         public decimal Item3Amount { get; set; }
 
+        public CategoryInfo? Category { get; set; }
+
         public IEnumerable<LocationItemInfo>? Item1Locations { get; set; }
         public IEnumerable<LocationItemInfo>? Item2Locations { get; set; }
         public IEnumerable<LocationItemInfo>? Item3Locations { get; set; }
@@ -369,6 +371,7 @@ namespace CookInformationViewer.Models
             var recipe = _contextManager.GetItems(x =>
             {
                 return (from m in x.CookRecipes
+                    join cat in x.CookCategories on m.CategoryId equals cat.Id
                     join mat1 in x.CookMaterials on m.Item1Id equals mat1.Id
                         into mat1Item
                     from subMat1 in mat1Item.DefaultIfEmpty()
@@ -391,6 +394,11 @@ namespace CookInformationViewer.Models
                     orderby m.Name
                     select new RecipeInfo(m)
                     {
+                        Category = new CategoryInfo
+                        {
+                            Id = cat.Id,
+                            Name = cat.Name
+                        },
                         Item1Name = subRec1.Name ?? subMat1.Name,
                         Item2Name = subRec2.Name ?? subMat2.Name,
                         Item3Name = subRec3.Name ?? subMat3.Name
@@ -407,7 +415,8 @@ namespace CookInformationViewer.Models
         {
             var recipe = _contextManager.GetRecipe(x =>
             {
-                var item = (from m in x.CookRecipes 
+                var item = (from m in x.CookRecipes
+                    join cat in x.CookCategories on m.CategoryId equals cat.Id 
                     join mat1 in x.CookMaterials on m.Item1Id equals mat1.Id
                         into mat1Item
                     from subMat1 in mat1Item.DefaultIfEmpty()
@@ -429,6 +438,11 @@ namespace CookInformationViewer.Models
                     where m.Id == id
                     select new RecipeInfo(m)
                     {
+                        Category = new CategoryInfo
+                        {
+                            Id = cat.Id,
+                            Name = cat.Name
+                        },
                         Item1Name = subRec1.Name ?? subMat1.Name,
                         Item2Name = subRec2.Name ?? subMat2.Name,
                         Item3Name = subRec3.Name ?? subMat3.Name
