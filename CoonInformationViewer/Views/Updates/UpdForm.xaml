@@ -1,17 +1,15 @@
-﻿<Window x:Class="CookInformationViewer.Views.Update.UpdForm"
+﻿<Window x:Class="CookInformationViewer.Views.Updates.UpdForm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
-        xmlns:update="clr-namespace:_7dtd_svmanager_fix_mvvm.Views.Update"
-        xmlns:update1="clr-namespace:_7dtd_svmanager_fix_mvvm.ViewModels.Update"
         xmlns:userControls="clr-namespace:_7dtd_svmanager_fix_mvvm.Views.UserControls"
-        xmlns:update2="clr-namespace:CookInformationViewer.ViewModels.Update"
-        xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
+        xmlns:converters="clr-namespace:CookInformationViewer.Views.Converters"
+        xmlns:updates="clr-namespace:CookInformationViewer.ViewModels.Updates"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance update2:UpdFormViewModel}"
+        d:DataContext="{d:DesignInstance updates:UpdFormViewModel}"
         ShowInTaskbar="True" Topmost="False" WindowStartupLocation="CenterScreen" WindowStyle="None"
         TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True"
         Title="Update Form" Height="400" Width="600" ResizeMode="CanResize" Style="{DynamicResource WindowStyle}">
@@ -42,7 +40,7 @@
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
                 <ResourceDictionary>
-                    <converter:RichTextItemsToDocumentConverter x:Key="RichTextItemsConverter"/>
+                    <converters:RichTextItemsToDocumentConverter x:Key="RichTextItemsConverter"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -90,7 +88,7 @@
                 </ListBox>
 
                 <!--<RichTextBox Text="{Binding DetailText.Value}" IsReadOnly="False" Margin="5,0,0,0" Grid.Column="1" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" TextWrapping="Wrap" ContextMenu="{StaticResource CopyOnly}" />-->
-                <userControls:BindableRichTextBox Grid.Column="1" Background="Transparent" Foreground="White" BindingDocument="{Binding RichDetailText.Value, Mode=OneWay, Converter={converter:RichTextItemsToDocumentConverter}}" IsReadOnly="True" VerticalScrollBarVisibility="Visible" ContextMenu="{StaticResource CopyOnly}">
+                <userControls:BindableRichTextBox Grid.Column="1" Background="Transparent" Foreground="White" BindingDocument="{Binding RichDetailText.Value, Mode=OneWay, Converter={converters:RichTextItemsToDocumentConverter}}" IsReadOnly="True" VerticalScrollBarVisibility="Visible" ContextMenu="{StaticResource CopyOnly}">
                     <userControls:BindableRichTextBox.Resources>
                         <Style TargetType="Hyperlink">
                             <Setter Property="Cursor" Value="Hand" />

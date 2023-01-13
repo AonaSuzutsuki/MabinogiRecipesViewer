@@ -1,4 +1,4 @@
-﻿namespace CookInformationViewer.Views.WindowService;
+﻿namespace CookInformationViewer.Views.WindowServices;
 
 public interface IGaugeResize
 {

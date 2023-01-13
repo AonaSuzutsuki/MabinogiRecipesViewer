@@ -4,20 +4,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using _7dtd_svmanager_fix_mvvm.Models.Update;
-using _7dtd_svmanager_fix_mvvm.ViewModels.Update;
-using _7dtd_svmanager_fix_mvvm.Views.Update;
 using _7dtd_svmanager_fix_mvvm.Views.UserControls;
 using CommonStyleLib.ExMessageBox;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
-using CookInformationViewer.Models.Update;
-using CookInformationViewer.Views.Update;
+using CookInformationViewer.Models.Updates;
+using CookInformationViewer.Views.Updates;
 using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
-namespace CookInformationViewer.ViewModels.Update
+namespace CookInformationViewer.ViewModels.Updates
 {
     public class UpdFormViewModel : ViewModelWindowStyleBase
     {

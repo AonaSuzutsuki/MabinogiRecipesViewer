@@ -1,8 +1,8 @@
-﻿using _7dtd_svmanager_fix_mvvm.Models.Update;
-using CommonStyleLib.ViewModels;
+﻿using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
+using CookInformationViewer.Models.Updates;
 
-namespace _7dtd_svmanager_fix_mvvm.ViewModels.Update
+namespace CookInformationViewer.ViewModels.Updates
 {
     public class LoadingViewModel : ViewModelBase
     {

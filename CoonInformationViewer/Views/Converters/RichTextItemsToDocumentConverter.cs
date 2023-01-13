@@ -8,7 +8,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using _7dtd_svmanager_fix_mvvm.Views.UserControls;
 
-namespace CookInformationViewer.Views.Converter;
+namespace CookInformationViewer.Views.Converters;
 
 public class RichTextItemsToDocumentConverter : MarkupExtension, IValueConverter
 {

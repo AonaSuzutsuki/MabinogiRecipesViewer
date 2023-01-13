@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CookInformationViewer.Views.Update
+namespace CookInformationViewer.Views.Updates
 {
     /// <summary>
     /// Loading.xaml の相互作用ロジック

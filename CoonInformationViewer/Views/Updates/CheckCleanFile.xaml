@@ -1,16 +1,15 @@
-﻿<Window x:Class="_7dtd_svmanager_fix_mvvm.Views.Update.CheckCleanFile"
+﻿<Window x:Class="CookInformationViewer.Views.Updates.CheckCleanFile"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:commonViews="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
-        xmlns:update="clr-namespace:_7dtd_svmanager_fix_mvvm.Views.Update"
-        xmlns:update1="clr-namespace:_7dtd_svmanager_fix_mvvm.ViewModels.Update"
-        xmlns:node="clr-namespace:_7dtd_svmanager_fix_mvvm.Models.Update.Node"
-        xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
+        xmlns:converters="clr-namespace:CookInformationViewer.Views.Converters"
+        xmlns:updates="clr-namespace:CookInformationViewer.ViewModels.Updates"
+        xmlns:node="clr-namespace:CookInformationViewer.Models.Updates.Node"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance update1:CheckCleanFileViewModel}"
+        d:DataContext="{d:DesignInstance updates:CheckCleanFileViewModel}"
         Title="Check Clean File" Height="450" Width="800" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -39,7 +38,7 @@
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
                 <ResourceDictionary Source="/Styles/TreeViewStyle.xaml" />
                 <ResourceDictionary>
-                    <converter:RichTextItemsToDocumentConverter x:Key="RichTextItemsConverter"/>
+                    <converters:RichTextItemsToDocumentConverter x:Key="RichTextItemsConverter"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

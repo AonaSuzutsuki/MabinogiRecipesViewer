@@ -11,7 +11,7 @@ using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
-using CookInformationViewer.Views.WindowService;
+using CookInformationViewer.Views.WindowServices;
 using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;

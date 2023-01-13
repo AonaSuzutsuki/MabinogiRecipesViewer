@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace _7dtd_svmanager_fix_mvvm.Views.Update
+namespace CookInformationViewer.Views.Updates
 {
     /// <summary>
     /// CheckCleanFile.xaml の相互作用ロジック

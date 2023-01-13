@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace _7dtd_svmanager_fix_mvvm.Models.Update
+namespace CookInformationViewer.Models.Updates
 {
     public static class Zip
     {
