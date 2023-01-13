@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using CommonExtensionLib.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -49,6 +51,10 @@ namespace CookInformationViewer.Models.Db.Context
 
     public class CookInfoContext : DbContext
     {
+#if DEBUG && LOG
+        private readonly FileStream _logStream;
+#endif
+
         private readonly Dictionary<Type, IDbSet> _dbMaps;
         
         public DbSet<DbCookMaterials> CookMaterials { get; set; }
@@ -64,6 +70,10 @@ namespace CookInformationViewer.Models.Db.Context
 
         public CookInfoContext()
         {
+#if DEBUG && LOG
+            _logStream = new FileStream("context.log", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+#endif
+
             _dbMaps = new Dictionary<Type, IDbSet>
             {
                 { typeof(DbCookMaterials), new DbSetWrapper<DbCookMaterials>(CookMaterials) },
@@ -119,6 +129,17 @@ namespace CookInformationViewer.Models.Db.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Data Source={Constants.DatabaseFileName}");
+#if DEBUG
+            optionsBuilder.LogTo(x =>
+            {
+#if LOG
+                var data = new UTF8Encoding(false).GetBytes(x);
+                _logStream.Write(data);
+                _logStream.Flush();
+#endif
+                Debug.WriteLine(x);
+            });
+#endif
         }
 
         public static Type ConvertType(ManageType manageType)
@@ -138,6 +159,15 @@ namespace CookInformationViewer.Models.Db.Context
             };
 
             return typeMap.Get(manageType);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+#if DEBUG && LOG
+            _logStream.Dispose();
+#endif
         }
     }
 }

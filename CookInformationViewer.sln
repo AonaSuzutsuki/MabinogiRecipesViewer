@@ -9,14 +9,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Log|Any CPU = Debug Log|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EDB0F97-E9B6-46F6-AAA3-C7068935C285}.Debug Log|Any CPU.ActiveCfg = Debug Log|Any CPU
+		{8EDB0F97-E9B6-46F6-AAA3-C7068935C285}.Debug Log|Any CPU.Build.0 = Debug Log|Any CPU
 		{8EDB0F97-E9B6-46F6-AAA3-C7068935C285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8EDB0F97-E9B6-46F6-AAA3-C7068935C285}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EDB0F97-E9B6-46F6-AAA3-C7068935C285}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDB0F97-E9B6-46F6-AAA3-C7068935C285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1EEA54-EB57-4455-A2FD-2A9D7543753D}.Debug Log|Any CPU.ActiveCfg = Debug Log|Any CPU
+		{2F1EEA54-EB57-4455-A2FD-2A9D7543753D}.Debug Log|Any CPU.Build.0 = Debug Log|Any CPU
 		{2F1EEA54-EB57-4455-A2FD-2A9D7543753D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F1EEA54-EB57-4455-A2FD-2A9D7543753D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F1EEA54-EB57-4455-A2FD-2A9D7543753D}.Release|Any CPU.ActiveCfg = Release|Any CPU

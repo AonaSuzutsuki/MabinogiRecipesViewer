@@ -344,12 +344,16 @@ namespace CookInformationViewer.Models.Db.Manager
 
     public class ContextManager : IDisposable
     {
-        protected readonly CookInfoContext Context = new();
+        protected readonly CookInfoContext Context;
         protected readonly SqlExecutor Executor;
         
         public ContextManager()
         {
+            Context = new CookInfoContext();
             Executor = new SqlExecutor(Constants.DatabaseFileName);
+#if DEBUG
+            Executor.SqlExecutedObservable.Subscribe(x => Debug.WriteLine(x));
+#endif
 
             var tables = TableColumns.GetTables().Values.ToList();
             foreach (var table in tables.Where(table => !Executor.ExistsTable(table.TableName)))

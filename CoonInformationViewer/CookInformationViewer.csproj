@@ -7,6 +7,19 @@
 	<LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
 	<Copyright>Copyright (C) Aona Suzutsuki 2022 - 2023</Copyright>
+	<Configurations>Debug;Release;Debug Log</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Log|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;DEBUG;LOG</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

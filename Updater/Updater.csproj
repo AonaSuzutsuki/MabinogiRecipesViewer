@@ -14,6 +14,7 @@
     <AssemblyName>update</AssemblyName>
     <ApplicationIcon />
     <StartupObject />
+    <Configurations>Debug;Release;Debug Log</Configurations>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
