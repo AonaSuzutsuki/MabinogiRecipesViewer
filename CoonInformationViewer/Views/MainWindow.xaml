@@ -12,7 +12,7 @@
         xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-        Title="Mabinogi Cooking Recipes" Height="600" Width="1000" Style="{DynamicResource WindowStyle}">
+        Title="Mabinogi Cooking Recipes" Height="700" Width="1000" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -193,6 +193,7 @@
                                     <RowDefinition Height="30" />
                                     <RowDefinition Height="100" />
                                     <RowDefinition Height="30" />
+                                    <RowDefinition Height="55" />
                                     <RowDefinition Height="2*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
@@ -325,7 +326,87 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <ScrollViewer Grid.Row="3" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="5" />
+                                            <RowDefinition Height="25" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid>
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                                <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item1Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item1RecipeId}" Style="{StaticResource HyperLinkButton}" />
+                                            </Grid>
+
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:BooleanVisibilityConverter}}">
+                                                <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item1Name}" />
+                                            </Grid>
+                                        </Grid>
+
+                                        <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
+                                            <TextBlock Text="- " />
+                                            <TextBlock Text="{Binding SelectedRecipe.Value.Item1Amount}" />
+                                            <TextBlock Text="%" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="5" />
+                                            <RowDefinition Height="25" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid>
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                                <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item2Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item2RecipeId}" Style="{StaticResource HyperLinkButton}" />
+                                            </Grid>
+
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:BooleanVisibilityConverter}}">
+                                                <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item2Name}" />
+                                            </Grid>
+                                        </Grid>
+
+                                        <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
+                                            <TextBlock Text="- " />
+                                            <TextBlock Text="{Binding SelectedRecipe.Value.Item2Amount}" />
+                                            <TextBlock Text="%" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Grid.Column="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="5" />
+                                            <RowDefinition Height="25" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid>
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
+                                                <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item3Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item3RecipeId}" Style="{StaticResource HyperLinkButton}" />
+                                            </Grid>
+
+                                            <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:BooleanVisibilityConverter}}">
+                                                <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item3Name}" />
+                                            </Grid>
+                                        </Grid>
+
+                                        <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
+                                            <TextBlock Text="- " />
+                                            <TextBlock Text="{Binding SelectedRecipe.Value.Item3Amount}" />
+                                            <TextBlock Text="%" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+
+                                <ScrollViewer Grid.Row="4" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
                                     <Grid>
 
                                         <Grid.ColumnDefinitions>
@@ -334,97 +415,22 @@
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
 
-                                        <Border>
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="30" />
-                                                    <RowDefinition Height="5" />
-                                                    <RowDefinition Height="25" />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
+                                        <Grid>
+                                            <ListBox ItemsSource="{Binding SelectedRecipe.Value.Item1Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item1LocationListBox}" />
+                                        </Grid>
 
-                                                <Grid>
-                                                    <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
-                                                        <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item1Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item1RecipeId}" Style="{StaticResource HyperLinkButton}" />
-                                                    </Grid>
+                                        <Grid Grid.Column="1">
+                                            <ListBox ItemsSource="{Binding SelectedRecipe.Value.Item2Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item2LocationListBox}" />
+                                        </Grid>
 
-                                                    <Grid Visibility="{Binding SelectedRecipe.Value.IsItem1Material, Converter={converter:BooleanVisibilityConverter}}">
-                                                        <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item1Name}" />
-                                                    </Grid>
-                                                </Grid>
-
-                                                <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
-                                                    <TextBlock Text="- " />
-                                                    <TextBlock Text="{Binding SelectedRecipe.Value.Item1Amount}" />
-                                                    <TextBlock Text="%" />
-                                                </StackPanel>
-
-                                                <ListBox Grid.Row="3" ItemsSource="{Binding SelectedRecipe.Value.Item1Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item1LocationListBox}" />
-                                            </Grid>
-                                        </Border>
-
-                                        <Border Grid.Column="1">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="30" />
-                                                    <RowDefinition Height="5" />
-                                                    <RowDefinition Height="25" />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
-
-                                                <Grid>
-                                                    <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
-                                                        <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item2Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item2RecipeId}" Style="{StaticResource HyperLinkButton}" />
-                                                    </Grid>
-
-                                                    <Grid Visibility="{Binding SelectedRecipe.Value.IsItem2Material, Converter={converter:BooleanVisibilityConverter}}">
-                                                        <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item2Name}" />
-                                                    </Grid>
-                                                </Grid>
-
-                                                <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
-                                                    <TextBlock Text="- " />
-                                                    <TextBlock Text="{Binding SelectedRecipe.Value.Item2Amount}" />
-                                                    <TextBlock Text="%" />
-                                                </StackPanel>
-
-                                                <ListBox Grid.Row="3" ItemsSource="{Binding SelectedRecipe.Value.Item2Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item2LocationListBox}" />
-                                            </Grid>
-                                        </Border>
-
-                                        <Border Grid.Column="2">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="30" />
-                                                    <RowDefinition Height="5" />
-                                                    <RowDefinition Height="25" />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
-
-                                                <Grid>
-                                                    <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:ReverseBooleanVisibilityConverter}}">
-                                                        <Button Cursor="Hand" VerticalAlignment="Top" Content="{Binding SelectedRecipe.Value.Item3Name}" Command="{Binding MaterialLinkCommand}" CommandParameter="{Binding SelectedRecipe.Value.Item3RecipeId}" Style="{StaticResource HyperLinkButton}" />
-                                                    </Grid>
-
-                                                    <Grid Visibility="{Binding SelectedRecipe.Value.IsItem3Material, Converter={converter:BooleanVisibilityConverter}}">
-                                                        <Label FontSize="12" Content="{Binding SelectedRecipe.Value.Item3Name}" />
-                                                    </Grid>
-                                                </Grid>
-
-                                                <StackPanel Grid.Row="2" Margin="5,0,0,0" Orientation="Horizontal">
-                                                    <TextBlock Text="- " />
-                                                    <TextBlock Text="{Binding SelectedRecipe.Value.Item3Amount}" />
-                                                    <TextBlock Text="%" />
-                                                </StackPanel>
-
-                                                <ListBox Grid.Row="3" ItemsSource="{Binding SelectedRecipe.Value.Item3Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item3LocationListBox}" />
-                                            </Grid>
-                                        </Border>
+                                        <Grid Grid.Column="2">
+                                            <ListBox ItemsSource="{Binding SelectedRecipe.Value.Item3Locations}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MaterialLocationListBoxItem}" Style="{StaticResource Item3LocationListBox}" />
+                                        </Grid>
 
                                     </Grid>
                                 </ScrollViewer>
 
-                                <Grid Grid.Row="4">
+                                <Grid Grid.Row="5">
                                     <ListView ItemsSource="{Binding SelectedRecipe.Value.Effects}">
                                         <ListView.View>
                                             <GridView>
