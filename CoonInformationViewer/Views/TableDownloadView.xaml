@@ -9,7 +9,7 @@
         xmlns:converters="clr-namespace:CookInformationViewer.Views.Converter"
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance viewModels:TableDownloadViewModel}" BorderThickness="0"
+        d:DataContext="{d:DesignInstance viewModels:TableDownloadViewModel}"
         Title="データ更新の確認" Height="450" Width="800" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
@@ -45,9 +45,6 @@
     </Window.Resources>
 
     <Grid Style="{StaticResource ResourceKey=BackgroundGrid}">
-        <Border BorderThickness="1"
-                BorderBrush="{Binding AroundBorderColor.Value}"
-                Opacity="{Binding AroundBorderOpacity.Value}" />
 
         <Grid Grid.ColumnSpan="2" Margin="{Binding MainWindowMargin}">
 

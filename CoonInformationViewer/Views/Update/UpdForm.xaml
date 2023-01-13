@@ -14,7 +14,7 @@
         d:DataContext="{d:DesignInstance update2:UpdFormViewModel}"
         ShowInTaskbar="True" Topmost="False" WindowStartupLocation="CenterScreen" WindowStyle="None"
         TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True"
-        Title="Update Form" Height="400" Width="600" ResizeMode="CanResize">
+        Title="Update Form" Height="400" Width="600" ResizeMode="CanResize" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -37,6 +37,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Window.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
@@ -48,7 +49,6 @@
     </Window.Resources>
 
     <Grid Style="{DynamicResource ResourceKey=BackgroundGrid}">
-        <Border Name="AroundBorder" BorderBrush="{Binding AroundBorderColor.Value}" BorderThickness="1" />
 
         <StackPanel Orientation="Horizontal" Margin="5,0,0,0"
                         HorizontalAlignment="left"

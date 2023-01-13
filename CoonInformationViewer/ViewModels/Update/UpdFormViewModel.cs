@@ -19,7 +19,7 @@ using Reactive.Bindings.Extensions;
 
 namespace CookInformationViewer.ViewModels.Update
 {
-    public class UpdFormViewModel : ViewModelBase
+    public class UpdFormViewModel : ViewModelWindowStyleBase
     {
         private readonly UpdFormModel _model;
         public UpdFormViewModel(WindowService windowService, UpdFormModel model, bool isAsync = false) : base(windowService, model)
@@ -33,7 +33,7 @@ namespace CookInformationViewer.ViewModels.Update
 
             VersionListView = model.ToReactivePropertyAsSynchronized(m => m.VersionList).AddTo(CompositeDisposable);
             VersionListSelectedIndex = model.ToReactivePropertyAsSynchronized(m => m.VersionListSelectedIndex).AddTo(CompositeDisposable);
-            CleanUpdateBtIsEnabled = model.ToReactivePropertyAsSynchronized(m => m.CanUpdate).AddTo(CompositeDisposable);
+            CleanUpdateBtIsEnabled = new ReactiveProperty<bool>(true);
             UpdateBtIsEnabled = model.ToReactivePropertyAsSynchronized(m => m.CanUpdate).AddTo(CompositeDisposable);
             CancelBtIsEnabled = model.ToReactivePropertyAsSynchronized(m => m.CanCancel).AddTo(CompositeDisposable);
             RichDetailText = model.ToReactivePropertyAsSynchronized(m => m.RichDetailText).AddTo(CompositeDisposable);
@@ -83,6 +83,8 @@ namespace CookInformationViewer.ViewModels.Update
                     return;
                 foreach (var exceptionInnerException in t.Exception.InnerExceptions)
                     App.ShowAndWriteException(exceptionInnerException);
+
+                CleanUpdateBtIsEnabled.Value = false;
             }, TaskContinuationOptions.OnlyOnFaulted);
             task.ContinueWith(t =>
             {

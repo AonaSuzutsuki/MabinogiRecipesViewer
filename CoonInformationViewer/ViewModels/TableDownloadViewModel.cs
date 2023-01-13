@@ -56,7 +56,7 @@ namespace CookInformationViewer.ViewModels
         }
     }
 
-    public class TableDownloadViewModel : ViewModelBase
+    public class TableDownloadViewModel : ViewModelWindowStyleBase
     {
         #region Fields
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,7 +29,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CookInformationViewer.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelWindowStyleBase
     {
         #region Fields
 
@@ -43,12 +44,15 @@ namespace CookInformationViewer.ViewModels
 
         #region Properties
 
+        public ReactiveProperty<string> UnderMessageLabelText { get; set; }
+
         public ReactiveProperty<bool> CanGoBack { get; set; }
         public ReactiveProperty<bool> CanGoForward { get; set; }
 
         public ReactiveProperty<string> SearchText { get; set; }
 
         public ReadOnlyReactiveCollection<CategoryInfo> Categories { get; set; }
+        public ReactiveProperty<int> SelectedCategoryIndex { get; set; }
 
         public ReadOnlyReactiveCollection<RecipeInfo> RecipesList { get; set; }
 
@@ -81,6 +85,8 @@ namespace CookInformationViewer.ViewModels
             _mainWindowService = windowService;
             _model = model;
 
+            UnderMessageLabelText = new ReactiveProperty<string>();
+
             CanGoBack = new ReactiveProperty<bool>();
             CanGoForward = new ReactiveProperty<bool>();
 
@@ -90,7 +96,10 @@ namespace CookInformationViewer.ViewModels
                 model.NarrowDownRecipes(SearchText.Value);
             };
 
+            SelectedCategoryIndex = new ReactiveProperty<int>();
             Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+            Categories.CollectionChangedAsObservable().Subscribe(x =>
+                SelectedCategoryIndex.Value = _model.SelectedCategoryIndex());
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
@@ -113,22 +122,38 @@ namespace CookInformationViewer.ViewModels
 
             Task.Factory.StartNew(async () =>
             {
-                await _model.Initialize().ContinueWith(_ =>
+                SetMessage("カテゴリー読み込み中...");
+
+                _model.Initialize();
+
+                if (SettingLoader.Instance.IsCheckDataUpdate)
                 {
-                    if (!_model.AvailableUpdate)
-                        return;
+                    SetMessage("データベースの更新を確認中...");
 
-                    var dr = WindowManageService.MessageBoxDispatchShow("データベースに更新があります。更新を行いますか？",
-                        "データベースに更新があります",
-                        ExMessageBoxBase.MessageType.Exclamation, ExMessageBoxBase.ButtonType.YesNo);
-
-                    if (dr == ExMessageBoxBase.DialogResult.Yes)
+                    await _model.CheckDatabaseUpdate().ContinueWith(_ =>
                     {
-                        WindowManageService.Dispatch(UpdateTable);
-                    }
-                });
+                        if (!_model.AvailableUpdate)
+                            return;
 
-                await CheckUpdate();
+                        var dr = WindowManageService.MessageBoxDispatchShow("データベースに更新があります。更新を行いますか？",
+                            "データベースに更新があります",
+                            ExMessageBoxBase.MessageType.Exclamation, ExMessageBoxBase.ButtonType.YesNo);
+
+                        if (dr == ExMessageBoxBase.DialogResult.Yes)
+                        {
+                            WindowManageService.Dispatch(UpdateTable);
+                        }
+                    });
+                }
+
+                if (SettingLoader.Instance.IsCheckProgramUpdate)
+                {
+                    SetMessage("プログラムの更新を確認中...");
+
+                    await CheckUpdate();
+                }
+
+                SetMessage();
             });
         }
 
@@ -176,6 +201,8 @@ namespace CookInformationViewer.ViewModels
             if (recipe == null)
                 return;
 
+            SetMessage("レシピを読み込み中...");
+
             _model.SelectRecipe(recipe);
             SelectedRecipe.Value = recipe;
             _overlayModel.SelectedRecipe = recipe;
@@ -191,6 +218,8 @@ namespace CookInformationViewer.ViewModels
             _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item1Amount, 0);
             _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item2Amount, 1);
             _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item3Amount, 2);
+
+            SetMessage();
         }
 
         public void OpenOverlay()
@@ -328,6 +357,11 @@ namespace CookInformationViewer.ViewModels
                     });
                 }
             }
+        }
+
+        private void SetMessage(string? message = null)
+        {
+            UnderMessageLabelText.Value = message ?? "準備完了";
         }
     }
 }

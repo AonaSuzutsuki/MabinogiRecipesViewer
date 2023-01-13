@@ -11,7 +11,7 @@
         xmlns:converter="clr-namespace:CookInformationViewer.Views.Converter"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance update1:CheckCleanFileViewModel}"
-        Title="Check Clean File" Height="450" Width="800" WindowStartupLocation="CenterOwner">
+        Title="Check Clean File" Height="450" Width="800" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding Loaded}" />
@@ -33,6 +33,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Window.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
@@ -45,7 +46,6 @@
     </Window.Resources>
 
     <Grid Style="{DynamicResource ResourceKey=BackgroundGrid}">
-        <Border Name="AroundBorder" BorderBrush="{Binding AroundBorderColor.Value}" BorderThickness="1" />
 
         <StackPanel Orientation="Horizontal" Margin="5,0,0,0"
                         HorizontalAlignment="left"

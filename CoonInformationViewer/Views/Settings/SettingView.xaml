@@ -9,7 +9,7 @@
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels.Settings"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:SettingViewModel}"
-        Title="設定" Height="300" Width="300" BorderThickness="0" Style="{DynamicResource WindowStyle}">
+        Title="設定" Height="300" Width="300" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -47,9 +47,6 @@
     </Window.Resources>
 
     <Grid Style="{StaticResource ResourceKey=BackgroundGrid}">
-        <Border BorderThickness="1"
-                BorderBrush="{Binding AroundBorderColor.Value}"
-                Opacity="{Binding AroundBorderOpacity.Value}" />
 
         <Grid Grid.ColumnSpan="2" Margin="{Binding MainWindowMargin}">
 

@@ -15,7 +15,7 @@ using Reactive.Bindings.Extensions;
 
 namespace CookInformationViewer.ViewModels.Settings
 {
-    public class SettingViewModel : ViewModelBase
+    public class SettingViewModel : ViewModelWindowStyleBase
     {
 
         #region Fields

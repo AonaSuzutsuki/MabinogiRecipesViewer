@@ -263,7 +263,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
             using var ms = new MemoryStream(imagesData);
             using var archive = new ZipArchive(ms, ZipArchiveMode.Read);
-
+            
             if (materials != null)
             {
                 var length = db.Count() + materials.Count;
@@ -289,8 +289,12 @@ namespace CookInformationViewer.Models.Db.Manager
                         if (entry != null)
                         {
                             using var entryStream = entry.Open();
+                            using var entryMemory = new MemoryStream();
+                            entryStream.CopyTo(entryMemory);
+                            entryMemory.Position = 0;
+
                             var imageData = new byte[entry.Length];
-                            _ = entryStream.Read(imageData);
+                            _ = entryMemory.Read(imageData);
 
                             material.ImageData = imageData;
                         }

@@ -9,7 +9,7 @@ using Reactive.Bindings.Extensions;
 
 namespace _7dtd_svmanager_fix_mvvm.ViewModels.Update
 {
-    public class CheckCleanFileViewModel : ViewModelBase
+    public class CheckCleanFileViewModel : ViewModelWindowStyleBase
     {
         private readonly CheckCleanFileModel _model;
 

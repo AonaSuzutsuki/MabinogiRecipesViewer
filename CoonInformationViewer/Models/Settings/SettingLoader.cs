@@ -9,7 +9,7 @@ namespace CookInformationViewer.Models.Settings
 {
     public class SettingLoader
     {
-        public static SettingLoader Instance => new();
+        public static SettingLoader Instance { get; } = new();
 
         private readonly IniLoader _iniLoader;
 

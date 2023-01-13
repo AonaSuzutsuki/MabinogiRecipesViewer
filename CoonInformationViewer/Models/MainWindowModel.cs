@@ -270,12 +270,19 @@ namespace CookInformationViewer.Models
         private CategoryInfo? _currentCategoryInfo;
         private RecipeInfo? _currentRecipeInfo;
 
+
         #region Properties
 
         public ObservableCollection<CategoryInfo> Categories
         {
             get => _categories;
             set => SetProperty(ref _categories, value);
+        }
+
+        public CategoryInfo? CurrentCategoryInfo
+        {
+            get => _currentCategoryInfo;
+            set => SetProperty(ref _currentCategoryInfo, value);
         }
 
         public ObservableCollection<RecipeInfo> Recipes
@@ -293,10 +300,13 @@ namespace CookInformationViewer.Models
 
         }
 
-        public async Task Initialize()
+        public void Initialize()
         {
             LoadCategories();
+        }
 
+        public async Task CheckDatabaseUpdate()
+        {
             if (_setting.IsCheckDataUpdate)
             {
                 await _contextManager.AvailableTableUpdateCheck();
@@ -320,8 +330,21 @@ namespace CookInformationViewer.Models
 
             LoadCategories();
 
-            if (_currentCategoryInfo != null)
-                SelectCategory(_currentCategoryInfo);
+            if (CurrentCategoryInfo != null)
+            {
+                var category = _categories.FirstOrDefault(x => x.Id == CurrentCategoryInfo.Id);
+                if (category != null)
+                {
+                    SelectCategory(category);
+                }
+            }
+        }
+
+        public int SelectedCategoryIndex()
+        {
+            if (CurrentCategoryInfo == null)
+                return -1;
+            return _categories.IndexOf(CurrentCategoryInfo);
         }
 
         public void LoadCategories()
@@ -342,8 +365,7 @@ namespace CookInformationViewer.Models
 
         public void SelectCategory(CategoryInfo category)
         {
-            _currentCategoryInfo = category;
-
+            CurrentCategoryInfo = category;
             var recipe = _contextManager.GetItems(x =>
             {
                 return (from m in x.CookRecipes
