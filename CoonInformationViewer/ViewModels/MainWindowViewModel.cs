@@ -171,7 +171,7 @@ namespace CookInformationViewer.ViewModels
         public void OpenSearchWindow()
         {
             var model = new SearchWindowModel();
-            var vm = new SearchWindowViewModel(new WindowService(), this, model, _model);
+            var vm = new SearchWindowViewModel(new WindowService(), _mainWindowService, this, model, _model);
             WindowManageService.ShowNonOwner<SearchWindow>(vm);
         }
 
@@ -211,7 +211,7 @@ namespace CookInformationViewer.ViewModels
         {
             if (recipe == null)
                 return;
-
+            
             SetMessage("レシピを読み込み中...");
 
             _model.SelectRecipe(recipe);

@@ -12,6 +12,7 @@ using CookInformationViewer.Models;
 using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Views;
 using CookInformationViewer.Views.Searches;
+using CookInformationViewer.Views.WindowServices;
 using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -23,6 +24,7 @@ namespace CookInformationViewer.ViewModels.Searchers
         private readonly SearchWindowModel _model;
         private readonly MainWindowViewModel _mainWindowViewModel;
         private readonly MainWindowModel _mainWindowModel;
+        private readonly MainWindowWindowService _mainWindowService;
 
         public ReactiveProperty<string> SearchText { get; set; }
         public ReactiveProperty<bool> IsMaterialSearch { get; set; }
@@ -31,12 +33,13 @@ namespace CookInformationViewer.ViewModels.Searchers
         public ICommand SearchCommand { get; set; }
         public ICommand SearchSelectedItemChangedCommand { get; set; }
 
-        public SearchWindowViewModel(IWindowService windowService, MainWindowViewModel mainWindowViewModel,
+        public SearchWindowViewModel(IWindowService windowService, MainWindowWindowService mainWindowService, MainWindowViewModel mainWindowViewModel,
             SearchWindowModel model, MainWindowModel mainWindowModel) : base(windowService, model)
         {
             _model = model;
             _mainWindowViewModel = mainWindowViewModel;
             _mainWindowModel = mainWindowModel;
+            _mainWindowService = mainWindowService;
 
             SearchText = new ReactiveProperty<string>();
             IsMaterialSearch = new ReactiveProperty<bool>();
@@ -59,11 +62,17 @@ namespace CookInformationViewer.ViewModels.Searchers
             _mainWindowModel.SelectCategory(args);
 
             var recipe = _mainWindowModel.GetRecipeInfo(args);
-            if (recipe != null)
-            {
-                _mainWindowViewModel.RecipesListSelectionChanged(recipe);
-                recipe.IsSelected = true;
-            }
+            if (recipe == null)
+                return;
+
+            _mainWindowViewModel.RecipesListSelectionChanged(recipe);
+            recipe.IsSelected = true;
+
+            if (_mainWindowService.MainWindow == null)
+                return;
+
+            _mainWindowService.MainWindow.IsSearched = true;
+            _mainWindowService.MainWindow.ScrollItem();
         }
     }
 }
