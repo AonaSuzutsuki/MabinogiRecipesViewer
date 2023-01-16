@@ -12,7 +12,7 @@
         xmlns:controls="clr-namespace:CookInformationViewer.Views.UserControls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:SearchWindowViewModel}"
-        Title="レシピ検索" Height="450" Width="800" Style="{DynamicResource WindowStyle}">
+        Title="レシピ検索" Height="450" Width="300" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -77,12 +77,63 @@
             </StackPanel>
 
             <Grid Margin="5,25,5,5">
-                <controls:BindableSelectedItemTreeView ItemsSource="{Binding SearchItems}" Background="Transparent">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Grid VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="5" />
+                        <RowDefinition />
+                        <RowDefinition Height="5" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Grid Height="25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Content="検索ワード" />
+                        <TextBox Text="{Binding SearchText.Value}" Grid.Column="2" />
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <CheckBox IsChecked="{Binding IsMaterialSearch.Value}" Content="素材検索" />
+                    </Grid>
+
+                    <Grid Grid.Row="4">
+                        <Button Content="検索" Width="100" Height="30" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding SearchCommand}" />
+                    </Grid>
+                </Grid>
+
+                <controls:BindableSelectedItemTreeView Grid.Row="2" ItemsSource="{Binding SearchItems}" Background="Transparent">
+                    <i:Interaction.Triggers>
+                        <!--<i:EventTrigger EventName="SelectedItemChanged">
+                            <i:InvokeCommandAction Command="{Binding SearchSelectedItemChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=controls:BindableSelectedItemTreeView}, Path=SelectedItem}" />
+                        </i:EventTrigger>-->
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding SearchSelectedItemChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=controls:BindableSelectedItemTreeView}, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
                     <controls:BindableSelectedItemTreeView.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type models:SearchNode}" ItemsSource="{Binding Children}">
                             <Label Content="{Binding Name}" />
                         </HierarchicalDataTemplate>
                     </controls:BindableSelectedItemTreeView.ItemTemplate>
+
+                    <controls:BindableSelectedItemTreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded}"/>
+                        </Style>
+                    </controls:BindableSelectedItemTreeView.ItemContainerStyle>
                 </controls:BindableSelectedItemTreeView>
             </Grid>
 

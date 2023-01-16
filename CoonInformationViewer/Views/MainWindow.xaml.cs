@@ -22,7 +22,7 @@ namespace CookInformationViewer.Views
     /// </summary>
     public partial class MainWindow : Window , IGaugeResize, IDisposable
     {
-        private IDisposable _model;
+        private readonly IDisposable _model;
 
         public MainWindow()
         {

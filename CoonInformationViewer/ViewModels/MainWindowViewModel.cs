@@ -100,10 +100,10 @@ namespace CookInformationViewer.ViewModels
                 model.NarrowDownRecipes(SearchText.Value);
             };
 
-            SelectedCategoryIndex = new ReactiveProperty<int>();
+            SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty()
+                .AddTo(CompositeDisposable);
             Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
-            Categories.CollectionChangedAsObservable().Subscribe(x =>
-                SelectedCategoryIndex.Value = _model.SelectedCategoryIndex());
+            Categories.CollectionChangedAsObservable().Subscribe(x => _model.SetSelectedCategoryIndex());
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
@@ -172,7 +172,7 @@ namespace CookInformationViewer.ViewModels
         public void OpenSearchWindow()
         {
             var model = new SearchWindowModel();
-            var vm = new SearchWindowViewModel(new WindowService(), model);
+            var vm = new SearchWindowViewModel(new WindowService(), this, model, _model);
             WindowManageService.ShowNonOwner<SearchWindow>(vm);
         }
 
