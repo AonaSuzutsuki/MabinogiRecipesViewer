@@ -30,8 +30,16 @@ using UpdateLib.Update;
 
 namespace CookInformationViewer.Models
 {
-    public class CategoryInfo
+    public class CategoryInfo : BindableBase
     {
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
@@ -279,7 +287,6 @@ namespace CookInformationViewer.Models
         private ObservableCollection<RecipeInfo> _recipes = new();
         private List<RecipeInfo> _recipeBaseItems = new();
         private int _selectedCategoryIndex;
-        private int _selectedRecipeIndex = -1;
 
         private CategoryInfo? _currentCategoryInfo;
         private RecipeInfo? _currentRecipeInfo;
@@ -311,20 +318,10 @@ namespace CookInformationViewer.Models
             set => SetProperty(ref _selectedCategoryIndex, value);
         }
 
-        public int SelectedRecipeIndex
-        {
-            get => _selectedRecipeIndex;
-            set => SetProperty(ref _selectedRecipeIndex, value);
-        }
-
         public bool AvailableUpdate => _contextManager.AvailableUpdate;
 
         #endregion
-
-        public MainWindowModel()
-        {
-
-        }
+        
 
         public void Initialize()
         {
@@ -362,24 +359,9 @@ namespace CookInformationViewer.Models
                 if (category != null)
                 {
                     SelectCategory(category);
+                    category.IsSelected = true;
                 }
             }
-        }
-
-        public void SetSelectedCategoryIndex()
-        {
-            if (CurrentCategoryInfo == null)
-                return;
-
-            SelectedCategoryIndex = _categories.IndexOf(CurrentCategoryInfo);
-        }
-
-        public void SetIsSelectedOnCurrentRecipe()
-        {
-            if (_currentRecipeInfo == null)
-                return;
-            
-            _currentRecipeInfo.IsSelected = true;
         }
 
         public void LoadCategories()
@@ -626,7 +608,7 @@ namespace CookInformationViewer.Models
                 return;
 
             SelectCategory(categoryInfo);
-
+            categoryInfo.IsSelected = true;
         }
 
         public void Dispose()

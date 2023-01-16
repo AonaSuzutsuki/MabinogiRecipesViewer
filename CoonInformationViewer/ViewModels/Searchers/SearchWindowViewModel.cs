@@ -57,13 +57,12 @@ namespace CookInformationViewer.ViewModels.Searchers
                 return;
 
             _mainWindowModel.SelectCategory(args);
-            _mainWindowModel.SetSelectedCategoryIndex();
 
             var recipe = _mainWindowModel.GetRecipeInfo(args);
             if (recipe != null)
             {
                 _mainWindowViewModel.RecipesListSelectionChanged(recipe);
-                //_mainWindowModel.SetIsSelectedOnCurrentRecipe();
+                recipe.IsSelected = true;
             }
         }
     }

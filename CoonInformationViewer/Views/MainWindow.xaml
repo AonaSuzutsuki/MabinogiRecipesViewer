@@ -131,11 +131,17 @@
                                     <Label Content="{Binding Name}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
+
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="IsSelected" Value="{Binding Path=IsSelected}"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
                         </ComboBox>
 
                         <TextBox Grid.Row="2" Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" behaviors:PlaceHolderBehavior.PlaceHolder="Filter" />
 
-                        <ListBox Grid.Row="4" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox2}">
+                        <ListBox Name="RecipesListBox" Grid.Row="4" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox2}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">

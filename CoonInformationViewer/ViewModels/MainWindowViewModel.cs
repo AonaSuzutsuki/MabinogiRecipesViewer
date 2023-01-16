@@ -103,7 +103,6 @@ namespace CookInformationViewer.ViewModels
             SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty()
                 .AddTo(CompositeDisposable);
             Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
-            Categories.CollectionChangedAsObservable().Subscribe(x => _model.SetSelectedCategoryIndex());
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 

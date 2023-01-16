@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using CookInformationViewer.Models;
 using CookInformationViewer.ViewModels;
 using CookInformationViewer.Views.WindowServices;
@@ -20,9 +23,9 @@ namespace CookInformationViewer.Views
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window , IGaugeResize, IDisposable
+    public partial class MainWindow : Window, IDisposable, IMainWindow
     {
-        private readonly IDisposable _model;
+        private readonly MainWindowModel _model;
 
         public MainWindow()
         {
