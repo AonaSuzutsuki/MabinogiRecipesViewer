@@ -355,10 +355,16 @@ namespace CookInformationViewer.Models.Db.Manager
             Executor.SqlExecutedObservable.Subscribe(x => Debug.WriteLine(x));
 #endif
 
-            var tables = TableColumns.GetTables().Values.ToList();
-            foreach (var table in tables.Where(table => !Executor.ExistsTable(table.TableName)))
+            var tables = TableColumns.GetTables();
+            var notExistsTables = Executor.ExistsObjects("table", 
+                tables.Values.Select(x => x.TableName).ToArray());
+            foreach (var notExistsTable in notExistsTables)
             {
-                Executor.CreateTable(table);
+                if (!tables.ContainsKey(notExistsTable))
+                    return;
+
+                var tableInfo = tables[notExistsTable];
+                Executor.CreateTable(tableInfo);
             }
         }
 
