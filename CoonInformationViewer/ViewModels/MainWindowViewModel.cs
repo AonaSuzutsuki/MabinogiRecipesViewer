@@ -14,11 +14,14 @@ using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
 using CookInformationViewer.Models.Db.Context;
+using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Models.Settings;
+using CookInformationViewer.ViewModels.Searchers;
 using CookInformationViewer.Models.Updates;
 using CookInformationViewer.ViewModels.Settings;
 using CookInformationViewer.ViewModels.Updates;
 using CookInformationViewer.Views;
+using CookInformationViewer.Views.Searches;
 using CookInformationViewer.Views.Settings;
 using CookInformationViewer.Views.Updates;
 using CookInformationViewer.Views.WindowServices;
@@ -63,6 +66,7 @@ namespace CookInformationViewer.ViewModels
         #region Event Properties
         
         public ICommand OpenSettingCommand { get; set; }
+        public ICommand OpenSearchWindowCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
         public ICommand OpenVersionInfoCommand { get; set; }
@@ -96,14 +100,14 @@ namespace CookInformationViewer.ViewModels
                 model.NarrowDownRecipes(SearchText.Value);
             };
 
-            SelectedCategoryIndex = new ReactiveProperty<int>();
+            SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty()
+                .AddTo(CompositeDisposable);
             Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
-            Categories.CollectionChangedAsObservable().Subscribe(x =>
-                SelectedCategoryIndex.Value = _model.SelectedCategoryIndex());
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
             OpenSettingCommand = new DelegateCommand(OpenSetting);
+            OpenSearchWindowCommand = new DelegateCommand(OpenSearchWindow);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
@@ -164,6 +168,13 @@ namespace CookInformationViewer.ViewModels
             WindowManageService.ShowDialog<SettingView>(vm);
         }
 
+        public void OpenSearchWindow()
+        {
+            var model = new SearchWindowModel();
+            var vm = new SearchWindowViewModel(new WindowService(), _mainWindowService, this, model, _model);
+            WindowManageService.ShowNonOwner<SearchWindow>(vm);
+        }
+
         public void UpdateTable()
         {
             var model = new TableDownloadModel(_model);
@@ -200,7 +211,7 @@ namespace CookInformationViewer.ViewModels
         {
             if (recipe == null)
                 return;
-
+            
             SetMessage("レシピを読み込み中...");
 
             _model.SelectRecipe(recipe);

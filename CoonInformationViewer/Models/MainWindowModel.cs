@@ -18,24 +18,42 @@ using CookInformationViewer.Models.Converters;
 using CookInformationViewer.Models.Db;
 using CookInformationViewer.Models.Db.Context;
 using CookInformationViewer.Models.Db.Manager;
+using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Models.Settings;
 using CookInformationViewer.Models.Updates;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Prism.Mvvm;
 using SavannahXmlLib.XmlWrapper;
 using UpdateLib.Http;
 using UpdateLib.Update;
 
 namespace CookInformationViewer.Models
 {
-    public class CategoryInfo
+    public class CategoryInfo : BindableBase
     {
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 
-    public class RecipeInfo
+    public class RecipeInfo : BindableBase
     {
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Item1Name { get; set; }
@@ -268,6 +286,7 @@ namespace CookInformationViewer.Models
         private ObservableCollection<CategoryInfo> _categories = new();
         private ObservableCollection<RecipeInfo> _recipes = new();
         private List<RecipeInfo> _recipeBaseItems = new();
+        private int _selectedCategoryIndex;
 
         private CategoryInfo? _currentCategoryInfo;
         private RecipeInfo? _currentRecipeInfo;
@@ -293,14 +312,16 @@ namespace CookInformationViewer.Models
             set => SetProperty(ref _recipes, value);
         }
 
+        public int SelectedCategoryIndex
+        {
+            get => _selectedCategoryIndex;
+            set => SetProperty(ref _selectedCategoryIndex, value);
+        }
+
         public bool AvailableUpdate => _contextManager.AvailableUpdate;
 
         #endregion
-
-        public MainWindowModel()
-        {
-
-        }
+        
 
         public void Initialize()
         {
@@ -338,15 +359,9 @@ namespace CookInformationViewer.Models
                 if (category != null)
                 {
                     SelectCategory(category);
+                    category.IsSelected = true;
                 }
             }
-        }
-
-        public int SelectedCategoryIndex()
-        {
-            if (CurrentCategoryInfo == null)
-                return -1;
-            return _categories.IndexOf(CurrentCategoryInfo);
         }
 
         public void LoadCategories()
@@ -571,6 +586,29 @@ namespace CookInformationViewer.Models
 
             recipe.IsMaterial = isMaterials;
             recipe.IsNotFestival = isNotFestival;
+        }
+
+        public RecipeInfo? GetRecipeInfo(SearchNode node)
+        {
+            var recipe = Recipes.FirstOrDefault(x => x.Name == node.Name);
+            if (recipe == null)
+                return null;
+
+            return recipe;
+        }
+
+        public void SelectCategory(SearchNode node)
+        {
+            var parent = node.Parent;
+            if (parent == null)
+                return;
+
+            var categoryInfo = Categories.FirstOrDefault(x => x.Name == parent.Name);
+            if (categoryInfo == null)
+                return;
+
+            SelectCategory(categoryInfo);
+            categoryInfo.IsSelected = true;
         }
 
         public void Dispose()

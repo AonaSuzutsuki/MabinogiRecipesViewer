@@ -84,6 +84,9 @@
                     <MenuItem Header="ツール(_T)">
                         <MenuItem Header="設定(_O)" Command="{Binding OpenSettingCommand}" />
                     </MenuItem>
+                    <MenuItem Header="検索(_S)">
+                        <MenuItem Header="レシピ検索" Command="{Binding OpenSearchWindowCommand}" />
+                    </MenuItem>
                     <MenuItem Header="ヘルプ(_H)">
                         <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
                         <MenuItem Header="更新プログラムの確認" Command="{Binding OpenUpdateProgramCommand}" />
@@ -128,11 +131,17 @@
                                     <Label Content="{Binding Name}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
+
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="IsSelected" Value="{Binding Path=IsSelected}"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
                         </ComboBox>
 
                         <TextBox Grid.Row="2" Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" behaviors:PlaceHolderBehavior.PlaceHolder="Filter" />
 
-                        <ListBox Grid.Row="4" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox2}">
+                        <ListBox Name="RecipesListBox" Grid.Row="4" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox2}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
@@ -154,6 +163,12 @@
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="IsSelected" Value="{Binding Path=IsSelected}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
                         </ListBox>
                     </Grid>
 
