@@ -73,6 +73,7 @@ namespace CookInformationViewer.ViewModels.Searchers
 
             _mainWindowService.MainWindow.IsSearched = true;
             _mainWindowService.MainWindow.ScrollItem();
+            _mainWindowService.MainWindow.WindowFocus();
         }
     }
 }

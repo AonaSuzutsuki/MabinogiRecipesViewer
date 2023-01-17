@@ -92,6 +92,11 @@ namespace CookInformationViewer.Views
             scrollViewer.ScrollToVerticalOffset(scrollOffset);
         }
 
+        public void WindowFocus()
+        {
+            Focus();
+        }
+
         private void UIElement_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (sender is not ScrollViewer scrollViewer)
