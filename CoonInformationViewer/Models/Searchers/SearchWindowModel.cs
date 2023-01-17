@@ -43,7 +43,30 @@ namespace CookInformationViewer.Models.Searchers
         {
             if (isMaterialSearch)
             {
+                var materials = _contextManager.GetRecipe(x => 
+                    x.CookMaterials.Where(m => m.Name.Contains(word)).Select(m => (int?)m.Id).ToList());
 
+                var recipeMaterials = _contextManager.GetRecipe(x =>
+                    x.CookRecipes.Where(m => m.Name.Contains(word)).Select(m => (int?)m.Id).ToList());
+
+                var recipesWithMaterial = _contextManager.GetRecipe(x =>
+                    (from rec in x.CookRecipes
+                        join cat in x.CookCategories on rec.CategoryId equals cat.Id
+                     where materials.Contains(rec.Item1Id) || materials.Contains(rec.Item2Id) || materials.Contains(rec.Item3Id)
+                     select new Tuple<DbCookRecipes, DbCookCategories>(rec, cat)).ToList()
+                );
+                
+                var recipes = _contextManager.GetRecipe(x =>
+                    (from rec in x.CookRecipes
+                        join cat in x.CookCategories on rec.CategoryId equals cat.Id
+                        where recipeMaterials.Contains(rec.Item1RecipeId) || recipeMaterials.Contains(rec.Item2RecipeId) || recipeMaterials.Contains(rec.Item3RecipeId)
+                        select new Tuple<DbCookRecipes, DbCookCategories>(rec, cat)).ToList()
+                );
+
+                var merge = recipes.Union(recipesWithMaterial).GroupBy(x => x.Item2)
+                    .ToDictionary(x => x.Key, x => x.ToList());
+
+                DrawList(merge);
             }
             else
             {
