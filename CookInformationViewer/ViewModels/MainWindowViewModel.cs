@@ -354,7 +354,7 @@ namespace CookInformationViewer.ViewModels
             var availableUpdate = await _model.CheckUpdate();
             if (availableUpdate)
             {
-                var dialogResult = _mainWindowService.MessageBoxShow("更新プログラムがあります。更新しますか？",
+                var dialogResult = _mainWindowService.MessageBoxDispatchShow("更新プログラムがあります。更新しますか？",
                     "更新プログラムがあります", ExMessageBoxBase.MessageType.Asterisk, ExMessageBoxBase.ButtonType.YesNo);
                 if (dialogResult == ExMessageBoxBase.DialogResult.Yes)
                 {

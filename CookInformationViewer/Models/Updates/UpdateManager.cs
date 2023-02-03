@@ -109,11 +109,11 @@ namespace CookInformationViewer.Models.Updates
         public ProcessStartInfo GetUpdaterInfo(int pid, string mode)
         {
             var arg =
-                $"{pid} CookInformationViewer \"{_updateClient.WebClient.BaseUrl}\" \"{_updateClient.MainDownloadUrlPath}\" {mode}";
+                $"{pid} MabinogiRecipesViewer \"{_updateClient.WebClient.BaseUrl}\" \"{_updateClient.MainDownloadUrlPath}\" {mode}";
 
             if (mode == "clean")
                 arg =
-                    $"{pid} CookInformationViewer \"{_updateClient.WebClient.BaseUrl}\" \"{_updateClient.MainDownloadUrlPath}\" {mode}" +
+                    $"{pid} MabinogiRecipesViewer \"{_updateClient.WebClient.BaseUrl}\" \"{_updateClient.MainDownloadUrlPath}\" {mode}" +
                     $" \"{CommonCoreLib.AppInfo.GetAppPath()}\" list.txt";
 
             var startInfo = new ProcessStartInfo

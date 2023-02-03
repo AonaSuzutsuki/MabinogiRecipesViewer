@@ -9,7 +9,7 @@ $OutBinDirectory = "$CurrentDirectory\$outName"
 $Framework = "net6.0-windows"
 $Profile = "Debug"
 
-$CookInfoViewerReleaseDirectory = "$CurrentDirectory\CoonInformationViewer\bin\$Profile\$Framework"
+$CookInfoViewerReleaseDirectory = "$CurrentDirectory\CookInformationViewer\bin\$Profile\$Framework"
 $UpdaterReleaseDirectory = "$CurrentDirectory\Updater\bin\$Profile\$Framework"
 
 #SavannahManager

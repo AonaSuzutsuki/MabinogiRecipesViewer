@@ -1,22 +1,23 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace CookInformationViewer.Models.Db
 {
     public class ColumnInfo
     {
-        public TableInfo Table { get; internal set; }
+        public TableInfo? Table { get; internal set; }
 
-        public string ColumnName { get; set; }
+        public string ColumnName { get; set; } = string.Empty;
         public ColumnType Type { get; set; }
         public bool PrimaryKey { get; set; }
         public bool NotNull { get; set; }
         public bool Unique { get; set; }
         public bool AutoIncrement { get; set; }
-        public object Default { get; set; }
+        public object? Default { get; set; }
 
-        public ColumnInfo ForeignKey { get; set; }
+        public ColumnInfo? ForeignKey { get; set; }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is ColumnInfo columnInfo && Equals(columnInfo);
         }

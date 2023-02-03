@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="SET TargetUpdateDir=$(SolutionDir)CoonInformationViewer\$(OutDir)Updater&#xD;&#xA;if exist &quot;%25TargetUpdateDir%25&quot; (&#xD;&#xA;    echo &quot;&quot;&#xD;&#xA;) else (&#xD;&#xA;    mkdir &quot;%25TargetUpdateDir%25&quot;&#xD;&#xA;)&#xD;&#xA;xcopy &quot;$(TargetDir)$(TargetName).exe&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y&#xD;&#xA;xcopy &quot;$(TargetDir)*.dll&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y&#xD;&#xA;xcopy &quot;$(TargetDir)*.json&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y" />
+    <Exec Command="SET TargetUpdateDir=$(SolutionDir)CookInformationViewer\$(OutDir)Updater&#xD;&#xA;if exist &quot;%25TargetUpdateDir%25&quot; (&#xD;&#xA;    echo &quot;&quot;&#xD;&#xA;) else (&#xD;&#xA;    mkdir &quot;%25TargetUpdateDir%25&quot;&#xD;&#xA;)&#xD;&#xA;xcopy &quot;$(TargetDir)$(TargetName).exe&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y&#xD;&#xA;xcopy &quot;$(TargetDir)*.dll&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y&#xD;&#xA;xcopy &quot;$(TargetDir)*.json&quot; &quot;%25TargetUpdateDir%25\&quot; /E /Y" />
   </Target>
 
   <ItemGroup>
