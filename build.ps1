@@ -17,7 +17,7 @@ xcopy /Y $CookInfoViewerReleaseDirectory\*.dll $OutBinDirectory\
 xcopy /Y $CookInfoViewerReleaseDirectory\*.exe $OutBinDirectory\
 xcopy /Y $CookInfoViewerReleaseDirectory\*.deps.json $OutBinDirectory\
 xcopy /Y $CookInfoViewerReleaseDirectory\*.runtimeconfig.json $OutBinDirectory\
-Copy-Item -Path $CookInfoViewerReleaseDirectory\runtimes\ -Destination "$OutBinDirectory\runtimes" -Recurse -Force
+Copy-Item -Path $CookInfoViewerReleaseDirectory\runtimes\ -Destination "$OutBinDirectory\" -Recurse -Force
 
 # Updater
 xcopy /Y $UpdaterReleaseDirectory\*.dll "$OutBinDirectory\Updater\"

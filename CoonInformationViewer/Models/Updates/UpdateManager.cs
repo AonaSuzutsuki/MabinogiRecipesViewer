@@ -260,7 +260,7 @@ namespace CookInformationViewer.Models.Updates
         {
             var webClient = new UpdateWebClient
             {
-                BaseUrl = "https://aonsztk.xyz/KimamaLab/Updates/CookInformationViewer/"
+                BaseUrl = "https://aonsztk.xyz/KimamaLab/Updates/CookInfo/"
             };
 
 #if DEBUG

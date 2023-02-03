@@ -63,8 +63,18 @@ namespace CookInformationViewer.Models.Db.Manager
         {
             var webClient = new UpdateWebClient
             {
-                BaseUrl = "http://localhost:58415/Export/"
+                BaseUrl = "https://mabicook.aonsztk.xyz/Export/"
             };
+
+#if DEBUG
+            if (File.Exists(Constants.UpdateUrlFile))
+            {
+                var reader = new SavannahXmlReader(Constants.UpdateUrlFile);
+                var baseUrl = reader.GetValue("updates/update[@name='data']") ?? webClient.BaseUrl;
+                webClient.BaseUrl = baseUrl;
+            }
+#endif
+
             DownloadClient = new UpdateClient(webClient);
 
             DownloadClient.DownloadStarted += (sender, args) =>
@@ -206,6 +216,8 @@ namespace CookInformationViewer.Models.Db.Manager
                     count++;
                 }
 
+                Context.SaveChanges();
+
                 foreach (var material in materials)
                 {
                     db.Add(material);
@@ -280,6 +292,8 @@ namespace CookInformationViewer.Models.Db.Manager
 
                     count++;
                 }
+
+                Context.SaveChanges();
 
                 foreach (var material in materials)
                 {
