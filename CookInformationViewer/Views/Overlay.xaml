@@ -1,0 +1,101 @@
+﻿<Window x:Class="CookInformationViewer.Views.Overlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:CookInformationViewer"
+        xmlns:commonView="clr-namespace:CommonStyleLib.Views;assembly=CommonStyleLib"
+        xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:OverlayViewModel}"
+        Title="Overlay" Height="100" Width="300" Background="{Binding WindowBackground.Value, FallbackValue=Transparent}" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding Closing}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Activated">
+            <i:InvokeCommandAction Command="{Binding Activated}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Deactivated">
+            <i:InvokeCommandAction Command="{Binding Deactivated}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Window.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Constants.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/ListBoxStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid Width="244px" Margin="0,0,0,0" Background="Transparent">
+            <Grid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="透過" IsCheckable="True" IsChecked="{Binding TransparentChecked.Value}" Command="{Binding ChangeTransparentCommand}" CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                    <MenuItem Header="閉じる" Command="{Binding MainWindowCloseBtClick}" />
+                </ContextMenu>
+            </Grid.ContextMenu>
+
+            <!--<Image Source="/Resources/gauge_overlay.png" Opacity=".2" />-->
+
+            <Button Content="透過する" Width="100" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding TransparentButtonVisibility.Value}" Style="{StaticResource FlatButton}" Command="{Binding DoTransparentCommand}" />
+
+            <Grid Margin="0,22,0,0" Name="PercentageGrid">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Name="Item1Column" Width="25*" />
+                    <ColumnDefinition Name="Item2Column" Width="35*" />
+                    <ColumnDefinition Name="Item3Column" Width="40*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000" Opacity="{Binding Opacity.Value}"></Grid>
+                <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff" Opacity="{Binding Opacity.Value}"></Grid>
+                <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00" Opacity="{Binding Opacity.Value}"></Grid>
+
+                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+            </Grid>
+
+            <Grid Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="1" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="3" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="4" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="5" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="6" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="7" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="8" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>
