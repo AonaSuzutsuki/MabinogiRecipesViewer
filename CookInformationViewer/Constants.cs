@@ -24,5 +24,11 @@ namespace CookInformationViewer
         public const string UpdateUrlFile = "UpdateUrl.xml";
         public static readonly string AppDirectoryPath = AppInfo.GetAppPath();
         public static readonly string UpdaterFilePath = AppDirectoryPath + @"\Updater\update.exe";
+
+#if DEBUG
+        public static readonly bool IsDebugMode = true;
+#else
+        public static readonly bool IsDebugMode = false;
+#endif
     }
 }

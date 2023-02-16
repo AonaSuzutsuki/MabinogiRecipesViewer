@@ -47,6 +47,8 @@ namespace CookInformationViewer.ViewModels
 
         #region Properties
 
+        public bool IsDebugMode => Constants.IsDebugMode;
+
         public ReactiveProperty<string> UnderMessageLabelText { get; set; }
 
         public ReactiveProperty<bool> CanGoBack { get; set; }
@@ -66,6 +68,7 @@ namespace CookInformationViewer.ViewModels
         #region Event Properties
         
         public ICommand OpenSettingCommand { get; set; }
+        public ICommand OpenDatabaseCommand { get; set; }
         public ICommand OpenSearchWindowCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
@@ -107,6 +110,7 @@ namespace CookInformationViewer.ViewModels
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
             OpenSettingCommand = new DelegateCommand(OpenSetting);
+            OpenDatabaseCommand = new DelegateCommand(OpenDatabase);
             OpenSearchWindowCommand = new DelegateCommand(OpenSearchWindow);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
@@ -166,6 +170,11 @@ namespace CookInformationViewer.ViewModels
             var model = new SettingModel();
             var vm = new SettingViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<SettingView>(vm);
+        }
+
+        public void OpenDatabase()
+        {
+            using var p = Process.Start("C:\\Valve\\DB Browser for SQLite\\DB Browser for SQLite.exe", Constants.DatabaseFileName);
         }
 
         public void OpenSearchWindow()

@@ -83,9 +83,7 @@
                     </MenuItem>
                     <MenuItem Header="ツール(_T)">
                         <MenuItem Header="設定(_O)" Command="{Binding OpenSettingCommand}" />
-                    </MenuItem>
-                    <MenuItem Header="検索(_S)">
-                        <MenuItem Header="レシピ検索" Command="{Binding OpenSearchWindowCommand}" />
+                        <MenuItem Header="Database" Command="{Binding OpenDatabaseCommand}" Visibility="{Binding IsDebugMode, Converter={converters:BooleanVisibilityConverter}}" />
                     </MenuItem>
                     <MenuItem Header="ヘルプ(_H)">
                         <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
