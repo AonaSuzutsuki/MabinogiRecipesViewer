@@ -17,7 +17,7 @@ namespace CookInformationViewer
         public const string DownloadHistoriesTableName = "download_histories";
         public const string CookAdditionalsTableName = "cook_additionals";
 
-        public const string DatabaseFileName = "CookInfo.dat";
+        public const string DatabaseFileName = "Data\\CookInfo.dat";
         
         public static string Version => CommonCoreLib.File.Version.GetVersion(); /* + "b";*/
 
