@@ -7,7 +7,7 @@ if ( [string]::IsNullOrEmpty($outName) ) {
 $CurrentDirectory = Split-Path $MyInvocation.MyCommand.Path -Parent
 $OutBinDirectory = "$CurrentDirectory\$outName"
 $Framework = "net6.0-windows"
-$Profile = "Debug"
+$Profile = "Release"
 
 $CookInfoViewerReleaseDirectory = "$CurrentDirectory\CookInformationViewer\bin\$Profile\$Framework"
 $UpdaterReleaseDirectory = "$CurrentDirectory\Updater\bin\$Profile\$Framework"
