@@ -9,7 +9,7 @@
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:OverlayViewModel}"
-        Title="Overlay" Height="100" Width="300" Background="{Binding WindowBackground.Value, FallbackValue=Transparent}" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True" WindowStartupLocation="CenterOwner" Style="{DynamicResource WindowStyle}">
+        Title="Overlay" Height="100" Width="300" Top="{Binding Top.Value, Mode=TwoWay}" Left="{Binding Left.Value, Mode=TwoWay}" Background="{Binding WindowBackground.Value, FallbackValue=Transparent}" AllowsTransparency="True" WindowStyle="None" Topmost="True" ShowInTaskbar="True" WindowStartupLocation="Manual" Style="{DynamicResource NoneCaptionWindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -30,6 +30,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Window.xaml" />
+                <ResourceDictionary Source="/Styles/Gauge.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Constants.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Icon.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Main.xaml" />
@@ -40,7 +41,9 @@
 
     <Grid>
 
-        <Grid Width="244px" Margin="0,0,0,0" Background="Transparent">
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Content="{Binding MainWindowCloseBtContent}" Style="{StaticResource CaptionButtonStyleKey}" Command="{Binding MainWindowCloseBtClick}" />
+
+        <Grid Width="245" Margin="0,0,0,0" Background="Transparent">
             <Grid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="透過" IsCheckable="True" IsChecked="{Binding TransparentChecked.Value}" Command="{Binding ChangeTransparentCommand}" CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
@@ -55,17 +58,17 @@
             <Grid Margin="0,22,0,0" Name="PercentageGrid">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Name="Item1Column" Width="25*" />
-                    <ColumnDefinition Name="Item2Column" Width="35*" />
-                    <ColumnDefinition Name="Item3Column" Width="40*" />
+                    <ColumnDefinition Name="Item1Column" Width="50*" />
+                    <ColumnDefinition Name="Item2Column" Width="45*" />
+                    <ColumnDefinition Name="Item3Column" Width="5*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" Height="12" Name="Item1" Background="#ff0000" Opacity="{Binding Opacity.Value}"></Grid>
                 <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff" Opacity="{Binding Opacity.Value}"></Grid>
                 <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00" Opacity="{Binding Opacity.Value}"></Grid>
 
-                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="0" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
                 <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
             </Grid>
 
@@ -84,16 +87,16 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="1" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="2" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="3" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="4" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="5" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="6" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="7" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="8" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <!--<Image Grid.Column="0" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="1" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="3" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="4" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="5" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="6" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="7" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="8" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />-->
+                <Image Grid.Column="9" Width="1" Height="10" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
             </Grid>
         </Grid>
 

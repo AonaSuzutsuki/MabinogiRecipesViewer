@@ -38,7 +38,9 @@ namespace CookInformationViewer.ViewModels
 
         private readonly MainWindowWindowService _mainWindowService;
         private readonly MainWindowModel _model;
-        private readonly OverlayModel _overlayModel = new();
+
+        private OverlayModel? _overlayModel;
+        private MainWindowWindowService? _overlayWindowService;
 
         private readonly Stack<RecipeInfo> _historyBack = new();
         private readonly Stack<RecipeInfo> _historyForward = new();
@@ -225,7 +227,6 @@ namespace CookInformationViewer.ViewModels
 
             _model.SelectRecipe(recipe);
             SelectedRecipe.Value = recipe;
-            _overlayModel.SelectedRecipe = recipe;
 
             _historyBack.Clear();
             _historyForward.Clear();
@@ -244,20 +245,28 @@ namespace CookInformationViewer.ViewModels
 
         public void OpenOverlay()
         {
+            if (_overlayModel != null && !_overlayModel.Closed)
+            {
+                _overlayModel.SelectedRecipe = SelectedRecipe.Value;
+
+                return;
+            }
+
             var windowService = new MainWindowWindowService();
+            var model = new OverlayModel
+            {
+                SelectedRecipe = SelectedRecipe.Value
+            };
+            _overlayModel = model;
+            _overlayWindowService = windowService;
+
             WindowManageService.ShowNonOwner<Overlay>(window =>
             {
                 windowService.GaugeResize = window;
-                var vm = new OverlayViewModel(windowService, _overlayModel);
+                windowService.MainWindow = _mainWindowService.MainWindow;
+                var vm = new OverlayViewModel(windowService, model);
                 return vm;
             });
-
-            //if (windowService.GaugeResize == null)
-            //    return;
-
-            //windowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item1Amount, 0);
-            //windowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item2Amount, 1);
-            //windowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item3Amount, 2);
         }
 
         public void NavigateBack()
@@ -355,6 +364,7 @@ namespace CookInformationViewer.ViewModels
         {
             base.Dispose();
 
+            _overlayWindowService?.Close();
             _model.Dispose();
         }
 

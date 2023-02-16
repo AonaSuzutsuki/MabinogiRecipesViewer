@@ -4,7 +4,7 @@
     <Style x:Key="SmallSizeGauge" TargetType="Image">
         <Setter Property="Margin" Value="0,4,0,0" />
         <Setter Property="Source" Value="/Resources/line.png" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Stretch" Value="Fill" />
         <Setter Property="Height" Value="5" />
     </Style>
@@ -12,7 +12,7 @@
 
     <Style x:Key="NormalSizeGauge" TargetType="Image">
         <Setter Property="Source" Value="/Resources/line.png" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Stretch" Value="Fill" />
         <Setter Property="Height" Value="10" />
     </Style>

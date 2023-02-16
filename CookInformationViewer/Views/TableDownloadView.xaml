@@ -124,7 +124,7 @@
 
                     <Button Grid.Column="3" Content="Update" IsEnabled="{Binding IsError.Value, Converter={converters1:ReverseBooleanConverter}}" Style="{StaticResource FlatButton}" Command="{Binding UpdateCommand}" />
 
-                    <Button Grid.Column="5" Content="Cancel" Style="{StaticResource FlatButton}" Command="{Binding MainWindowCloseBtClick}" />
+                    <Button Grid.Column="5" Content="Close" Style="{StaticResource FlatButton}" Command="{Binding MainWindowCloseBtClick}" />
 
                 </Grid>
             </Grid>

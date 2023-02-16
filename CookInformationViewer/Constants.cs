@@ -2,7 +2,7 @@
 
 namespace CookInformationViewer
 {
-    public class Constants
+    public static class Constants
     {
         public const string Schema = "cookinfo";
 
@@ -19,7 +19,7 @@ namespace CookInformationViewer
 
         public const string DatabaseFileName = "Data\\CookInfo.dat";
         
-        public static string Version => CommonCoreLib.File.Version.GetVersion(); /* + "b";*/
+        public static string Version => CommonCoreLib.File.Version.GetVersion() + "b";
 
         public const string UpdateUrlFile = "UpdateUrl.xml";
         public static readonly string AppDirectoryPath = AppInfo.GetAppPath();
