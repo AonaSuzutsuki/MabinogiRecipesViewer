@@ -25,20 +25,24 @@
 
   <ItemGroup>
     <None Remove="Resources\gauge.png" />
+    <None Remove="Resources\gauge2.png" />
     <None Remove="Resources\gauge_overlay.png" />
+    <None Remove="Resources\gauge_overlay2.png" />
     <None Remove="Resources\line.png" />
     <None Remove="Resources\no-image.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\gauge.png" />
+    <Resource Include="Resources\gauge2.png" />
     <Resource Include="Resources\gauge_overlay.png" />
+    <Resource Include="Resources\gauge_overlay2.png" />
     <Resource Include="Resources\line.png" />
     <EmbeddedResource Include="Resources\no-image.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommonCoreLib" Version="1.0.4" />
+    <PackageReference Include="CommonCoreLib" Version="1.0.6" />
     <PackageReference Include="CommonStyleLib" Version="1.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
