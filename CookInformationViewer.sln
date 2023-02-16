@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CookInformationViewer", "CookInformationViewer\CookInformationViewer.csproj", "{A5A55860-D4C1-4369-B652-0B1F3AA47FCE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UpdateLogs", "UpdateLogs", "{5D998BDD-0DD9-42F9-99E7-4A5DF64CE966}"
+	ProjectSection(SolutionItems) = preProject
+		UpdateLogs\notice.en.xml = UpdateLogs\notice.en.xml
+		UpdateLogs\notice.ja.xml = UpdateLogs\notice.ja.xml
+		UpdateLogs\updates.en.xml = UpdateLogs\updates.en.xml
+		UpdateLogs\updates.ja.xml = UpdateLogs\updates.ja.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Log|Any CPU = Debug Log|Any CPU
