@@ -22,6 +22,7 @@ namespace CookInformationViewer.ViewModels
     public class OverlayViewModel : ViewModelWindowStyleBase
     {
         private MainWindowWindowService _mainWindowService;
+        private OverlayModel _model;
 
         public ReactiveProperty<RecipeInfo?> SelectedRecipe { get; set; }
 
@@ -36,6 +37,7 @@ namespace CookInformationViewer.ViewModels
         public OverlayViewModel(MainWindowWindowService windowService, OverlayModel model) : base(windowService, model)
         {
             _mainWindowService = windowService;
+            _model = model;
 
             SelectedRecipe = model.ObserveProperty(x => x.SelectedRecipe).ToReactiveProperty()
                 .AddTo(CompositeDisposable);
@@ -44,6 +46,9 @@ namespace CookInformationViewer.ViewModels
                 if (model.SelectedRecipe == null || windowService.GaugeResize == null)
                     return;
 
+                //windowService.GaugeResize.SetGaugeLength((double)Math.Ceiling((244 * (model.SelectedRecipe.Item1Amount / 100))), 0);
+                //windowService.GaugeResize.SetGaugeLength((double)Math.Ceiling((244 * (model.SelectedRecipe.Item2Amount / 100))), 1);
+                //windowService.GaugeResize.SetGaugeLength((double)Math.Ceiling((244 * (model.SelectedRecipe.Item3Amount / 100))), 2);
                 windowService.GaugeResize.SetGaugeLength((double)model.SelectedRecipe.Item1Amount, 0);
                 windowService.GaugeResize.SetGaugeLength((double)model.SelectedRecipe.Item2Amount, 1);
                 windowService.GaugeResize.SetGaugeLength((double)model.SelectedRecipe.Item3Amount, 2);
@@ -72,7 +77,7 @@ namespace CookInformationViewer.ViewModels
             Opacity.Value = .2;
             TransparentButtonVisibility.Value = Visibility.Collapsed;
             WindowBackground.Value = new SolidColorBrush(Colors.Transparent);
-            WindowManageService.Owner.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            //WindowManageService.Owner.BorderBrush = new SolidColorBrush(Colors.Transparent);
             TransparentChecked.Value = true;
         }
 
@@ -97,9 +102,24 @@ namespace CookInformationViewer.ViewModels
                 else
                     WindowBackground.Value = new SolidColorBrush(Colors.Transparent);
 
-                if (WindowManageService.Owner.FindResource("AroundBorderColor") is SolidColorBrush color)
-                    WindowManageService.Owner.BorderBrush = color;
+                //if (WindowManageService.Owner.FindResource("AroundBorderColor") is SolidColorBrush color)
+                //    WindowManageService.Owner.BorderBrush = color;
             }
+        }
+
+        protected override void MainWindowCloseBt_Click()
+        {
+            _mainWindowService.MainWindow?.WindowFocus();
+
+            base.MainWindowCloseBt_Click();
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _model.SaveSetting();
+            _model.Closed = true;
         }
     }
 }

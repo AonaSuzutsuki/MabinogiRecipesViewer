@@ -86,6 +86,12 @@
                             </StackPanel>
                         </Grid>
                     </TabItem>
+
+                    <TabItem Header="オーバーレイ">
+                        <Grid Margin="0,10,0,0" VerticalAlignment="Top">
+                            <Button Width="200" Height="30" Content="オーバーレイの座標をリセット" Style="{StaticResource FlatButton}" Command="{Binding ResetOverlayPositionCommand}" />
+                        </Grid>
+                    </TabItem>
                 </TabControl>
 
                 <Grid Grid.Row="2">

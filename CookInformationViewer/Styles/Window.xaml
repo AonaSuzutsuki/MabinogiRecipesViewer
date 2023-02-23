@@ -25,4 +25,24 @@
         <Setter Property="Foreground" Value="White"/>
     </Style>
 
+    <Style TargetType="{x:Type Window}" x:Key="NoneCaptionWindowStyle">
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome 
+                    CornerRadius="0" 
+                    GlassFrameThickness="0" 
+                    ResizeBorderThickness="0" 
+                    UseAeroCaptionButtons="False" 
+                    CaptionHeight="0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Background" Value="{StaticResource MainColor}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AroundBorderColor}"/>
+        <Setter Property="Opacity" Value="1"></Setter>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
 </ResourceDictionary>

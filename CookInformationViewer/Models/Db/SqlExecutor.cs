@@ -23,6 +23,18 @@ namespace CookInformationViewer.Models.Db
                 File.Delete(source);
             }
 
+            var fileInfo = new FileInfo(source);
+            if (!fileInfo.Exists)
+            {
+                var parent = Path.GetDirectoryName(fileInfo.FullName);
+                if (string.IsNullOrEmpty(parent))
+                    throw new DirectoryNotFoundException(fileInfo.FullName);
+
+                var di = new DirectoryInfo(parent);
+                if (!di.Exists)
+                    di.Create();
+            }
+
             _connection = new SqliteConnection($"Data Source={source}");
             _connection.Open();
         }

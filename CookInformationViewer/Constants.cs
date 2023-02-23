@@ -2,7 +2,7 @@
 
 namespace CookInformationViewer
 {
-    public class Constants
+    public static class Constants
     {
         public const string Schema = "cookinfo";
 
@@ -17,12 +17,18 @@ namespace CookInformationViewer
         public const string DownloadHistoriesTableName = "download_histories";
         public const string CookAdditionalsTableName = "cook_additionals";
 
-        public const string DatabaseFileName = "CookInfo.dat";
+        public const string DatabaseFileName = "Data\\CookInfo.dat";
         
-        public static string Version => CommonCoreLib.File.Version.GetVersion(); /* + "b";*/
+        public static string Version => CommonCoreLib.File.Version.GetVersion() + "b";
 
         public const string UpdateUrlFile = "UpdateUrl.xml";
         public static readonly string AppDirectoryPath = AppInfo.GetAppPath();
         public static readonly string UpdaterFilePath = AppDirectoryPath + @"\Updater\update.exe";
+
+#if DEBUG
+        public static readonly bool IsDebugMode = true;
+#else
+        public static readonly bool IsDebugMode = false;
+#endif
     }
 }

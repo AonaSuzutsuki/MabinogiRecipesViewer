@@ -42,6 +42,12 @@ namespace CookInformationViewer.Models.Settings
             IsCheckProgram = _settingLoader.IsCheckProgramUpdate;
         }
 
+        public void ResetOverlayPosition()
+        {
+            _settingLoader.OverlayLeft = SettingLoader.DefaultOverlayLeft;
+            _settingLoader.OverlayTop = SettingLoader.DefaultOverlayTop;
+        }
+
         public void Save()
         {
             _settingLoader.IsCheckDataUpdate = IsCheckAutoData;
