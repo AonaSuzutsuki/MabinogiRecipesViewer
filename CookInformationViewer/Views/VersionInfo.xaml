@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance viewModels:VersionInfoViewModel}"
         ShowInTaskbar="True" Topmost="False" WindowStartupLocation="CenterOwner" WindowStyle="None"
         TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True"
-        Title="Settings" Height="350" Width="550" ResizeMode="CanMinimize"
+        Title="Settings" Height="320" Width="550" ResizeMode="CanMinimize"
         Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
@@ -79,7 +79,6 @@
                         <Label Content="Prism.Core: Copyright (c) .NET Foundation" />
                         <Label Content="Microsoft.Xaml.Behaviors.Wpf: Copyright (c) 2015 Microsoft" />
                         <Label Content="Newtonsoft.Json: Copyright (c) 2007 James Newton-King" />
-                        <Label Content="OpenCover: Copyright (c) 2011-2019 Shaun Wilde " />
                         <Label  Content="This software includes the work that is distributed in the Apache License 2.0"/>
                     </StackPanel>
                 </StackPanel>
