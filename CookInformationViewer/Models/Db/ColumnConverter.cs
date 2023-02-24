@@ -2,7 +2,7 @@
 {
     public static class ColumnConverter
     {
-        public static ColumnType ToColumnType(string text)
+        public static ColumnType ToColumnType(string? text)
         {
             return text.ToLower() switch
             {

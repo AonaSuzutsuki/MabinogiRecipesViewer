@@ -4,8 +4,8 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
-using CommonExtensionLib.Extensions;
 using Microsoft.Data.Sqlite;
+using CookInformationViewer.Models.Extensions;
 
 namespace CookInformationViewer.Models.Db
 {
@@ -46,7 +46,7 @@ namespace CookInformationViewer.Models.Db
             return tran;
         }
 
-        private SqliteCommand PrepareQuery(SqlCreator creator, SqlTransactionExecutor transaction, params SelectParameter[] values)
+        private SqliteCommand PrepareQuery(SqlCreator creator, SqlTransactionExecutor? transaction, params SelectParameter[] values)
         {
             var command = new SqliteCommand
             {
@@ -100,7 +100,8 @@ namespace CookInformationViewer.Models.Db
             var result = Execute(creator);
             foreach (var dict in result)
             {
-                var name = dict.Get("name")?.GetValue<string>();
+                const string key = "name";
+                var name = dict.Get(key, new SelectValue("", ColumnType.Undefined)).GetValue<string>();
                 if (hashSet.Contains(name))
                     notExistsObjects.Remove(name);
             }
@@ -128,7 +129,7 @@ namespace CookInformationViewer.Models.Db
             return merge;
         }
 
-        public int ExecuteNonQuery(SqlCreator creator, SqlTransactionExecutor transaction, params SelectParameter[] values)
+        public int ExecuteNonQuery(SqlCreator creator, SqlTransactionExecutor? transaction, params SelectParameter[] values)
         {
             using var command = PrepareQuery(creator, transaction, values);
 
@@ -160,7 +161,7 @@ namespace CookInformationViewer.Models.Db
         }
 #endif
 
-        public IEnumerable<Dictionary<string, SelectValue>> Execute(SqlCreator creator, SqlTransactionExecutor transaction,
+        public IEnumerable<Dictionary<string, SelectValue>> Execute(SqlCreator creator, SqlTransactionExecutor? transaction,
             params SelectParameter[] values)
         {
             using var command = PrepareQuery(creator, transaction, values);
