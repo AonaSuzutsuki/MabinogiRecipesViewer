@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
@@ -216,7 +217,7 @@ namespace CookInformationViewer.ViewModels
             if (category == null)
                 return;
 
-            if (category == CategoryInfo.Favorite)
+            if (category.SameFavorite())
                 _model.SelectFavorite();
             else
                 _model.SelectCategory(category);
@@ -291,7 +292,7 @@ namespace CookInformationViewer.ViewModels
                 _model.RemoveFavorite(recipe);
             }
 
-            if (_model.CurrentCategoryInfo == CategoryInfo.Favorite)
+            if (_model.CurrentCategoryInfo?.SameFavorite() ?? false)
                 _model.SelectFavorite();
         }
 

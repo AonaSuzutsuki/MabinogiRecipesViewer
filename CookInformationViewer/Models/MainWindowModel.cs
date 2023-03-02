@@ -33,7 +33,7 @@ namespace CookInformationViewer.Models
 {
     public class CategoryInfo : BindableBase
     {
-        public static readonly CategoryInfo Favorite = new()
+        public static CategoryInfo Favorite => new()
         {
             Id = 0,
             Name = FavoriteContent
@@ -52,7 +52,12 @@ namespace CookInformationViewer.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
-        public Brush Foreground => this == Favorite ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
+        public Brush Foreground => SameFavorite() ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
+
+        public bool SameFavorite()
+        {
+            return Name == FavoriteContent;
+        }
     }
 
     public class RecipeInfo : BindableBase
@@ -382,6 +387,14 @@ namespace CookInformationViewer.Models
 
             if (CurrentCategoryInfo != null)
             {
+                if (CurrentCategoryInfo.SameFavorite())
+                {
+                    SelectFavorite();
+                    CurrentCategoryInfo.IsSelected = true;
+
+                    return;
+                }
+
                 var category = _categories.FirstOrDefault(x => x.Id == CurrentCategoryInfo.Id);
                 if (category != null)
                 {
@@ -466,7 +479,7 @@ namespace CookInformationViewer.Models
 
         public void SelectFavorite()
         {
-            CurrentCategoryInfo = CategoryInfo.Favorite;
+            CurrentCategoryInfo = Categories.First();
 
             var recipeIds = _contextManager.GetRecipe(x =>
                 x.Favorites.Where(m => !m.IsDelete).Select(m => m.RecipeId));
