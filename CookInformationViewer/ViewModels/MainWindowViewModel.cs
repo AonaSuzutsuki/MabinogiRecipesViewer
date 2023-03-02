@@ -68,7 +68,7 @@ namespace CookInformationViewer.ViewModels
         #endregion
 
         #region Event Properties
-        
+
         public ICommand OpenSettingCommand { get; set; }
         public ICommand OpenDatabaseCommand { get; set; }
         public ICommand OpenSearchWindowCommand { get; set; }
@@ -80,6 +80,7 @@ namespace CookInformationViewer.ViewModels
         public ICommand RecipesListSelectionChangedCommand { get; set; }
 
         public ICommand OpenOverlayCommand { get; set; }
+        public ICommand FavoriteCommand { get; set; }
 
         public ICommand NavigateBackCommand { get; set; }
         public ICommand NavigateGoCommand { get; set; }
@@ -120,6 +121,7 @@ namespace CookInformationViewer.ViewModels
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeInfo>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
+            FavoriteCommand = new DelegateCommand(Favorite);
             NavigateBackCommand = new DelegateCommand(NavigateBack);
             NavigateGoCommand = new DelegateCommand(NavigateGo);
             MaterialLinkCommand = new DelegateCommand<int?>(NavigateMaterialLink);
@@ -267,6 +269,10 @@ namespace CookInformationViewer.ViewModels
                 var vm = new OverlayViewModel(windowService, model);
                 return vm;
             });
+        }
+
+        public void Favorite()
+        {
         }
 
         public void NavigateBack()

@@ -47,6 +47,7 @@ namespace CookInformationViewer.Models
     public class RecipeInfo : BindableBase
     {
         private bool _isSelected;
+        private bool _isFavorite;
 
         public bool IsSelected
         {
@@ -96,6 +97,12 @@ namespace CookInformationViewer.Models
         public bool IsNotFestival { get; set; }
 
         public int Star { get; set; }
+
+        public bool IsFavorite
+        {
+            get => _isFavorite;
+            set => SetProperty(ref _isFavorite, value);
+        }
 
         public string StarText
         {
