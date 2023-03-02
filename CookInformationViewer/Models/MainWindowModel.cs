@@ -27,6 +27,7 @@ using Prism.Mvvm;
 using SavannahXmlLib.XmlWrapper;
 using UpdateLib.Http;
 using UpdateLib.Update;
+using Brush = System.Windows.Media.Brush;
 
 namespace CookInformationViewer.Models
 {
@@ -50,12 +51,15 @@ namespace CookInformationViewer.Models
 
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+
+        public Brush Foreground => this == Favorite ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
     }
 
     public class RecipeInfo : BindableBase
     {
         private bool _isSelected;
         private bool _isFavorite;
+        private Brush _foreground = new SolidColorBrush(Colors.White);
 
         public bool IsSelected
         {
@@ -109,7 +113,11 @@ namespace CookInformationViewer.Models
         public bool IsFavorite
         {
             get => _isFavorite;
-            set => SetProperty(ref _isFavorite, value);
+            set
+            {
+                Foreground = value ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
+                SetProperty(ref _isFavorite, value);
+            }
         }
 
         public string StarText
@@ -154,17 +162,22 @@ namespace CookInformationViewer.Models
             }
         }
 
-        public System.Windows.Media.Brush StarBrush
+        public Brush StarBrush
         {
             get
             {
                 return Star switch
                 {
-                    6 => (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff5307") ??
-                                           new SolidColorBrush(Colors.White)),
+                    6 => Constants.StarSixForeground,
                     _ => new SolidColorBrush(Colors.White)
                 };
             }
+        }
+
+        public Brush Foreground
+        {
+            get => _foreground;
+            set => SetProperty(ref _foreground, value);
         }
 
         public string Url { get; set; }
@@ -218,8 +231,7 @@ namespace CookInformationViewer.Models
             {
                 return Star switch
                 {
-                    6 => (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff5307") ??
-                                           new SolidColorBrush(Colors.White)),
+                    6 => Constants.StarSixForeground,
                     _ => new SolidColorBrush(Colors.White)
                 };
             }
@@ -427,6 +439,9 @@ namespace CookInformationViewer.Models
                     join rec3 in x.CookRecipes on m.Item3RecipeId equals rec3.Id
                         into rec3Item
                     from subRec3 in rec3Item.DefaultIfEmpty()
+                    join fav in x.Favorites on m.Id equals fav.RecipeId
+                        into favItem
+                    from subFav in favItem.DefaultIfEmpty()
                     where !m.IsDelete && m.CategoryId == category.Id
                     orderby m.Name
                     select new RecipeInfo(m)
@@ -438,7 +453,8 @@ namespace CookInformationViewer.Models
                         },
                         Item1Name = subRec1.Name ?? subMat1.Name,
                         Item2Name = subRec2.Name ?? subMat2.Name,
-                        Item3Name = subRec3.Name ?? subMat3.Name
+                        Item3Name = subRec3.Name ?? subMat3.Name,
+                        IsFavorite = subFav != null
                     }).ToList();
             });
 
@@ -477,6 +493,9 @@ namespace CookInformationViewer.Models
                         join rec3 in x.CookRecipes on m.Item3RecipeId equals rec3.Id
                             into rec3Item
                         from subRec3 in rec3Item.DefaultIfEmpty()
+                        join fav in x.Favorites on m.Id equals fav.RecipeId
+                            into favItem
+                        from subFav in favItem.DefaultIfEmpty()
                         where !m.IsDelete && recipeIds.Contains(m.Id)
                         orderby m.Name
                         select new RecipeInfo(m)
@@ -488,7 +507,8 @@ namespace CookInformationViewer.Models
                             },
                             Item1Name = subRec1.Name ?? subMat1.Name,
                             Item2Name = subRec2.Name ?? subMat2.Name,
-                            Item3Name = subRec3.Name ?? subMat3.Name
+                            Item3Name = subRec3.Name ?? subMat3.Name,
+                            IsFavorite = subFav != null
                         }).ToList();
             });
 

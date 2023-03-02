@@ -126,7 +126,7 @@
 
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Content="{Binding Name}" />
+                                    <Label Content="{Binding Name}" Foreground="{Binding Foreground}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
 
@@ -167,7 +167,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Image Source="{Binding Image}" />
-                                        <Label Grid.Column="2" Content="{Binding Name}" VerticalAlignment="Center" />
+                                        <Label Grid.Column="2" Content="{Binding Name}" VerticalAlignment="Center" Foreground="{Binding Foreground}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -223,11 +223,11 @@
 
                                 <Grid Grid.Row="0">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Label Content="{Binding SelectedRecipe.Value.Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
+                                        <Label Content="{Binding SelectedRecipe.Value.Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Foreground="{Binding SelectedRecipe.Value.Foreground}" />
                                         <Label Content="{Binding SelectedRecipe.Value.Category.Name, FallbackValue=''}" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" />
                                     </StackPanel>
 
-                                    <Button Content="{Binding SelectedRecipe.Value.IsFavorite, FallbackValue=☆, Converter={converters:BooleanFavoriteConverter}}" Width="25" Margin="0,5,5,0" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding FavoriteCommand}" />
+                                    <Button Content="{Binding SelectedRecipe.Value.IsFavorite, FallbackValue=☆, Converter={converters:BooleanFavoriteConverter}}" Width="25" Margin="0,5,5,0" Foreground="{Binding SelectedRecipe.Value.Foreground}" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding FavoriteCommand}" />
                                 </Grid>
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">

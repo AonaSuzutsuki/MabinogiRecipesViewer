@@ -1,4 +1,5 @@
-﻿using CommonCoreLib;
+﻿using System.Windows.Media;
+using CommonCoreLib;
 
 namespace CookInformationViewer
 {
@@ -19,7 +20,13 @@ namespace CookInformationViewer
         public const string CookFavoritesTableName = "cook_favorites";
 
         public const string DatabaseFileName = "Data\\CookInfo.dat";
-        
+
+        public static readonly SolidColorBrush FavoriteForeground =
+            (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff9460") ?? new SolidColorBrush(Colors.White));
+
+        public static readonly SolidColorBrush StarSixForeground =
+            (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff5307") ?? new SolidColorBrush(Colors.White));
+
         public static string Version => CommonCoreLib.File.Version.GetVersion() + "b";
 
         public const string UpdateUrlFile = "UpdateUrl.xml";
