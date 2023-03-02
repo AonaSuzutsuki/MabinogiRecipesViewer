@@ -16,6 +16,7 @@ namespace CookInformationViewer
         public const string CookEffectsTableName = "cook_effects";
         public const string DownloadHistoriesTableName = "download_histories";
         public const string CookAdditionalsTableName = "cook_additionals";
+        public const string CookFavoritesTableName = "cook_favorites";
 
         public const string DatabaseFileName = "Data\\CookInfo.dat";
         
