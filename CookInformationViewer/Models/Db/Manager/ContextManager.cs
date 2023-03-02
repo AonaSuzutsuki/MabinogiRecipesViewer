@@ -406,19 +406,12 @@ namespace CookInformationViewer.Models.Db.Manager
             }
         }
 
-        public string? GetRecipeMaterialName(int? id, bool isRecipe)
+        public void Apply(Action<CookInfoContext> whereAction)
         {
             lock (Context)
             {
-                if (isRecipe)
-                {
-                    var recipe = Context.CookRecipes.FirstOrDefault(x => x.Id == id);
-
-                    return recipe?.Name;
-                }
-
-                var material = Context.CookMaterials.FirstOrDefault(x => x.Id == id);
-                return material?.Name;
+                whereAction.Invoke(Context);
+                Context.SaveChanges();
             }
         }
 

@@ -216,7 +216,11 @@ namespace CookInformationViewer.ViewModels
             if (category == null)
                 return;
 
-            _model.SelectCategory(category);
+            if (category == CategoryInfo.Favorite)
+                _model.SelectFavorite();
+            else
+                _model.SelectCategory(category);
+
             _model.NarrowDownRecipes(SearchText.Value);
         }
 
@@ -273,6 +277,22 @@ namespace CookInformationViewer.ViewModels
 
         public void Favorite()
         {
+            if (SelectedRecipe.Value == null)
+                return;
+
+            var recipe = SelectedRecipe.Value;
+
+            if (!recipe.IsFavorite)
+            {
+                _model.RegisterFavorite(SelectedRecipe.Value);
+            }
+            else
+            {
+                _model.RemoveFavorite(recipe);
+            }
+
+            if (_model.CurrentCategoryInfo == CategoryInfo.Favorite)
+                _model.SelectFavorite();
         }
 
         public void NavigateBack()

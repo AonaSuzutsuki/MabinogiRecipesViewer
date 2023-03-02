@@ -32,6 +32,14 @@ namespace CookInformationViewer.Models
 {
     public class CategoryInfo : BindableBase
     {
+        public static readonly CategoryInfo Favorite = new()
+        {
+            Id = 0,
+            Name = FavoriteContent
+        };
+
+        public const string FavoriteContent = "お気に入り";
+
         private bool _isSelected;
 
         public bool IsSelected
@@ -379,12 +387,19 @@ namespace CookInformationViewer.Models
                     .OrderByDescending(m => m.SkillRank);
             });
 
-            Categories.Clear();
-            Categories.AddRange(categories.Select(x => new CategoryInfo
+            var categoryInfos = new List<CategoryInfo>
+            {
+                CategoryInfo.Favorite
+            };
+            
+            categoryInfos.AddRange(categories.Select(x => new CategoryInfo
             {
                 Id = x.Id,
                 Name = x.Name
             }));
+
+            Categories.Clear();
+            Categories.AddRange(categoryInfos);
         }
 
         public void SelectCategory(CategoryInfo category)
@@ -425,6 +440,56 @@ namespace CookInformationViewer.Models
                         Item2Name = subRec2.Name ?? subMat2.Name,
                         Item3Name = subRec3.Name ?? subMat3.Name
                     }).ToList();
+            });
+
+            Recipes.Clear();
+            Recipes.AddRange(recipe);
+
+            _recipeBaseItems = new List<RecipeInfo>(recipe);
+        }
+
+        public void SelectFavorite()
+        {
+            CurrentCategoryInfo = CategoryInfo.Favorite;
+
+            var recipeIds = _contextManager.GetRecipe(x =>
+                x.Favorites.Where(m => !m.IsDelete).Select(m => m.RecipeId));
+            
+            var recipe = _contextManager.GetItems(x =>
+            {
+                return (from m in x.CookRecipes
+                        join cat in x.CookCategories on m.CategoryId equals cat.Id
+                        join mat1 in x.CookMaterials on m.Item1Id equals mat1.Id
+                            into mat1Item
+                        from subMat1 in mat1Item.DefaultIfEmpty()
+                        join mat2 in x.CookMaterials on m.Item2Id equals mat2.Id
+                            into mat2Item
+                        from subMat2 in mat2Item.DefaultIfEmpty()
+                        join mat3 in x.CookMaterials on m.Item3Id equals mat3.Id
+                            into mat3Item
+                        from subMat3 in mat3Item.DefaultIfEmpty()
+                        join rec1 in x.CookRecipes on m.Item1RecipeId equals rec1.Id
+                            into rec1Item
+                        from subRec1 in rec1Item.DefaultIfEmpty()
+                        join rec2 in x.CookRecipes on m.Item2RecipeId equals rec2.Id
+                            into rec2Item
+                        from subRec2 in rec2Item.DefaultIfEmpty()
+                        join rec3 in x.CookRecipes on m.Item3RecipeId equals rec3.Id
+                            into rec3Item
+                        from subRec3 in rec3Item.DefaultIfEmpty()
+                        where !m.IsDelete && recipeIds.Contains(m.Id)
+                        orderby m.Name
+                        select new RecipeInfo(m)
+                        {
+                            Category = new CategoryInfo
+                            {
+                                Id = cat.Id,
+                                Name = cat.Name
+                            },
+                            Item1Name = subRec1.Name ?? subMat1.Name,
+                            Item2Name = subRec2.Name ?? subMat2.Name,
+                            Item3Name = subRec3.Name ?? subMat3.Name
+                        }).ToList();
             });
 
             Recipes.Clear();
@@ -484,6 +549,7 @@ namespace CookInformationViewer.Models
 
             SetEffects(recipe);
             SetAdditional(recipe);
+            SetFavorite(recipe);
 
             return recipe;
         }
@@ -556,7 +622,7 @@ namespace CookInformationViewer.Models
             return locations;
         }
 
-        public void SetEffects(RecipeInfo recipe)
+        private void SetEffects(RecipeInfo recipe)
         {
             var effects = _contextManager.GetItems(x => (from m in x.CookEffects
                 where m.RecipeId == recipe.Id
@@ -579,7 +645,7 @@ namespace CookInformationViewer.Models
             recipe.Effects = result.Values;
         }
 
-        public void SetAdditional(RecipeInfo recipe)
+        private void SetAdditional(RecipeInfo recipe)
         {
             var item = _contextManager.GetItems(x => (from m in x.Additionals
                 where m.RecipeId == recipe.Id
@@ -593,6 +659,17 @@ namespace CookInformationViewer.Models
 
             recipe.IsMaterial = isMaterials;
             recipe.IsNotFestival = isNotFestival;
+        }
+
+        private void SetFavorite(RecipeInfo recipe)
+        {
+            var favorite = _contextManager.GetRecipe(x =>
+                x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
+
+            if (favorite == null)
+                return;
+
+            recipe.IsFavorite = true;
         }
 
         public RecipeInfo? GetRecipeInfo(SearchNode node)
@@ -616,6 +693,35 @@ namespace CookInformationViewer.Models
 
             SelectCategory(categoryInfo);
             categoryInfo.IsSelected = true;
+        }
+
+        public void RegisterFavorite(RecipeInfo recipe)
+        {
+            _contextManager.Apply(x =>
+            {
+                var favorite = new DbCookFavorites
+                {
+                    RecipeId = recipe.Id,
+                    CreateDate = DateTime.Now
+                };
+
+                x.Favorites.Add(favorite);
+            });
+
+            recipe.IsFavorite = true;
+        }
+
+        public void RemoveFavorite(RecipeInfo recipe)
+        {
+            var favorite = _contextManager.GetRecipe(x =>
+                x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
+
+            if (favorite == null)
+                return;
+
+            _contextManager.Apply(x => x.Favorites.Remove(favorite));
+
+            recipe.IsFavorite = false;
         }
 
         public void Dispose()
