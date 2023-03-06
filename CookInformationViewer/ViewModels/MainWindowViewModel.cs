@@ -60,6 +60,7 @@ namespace CookInformationViewer.ViewModels
         public ReactiveProperty<string> SearchText { get; set; }
 
         public ReadOnlyReactiveCollection<CategoryInfo> Categories { get; set; }
+        public ReactiveProperty<CategoryInfo?> SelectedCategory { get; set; }
         public ReactiveProperty<int> SelectedCategoryIndex { get; set; }
 
         public ReadOnlyReactiveCollection<RecipeInfo> RecipesList { get; set; }

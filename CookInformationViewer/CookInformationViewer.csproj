@@ -9,6 +9,7 @@
 	<Copyright>Copyright (C) Aona Suzutsuki 2022 - 2023</Copyright>
 	<Configurations>Debug;Release;Debug Log</Configurations>
 	<AssemblyName>MabinogiRecipesViewer</AssemblyName>
+	<Version>1.0.1.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

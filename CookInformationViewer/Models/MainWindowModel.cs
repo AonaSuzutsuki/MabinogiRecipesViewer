@@ -482,7 +482,11 @@ namespace CookInformationViewer.Models
             CurrentCategoryInfo = Categories.First();
 
             var recipeIds = _contextManager.GetRecipe(x =>
-                x.Favorites.Where(m => !m.IsDelete).Select(m => m.RecipeId));
+                x.Favorites
+                    .Where(m => !m.IsDelete)
+                    .OrderBy(m => m.CreateDate)
+                    .Select(m => m.RecipeId)
+                );
             
             var recipe = _contextManager.GetItems(x =>
             {
@@ -510,7 +514,7 @@ namespace CookInformationViewer.Models
                             into favItem
                         from subFav in favItem.DefaultIfEmpty()
                         where !m.IsDelete && recipeIds.Contains(m.Id)
-                        orderby m.Name
+                        orderby subFav.CreateDate
                         select new RecipeInfo(m)
                         {
                             Category = new CategoryInfo

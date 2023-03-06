@@ -400,6 +400,7 @@ namespace CookInformationViewer.Models.Db.Manager
                     continue;
 
                 favorite.RecipeId = newIdItem.Recipe.Id;
+                favorite.UpdateDate = DateTime.Now;
             }
 
             context.SaveChanges();
