@@ -13,5 +13,6 @@ public enum ManageType
     CookMaterialDrops,
     CookEffects,
     History,
-    CookAdditionals
+    CookAdditionals,
+    CookFavorites
 }

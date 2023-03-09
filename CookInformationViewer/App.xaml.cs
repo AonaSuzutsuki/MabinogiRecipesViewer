@@ -1,10 +1,6 @@
 ﻿using CookInformationViewer.Views;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -29,10 +25,6 @@ namespace CookInformationViewer
             var mainWindow = new MainWindow();
             _mainWindow = mainWindow;
             mainWindow.Show();
-        }
-
-        private void App_OnExit(object sender, ExitEventArgs e)
-        {
         }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)

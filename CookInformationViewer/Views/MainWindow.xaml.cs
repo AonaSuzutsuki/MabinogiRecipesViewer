@@ -79,7 +79,7 @@ namespace CookInformationViewer.Views
                 return;
 
             var halfList = scrollViewer.ViewportHeight / 2;
-            var item = _model.Recipes.FirstOrDefault(x => x.IsSelected);
+            var item = _model.Recipes.FirstOrDefault(x => x.Recipe.IsSelected);
             if (item == null)
                 return;
 

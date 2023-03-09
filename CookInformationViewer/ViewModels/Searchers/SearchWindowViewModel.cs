@@ -59,14 +59,22 @@ namespace CookInformationViewer.ViewModels.Searchers
             if (args == null || args.IsCategory)
                 return;
 
-            _mainWindowModel.SelectCategory(args);
+
+            var category = _mainWindowModel.SelectCategory(args);
+            if (category == null)
+                return;
+
+            if (_mainWindowViewModel.SelectedCategory.Value.Name != category.Name)
+                _mainWindowViewModel.IgnoreEvent.Add(nameof(_mainWindowViewModel.SelectedCategory));
+
+            _mainWindowViewModel.SelectedCategory.Value = category;
 
             var recipe = _mainWindowModel.GetRecipeInfo(args);
             if (recipe == null)
                 return;
 
             _mainWindowViewModel.RecipesListSelectionChanged(recipe);
-            recipe.IsSelected = true;
+            recipe.Recipe.IsSelected = true;
 
             if (_mainWindowService.MainWindow == null)
                 return;

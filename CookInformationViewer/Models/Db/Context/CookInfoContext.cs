@@ -67,6 +67,7 @@ namespace CookInformationViewer.Models.Db.Context
         public DbSet<DbCookEffects> CookEffects { get; set; }
         public DbSet<DbCookAdditionals> Additionals { get; set; }
         public DbSet<DbDownloadHistory> Histories { get; set; }
+        public DbSet<DbCookFavorites> Favorites { get; set; }
 
         public CookInfoContext()
         {
@@ -85,7 +86,8 @@ namespace CookInformationViewer.Models.Db.Context
                 { typeof(DbCookMaterialDrops), new DbSetWrapper<DbCookMaterialDrops>(CookMaterialDrops) },
                 { typeof(DbCookEffects), new DbSetWrapper<DbCookEffects>(CookEffects) },
                 { typeof(DbDownloadHistory), new DbSetWrapper<DbDownloadHistory>(Histories) },
-                { typeof(DbCookAdditionals), new DbSetWrapper<DbCookAdditionals>(Additionals) }
+                { typeof(DbCookAdditionals), new DbSetWrapper<DbCookAdditionals>(Additionals) },
+                { typeof(DbCookFavorites), new DbSetWrapper<DbCookFavorites>(Favorites) }
             };
         }
 
@@ -155,7 +157,8 @@ namespace CookInformationViewer.Models.Db.Context
                 { ManageType.CookMaterialDrops, typeof(DbCookMaterialDrops) },
                 { ManageType.CookEffects, typeof(DbCookEffects) },
                 { ManageType.History, typeof(DbDownloadHistory) },
-                { ManageType.CookAdditionals, typeof(DbCookAdditionals) }
+                { ManageType.CookAdditionals, typeof(DbCookAdditionals) },
+                { ManageType.CookFavorites, typeof(DbCookFavorites) }
             };
 
             return typeMap.Get(manageType);

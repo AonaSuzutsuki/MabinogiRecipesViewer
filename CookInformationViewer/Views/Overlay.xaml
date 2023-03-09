@@ -67,8 +67,8 @@
                 <Grid Grid.Column="1" Height="12" Name="Item2" Background="#0059ff" Opacity="{Binding Opacity.Value}"></Grid>
                 <Grid Grid.Column="2" Height="12" Name="Item3" Background="#00ff00" Opacity="{Binding Opacity.Value}"></Grid>
 
-                <Image Grid.Column="0" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
-                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="1" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
+                <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Left" Stretch="Fill" Source="/Resources/line.png" />
                 <Image Grid.Column="2" Width="1" Height="15" Margin="0,-27,0,0" HorizontalAlignment="Right" Stretch="Fill" Source="/Resources/line.png" />
             </Grid>
 

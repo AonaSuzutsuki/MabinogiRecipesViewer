@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommonExtensionLib.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using UpdateLib.Http;
 using UpdateLib.Update;
@@ -27,6 +28,20 @@ namespace CookInformationViewer.Models.Db.Manager
 
     public class UpdateContextManager : ContextManager
     {
+        public class FavoriteTuple
+        {
+            public int Id { get; set; }
+            public int NewId { get; set; }
+            public string RecipeName { get; set; }
+
+            public FavoriteTuple(int id, int newId, string recipeName)
+            {
+                Id = id;
+                NewId = newId;
+                RecipeName = recipeName;
+            }
+        }
+
         public SavannahXmlReader? VersionReader { get; private set; }
         public UpdateClient DownloadClient { get; }
         public Dictionary<string, Tuple<string, bool>> AvailableTableUpdate { get; } = new();
@@ -147,6 +162,11 @@ namespace CookInformationViewer.Models.Db.Manager
                 lock (DownloadClient)
                     lock (Context)
                     {
+                        var favoriteTable = (from x in Context.Favorites
+                            join rec in Context.CookRecipes on x.RecipeId equals rec.Id
+                            where !x.IsDelete
+                            select new FavoriteTuple(x.Id, x.RecipeId, rec.Name)).ToList();
+
                         RebuildItems(DownloadClient, Context.CookMaterials, TargetFiles["Materials"]);
                         RebuildItems(DownloadClient, Context.CookLocations, TargetFiles["Locations"]);
                         RebuildItems(DownloadClient, Context.CookCategories, TargetFiles["Categories"]);
@@ -156,6 +176,8 @@ namespace CookInformationViewer.Models.Db.Manager
                         RebuildRecipes(DownloadClient, Context.CookRecipes, TargetFiles["Recipes"]);
                         RebuildItems(DownloadClient, Context.Additionals, TargetFiles["Additionals"]);
                         RebuildItems(DownloadClient, Context.CookEffects, TargetFiles["Effects"]);
+
+                        RebuildFavorite(favoriteTable, Context);
                     }
             });
         }
@@ -167,6 +189,11 @@ namespace CookInformationViewer.Models.Db.Manager
                 lock (DownloadClient)
                     lock (Context)
                     {
+                        var favoriteTable = (from x in Context.Favorites
+                            join rec in Context.CookRecipes on x.RecipeId equals rec.Id
+                            where !x.IsDelete
+                            select new FavoriteTuple(x.Id, x.RecipeId, rec.Name)).ToList();
+
                         RebuildItems(DownloadClient, Context.CookMaterials, TargetFiles["Materials"], targetFileName.Get("Materials"));
                         RebuildItems(DownloadClient, Context.CookLocations, TargetFiles["Locations"], targetFileName.Get("Locations"));
                         RebuildItems(DownloadClient, Context.CookCategories, TargetFiles["Categories"], targetFileName.Get("Categories"));
@@ -176,6 +203,8 @@ namespace CookInformationViewer.Models.Db.Manager
                         RebuildRecipes(DownloadClient, Context.CookRecipes, TargetFiles["Recipes"], targetFileName.Get("Recipes"));
                         RebuildItems(DownloadClient, Context.Additionals, TargetFiles["Additionals"], targetFileName.Get("Additionals"));
                         RebuildItems(DownloadClient, Context.CookEffects, TargetFiles["Effects"], targetFileName.Get("Effects"));
+
+                        RebuildFavorite(favoriteTable, Context);
                     }
             });
         }
@@ -264,7 +293,7 @@ namespace CookInformationViewer.Models.Db.Manager
         {
             if (!canUpdate)
                 return;
-
+            
             if (!AvailableTableUpdate.ContainsKey(fileName))
                 return;
 
@@ -354,6 +383,29 @@ namespace CookInformationViewer.Models.Db.Manager
             });
         }
 
+        public static void RebuildFavorite(List<FavoriteTuple> favoriteTable, CookInfoContext context)
+        {
+            var newIdItems = (from x in favoriteTable
+                join rec in context.CookRecipes on x.RecipeName equals rec.Name
+                select new
+                {
+                    Recipe = rec,
+                    FavoriteTable = x
+                }).ToList();
+
+            foreach (var newIdItem in newIdItems)
+            {
+                var favorite = context.Favorites.FirstOrDefault(x => x.Id == newIdItem.FavoriteTable.Id);
+                if (favorite == null)
+                    continue;
+
+                favorite.RecipeId = newIdItem.Recipe.Id;
+                favorite.UpdateDate = DateTime.Now;
+            }
+
+            context.SaveChanges();
+        }
+
     }
 
     public class ContextManager : IDisposable
@@ -406,19 +458,12 @@ namespace CookInformationViewer.Models.Db.Manager
             }
         }
 
-        public string? GetRecipeMaterialName(int? id, bool isRecipe)
+        public void Apply(Action<CookInfoContext> whereAction)
         {
             lock (Context)
             {
-                if (isRecipe)
-                {
-                    var recipe = Context.CookRecipes.FirstOrDefault(x => x.Id == id);
-
-                    return recipe?.Name;
-                }
-
-                var material = Context.CookMaterials.FirstOrDefault(x => x.Id == id);
-                return material?.Name;
+                whereAction.Invoke(Context);
+                Context.SaveChanges();
             }
         }
 
