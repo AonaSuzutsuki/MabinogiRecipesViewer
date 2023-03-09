@@ -63,7 +63,7 @@ namespace CookInformationViewer.ViewModels
         public ReactiveProperty<CategoryInfo?> SelectedCategory { get; set; }
         public ReactiveProperty<int> SelectedCategoryIndex { get; set; }
 
-        public ReadOnlyReactiveCollection<RecipeInfo> RecipesList { get; set; }
+        public ReadOnlyReactiveCollection<RecipeHeader> RecipesList { get; set; }
 
         public ReactiveProperty<RecipeInfo?> SelectedRecipe { get; set; }
 
@@ -121,7 +121,7 @@ namespace CookInformationViewer.ViewModels
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
-            RecipesListSelectionChangedCommand = new DelegateCommand<RecipeInfo>(RecipesListSelectionChanged);
+            RecipesListSelectionChangedCommand = new DelegateCommand<RecipeHeader>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
             FavoriteCommand = new DelegateCommand(Favorite);
             NavigateBackCommand = new DelegateCommand(NavigateBack);
@@ -226,15 +226,15 @@ namespace CookInformationViewer.ViewModels
             _model.NarrowDownRecipes(SearchText.Value);
         }
 
-        public void RecipesListSelectionChanged(RecipeInfo? recipe)
+        public void RecipesListSelectionChanged(RecipeHeader? header)
         {
-            if (recipe == null)
+            if (header == null || header.IsHeader)
                 return;
             
             SetMessage("レシピを読み込み中...");
 
-            _model.SelectRecipe(recipe);
-            SelectedRecipe.Value = recipe;
+            _model.SelectRecipe(header.Recipe);
+            SelectedRecipe.Value = header.Recipe;
 
             _historyBack.Clear();
             _historyForward.Clear();
