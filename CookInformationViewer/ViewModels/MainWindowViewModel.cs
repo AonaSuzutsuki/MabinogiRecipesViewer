@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
@@ -32,6 +33,41 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CookInformationViewer.ViewModels
 {
+    public class IgnoreEvent
+    {
+        private readonly HashSet<string> _ignorePropertyNames = new();
+
+        public void Add(string propertyName)
+        {
+            if (_ignorePropertyNames.Contains(propertyName))
+                return;
+
+            _ignorePropertyNames.Add(propertyName);
+        }
+
+        public void Remove(string propertyName)
+        {
+            if (!_ignorePropertyNames.Contains(propertyName))
+                return;
+
+            _ignorePropertyNames.Remove(propertyName);
+        }
+
+        public bool CheckIgnore(string? propertyName)
+        {
+            if (propertyName == null)
+                return false;
+
+            var result = _ignorePropertyNames.Contains(propertyName);
+            if (result)
+            {
+                Remove(propertyName);
+            }
+
+            return result;
+        }
+    }
+
     public class MainWindowViewModel : ViewModelWindowStyleBase
     {
         #region Fields
@@ -49,6 +85,8 @@ namespace CookInformationViewer.ViewModels
 
         #region Properties
 
+        public IgnoreEvent IgnoreEvent { get; } = new(); 
+
         public bool IsDebugMode => Constants.IsDebugMode;
 
         public ReactiveProperty<string> UnderMessageLabelText { get; set; }
@@ -59,16 +97,17 @@ namespace CookInformationViewer.ViewModels
         public ReactiveProperty<string> SearchText { get; set; }
 
         public ReadOnlyReactiveCollection<CategoryInfo> Categories { get; set; }
+        public ReactiveProperty<CategoryInfo> SelectedCategory { get; set; }
         public ReactiveProperty<int> SelectedCategoryIndex { get; set; }
 
-        public ReadOnlyReactiveCollection<RecipeInfo> RecipesList { get; set; }
+        public ReadOnlyReactiveCollection<RecipeHeader> RecipesList { get; set; }
 
         public ReactiveProperty<RecipeInfo?> SelectedRecipe { get; set; }
 
         #endregion
 
         #region Event Properties
-        
+
         public ICommand OpenSettingCommand { get; set; }
         public ICommand OpenDatabaseCommand { get; set; }
         public ICommand OpenSearchWindowCommand { get; set; }
@@ -80,6 +119,7 @@ namespace CookInformationViewer.ViewModels
         public ICommand RecipesListSelectionChangedCommand { get; set; }
 
         public ICommand OpenOverlayCommand { get; set; }
+        public ICommand FavoriteCommand { get; set; }
 
         public ICommand NavigateBackCommand { get; set; }
         public ICommand NavigateGoCommand { get; set; }
@@ -105,9 +145,26 @@ namespace CookInformationViewer.ViewModels
                 model.NarrowDownRecipes(SearchText.Value);
             };
 
-            SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty()
-                .AddTo(CompositeDisposable);
+            SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty();
+            
+            SelectedCategory = new ReactiveProperty<CategoryInfo>();
+            SelectedCategory.PropertyChangedAsObservable().Subscribe(x =>
+            {
+                if (IgnoreEvent.CheckIgnore(nameof(SelectedCategory)))
+                    return;
+
+                CategoriesSelectionChangedCommand?.Execute(SelectedCategory.Value);
+            });
             Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+            Categories.ObserveAddChanged().Subscribe(item =>
+            {
+                if (item.IsSelected)
+                {
+                    SelectedCategory.Value = item;
+                }
+
+                item.IsSelected = false;
+            });
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
@@ -118,8 +175,9 @@ namespace CookInformationViewer.ViewModels
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
-            RecipesListSelectionChangedCommand = new DelegateCommand<RecipeInfo>(RecipesListSelectionChanged);
+            RecipesListSelectionChangedCommand = new DelegateCommand<RecipeHeader>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
+            FavoriteCommand = new DelegateCommand(Favorite);
             NavigateBackCommand = new DelegateCommand(NavigateBack);
             NavigateGoCommand = new DelegateCommand(NavigateGo);
             MaterialLinkCommand = new DelegateCommand<int?>(NavigateMaterialLink);
@@ -214,19 +272,23 @@ namespace CookInformationViewer.ViewModels
             if (category == null)
                 return;
 
-            _model.SelectCategory(category);
+            if (category.SameFavorite())
+                _model.SelectFavorite();
+            else
+                _model.SelectCategory(category);
+
             _model.NarrowDownRecipes(SearchText.Value);
         }
 
-        public void RecipesListSelectionChanged(RecipeInfo? recipe)
+        public void RecipesListSelectionChanged(RecipeHeader? header)
         {
-            if (recipe == null)
+            if (header == null || header.IsHeader)
                 return;
             
             SetMessage("レシピを読み込み中...");
 
-            _model.SelectRecipe(recipe);
-            SelectedRecipe.Value = recipe;
+            _model.SelectRecipe(header.Recipe);
+            SelectedRecipe.Value = header.Recipe;
 
             _historyBack.Clear();
             _historyForward.Clear();
@@ -267,6 +329,26 @@ namespace CookInformationViewer.ViewModels
                 var vm = new OverlayViewModel(windowService, model);
                 return vm;
             });
+        }
+
+        public void Favorite()
+        {
+            if (SelectedRecipe.Value == null)
+                return;
+
+            var recipe = SelectedRecipe.Value;
+
+            if (!recipe.IsFavorite)
+            {
+                _model.RegisterFavorite(SelectedRecipe.Value);
+            }
+            else
+            {
+                _model.RemoveFavorite(recipe);
+            }
+
+            if (_model.CurrentCategoryInfo?.SameFavorite() ?? false)
+                _model.SelectFavorite();
         }
 
         public void NavigateBack()

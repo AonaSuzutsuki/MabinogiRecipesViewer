@@ -574,6 +574,42 @@ namespace CookInformationViewer.Models.Db
                 }
             };
 
+            var favorite = new TableInfo
+            {
+                TableName = Constants.CookFavoritesTableName,
+                Columns = new[]
+                {
+                    new ColumnInfo
+                    {
+                        ColumnName = "id",
+                        Type = ColumnType.Integer,
+                        PrimaryKey = true,
+                        AutoIncrement = true
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "recipe_id",
+                        Type = ColumnType.Integer
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "create_date",
+                        Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "update_date",
+                        Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "is_delete",
+                        Type = ColumnType.Integer,
+                        Default = "0"
+                    }
+                }
+            };
+
             return new Dictionary<string, TableInfo>
             {
                 { cookMaterials.TableName, cookMaterials },
@@ -585,7 +621,8 @@ namespace CookInformationViewer.Models.Db
                 { cookMaterialDrops.TableName, cookMaterialDrops },
                 { cookEffects.TableName, cookEffects },
                 { additional.TableName, additional },
-                { downloadHistory.TableName, downloadHistory }
+                { downloadHistory.TableName, downloadHistory },
+                { favorite.TableName, favorite }
             };
         }
     }
