@@ -758,18 +758,18 @@ namespace CookInformationViewer.Models
             return recipe;
         }
 
-        public void SelectCategory(SearchNode node)
+        public CategoryInfo? SelectCategory(SearchNode node)
         {
             var parent = node.Parent;
             if (parent == null)
-                return;
+                return null;
 
             var categoryInfo = Categories.FirstOrDefault(x => x.Name == parent.Name);
             if (categoryInfo == null)
-                return;
+                return null;
 
             SelectCategory(categoryInfo);
-            categoryInfo.IsSelected = true;
+            return categoryInfo;
         }
 
         public void RegisterFavorite(RecipeInfo recipe)

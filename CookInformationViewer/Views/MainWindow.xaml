@@ -116,12 +116,7 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <ComboBox ItemsSource="{Binding  Categories}" SelectedIndex="{Binding SelectedCategoryIndex.Value, Mode=OneWay}" SelectedItem="{Binding SelectedCategory.Value, Mode=OneWay}" IsSynchronizedWithCurrentItem="False">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding CategoriesSelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedItem}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                        <ComboBox ItemsSource="{Binding  Categories}" SelectedIndex="{Binding SelectedCategoryIndex.Value, Mode=TwoWay}" SelectedItem="{Binding SelectedCategory.Value, Mode=TwoWay}" IsSynchronizedWithCurrentItem="False">
 
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>

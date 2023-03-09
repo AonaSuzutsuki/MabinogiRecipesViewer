@@ -33,6 +33,41 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CookInformationViewer.ViewModels
 {
+    public class IgnoreEvent
+    {
+        private readonly HashSet<string> _ignorePropertyNames = new();
+
+        public void Add(string propertyName)
+        {
+            if (_ignorePropertyNames.Contains(propertyName))
+                return;
+
+            _ignorePropertyNames.Add(propertyName);
+        }
+
+        public void Remove(string propertyName)
+        {
+            if (!_ignorePropertyNames.Contains(propertyName))
+                return;
+
+            _ignorePropertyNames.Remove(propertyName);
+        }
+
+        public bool CheckIgnore(string? propertyName)
+        {
+            if (propertyName == null)
+                return false;
+
+            var result = _ignorePropertyNames.Contains(propertyName);
+            if (result)
+            {
+                Remove(propertyName);
+            }
+
+            return result;
+        }
+    }
+
     public class MainWindowViewModel : ViewModelWindowStyleBase
     {
         #region Fields
@@ -50,6 +85,8 @@ namespace CookInformationViewer.ViewModels
 
         #region Properties
 
+        public IgnoreEvent IgnoreEvent { get; } = new(); 
+
         public bool IsDebugMode => Constants.IsDebugMode;
 
         public ReactiveProperty<string> UnderMessageLabelText { get; set; }
@@ -60,7 +97,7 @@ namespace CookInformationViewer.ViewModels
         public ReactiveProperty<string> SearchText { get; set; }
 
         public ReadOnlyReactiveCollection<CategoryInfo> Categories { get; set; }
-        public ReactiveProperty<CategoryInfo?> SelectedCategory { get; set; }
+        public ReactiveProperty<CategoryInfo> SelectedCategory { get; set; }
         public ReactiveProperty<int> SelectedCategoryIndex { get; set; }
 
         public ReadOnlyReactiveCollection<RecipeHeader> RecipesList { get; set; }
@@ -108,9 +145,26 @@ namespace CookInformationViewer.ViewModels
                 model.NarrowDownRecipes(SearchText.Value);
             };
 
-            SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty()
-                .AddTo(CompositeDisposable);
+            SelectedCategoryIndex = model.ObserveProperty(m => m.SelectedCategoryIndex).ToReactiveProperty();
+            
+            SelectedCategory = new ReactiveProperty<CategoryInfo>();
+            SelectedCategory.PropertyChangedAsObservable().Subscribe(x =>
+            {
+                if (IgnoreEvent.CheckIgnore(nameof(SelectedCategory)))
+                    return;
+
+                CategoriesSelectionChangedCommand?.Execute(SelectedCategory.Value);
+            });
             Categories = model.Categories.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+            Categories.ObserveAddChanged().Subscribe(item =>
+            {
+                if (item.IsSelected)
+                {
+                    SelectedCategory.Value = item;
+                }
+
+                item.IsSelected = false;
+            });
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
 
