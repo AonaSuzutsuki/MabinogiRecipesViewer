@@ -1,5 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.2.2b">
+    1. Added group header to favorites.
+    2. Fixed a problem with an infinite loop when selecting a category in advanced search.
+  </update>
+  <update version="1.0.1.1b">
+    1. Added favorite to category.
+      "Favorites" has been added to the top level of categories.
+      You can display only your favorites by selecting them.
+      To add a recipe to your favorites, click on the "☆ (★)" in the upper right corner of the recipe to register or delete it.
+  </update>
   <update version="1.0.0.0b">
     Pre-Release
   </update>
