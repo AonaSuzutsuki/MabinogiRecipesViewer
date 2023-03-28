@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<queries>
+    <!-- 最新の更新年月日を取得するSQL -->
+    <query id="getLatestDates">
+        <sql>
+            WITH latest_effects AS (
+                SELECT
+                    recipe_id
+                    , MAX(create_date) AS eff_create_date
+                    , MAX(update_date) AS eff_update_date
+                FROM
+                    cook_effects
+                GROUP BY
+                    recipe_id
+            )
+            SELECT
+                DATE(
+                    CASE
+                        WHEN latest_create_date > latest_update_date THEN latest_create_date
+                        ELSE latest_update_date
+                    END
+                ) AS latest_date
+            FROM
+            (
+                SELECT
+                    id
+                    , name
+                    , create_date
+                    , update_date
+                    , eff_create_date
+                    , eff_update_date
+                    , CASE
+                        WHEN eff_create_date IS NULL THEN create_date
+                        WHEN create_date IS NULL THEN eff_create_date
+                        WHEN create_date >= eff_create_date THEN create_date
+                        ELSE eff_create_date
+                    END AS latest_create_date
+                    , CASE
+                        WHEN eff_update_date IS NULL THEN update_date
+                        WHEN update_date IS NULL THEN eff_update_date
+                        WHEN update_date >= eff_update_date THEN update_date
+                        ELSE eff_update_date
+                    END AS latest_update_date
+                FROM
+                    cook_recipes rec
+                    LEFT JOIN latest_effects eff on rec.id = eff.recipe_id
+            )
+            GROUP BY
+                latest_date
+        </sql>
+    </query>
+    
+    <!-- レシピ一覧と関連する最新の更新年月日を取得するSQL -->
+    <query id="getLatestRecipeAndDate">
+        <sql>
+            WITH latest_effects AS (
+                SELECT
+                    recipe_id
+                    , MAX(create_date) AS eff_create_date
+                    , MAX(update_date) AS eff_update_date
+                FROM
+                    cook_effects
+                GROUP BY
+                    recipe_id
+            )
+            SELECT
+                id
+                , name
+                , DATE(
+                    CASE
+                        WHEN latest_create_date > latest_update_date THEN latest_create_date
+                        ELSE latest_update_date
+                    END
+                ) AS latest_date
+            FROM
+            (
+                SELECT
+                    id
+                    , name
+                    , create_date
+                    , update_date
+                    , eff_create_date
+                    , eff_update_date
+                    , CASE
+                        WHEN eff_create_date IS NULL THEN create_date
+                        WHEN create_date IS NULL THEN eff_create_date
+                        WHEN create_date >= eff_create_date THEN create_date
+                        ELSE eff_create_date
+                    END AS latest_create_date
+                    , CASE
+                        WHEN eff_update_date IS NULL THEN update_date
+                        WHEN update_date IS NULL THEN eff_update_date
+                        WHEN update_date >= eff_update_date THEN update_date
+                        ELSE eff_update_date
+                    END AS latest_update_date
+                FROM
+                    cook_recipes rec
+                    LEFT JOIN latest_effects eff on rec.id = eff.recipe_id
+            )
+        </sql>
+    </query>
+</queries>
