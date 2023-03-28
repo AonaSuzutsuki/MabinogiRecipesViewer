@@ -3,7 +3,7 @@ using System.Reflection;
 using CookInformationViewer.Models.Db.Loader;
 using NUnit.Framework;
 
-namespace TestProject
+namespace TestProject.Models.Db.Loader
 {
     public class SqlLoaderTests
     {
