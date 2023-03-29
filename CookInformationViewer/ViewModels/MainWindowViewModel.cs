@@ -30,6 +30,7 @@ using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
 
 namespace CookInformationViewer.ViewModels
 {
@@ -113,6 +114,7 @@ namespace CookInformationViewer.ViewModels
         public ICommand OpenSearchWindowCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
+        public ICommand OpenListUpdateHistoryCommand { get; set; }
         public ICommand OpenVersionInfoCommand { get; set; }
 
         public ICommand CategoriesSelectionChangedCommand { get; set; }
@@ -173,6 +175,7 @@ namespace CookInformationViewer.ViewModels
             OpenSearchWindowCommand = new DelegateCommand(OpenSearchWindow);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
+            OpenListUpdateHistoryCommand = new DelegateCommand(OpenListUpdateHistory);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeHeader>(RecipesListSelectionChanged);
@@ -258,6 +261,13 @@ namespace CookInformationViewer.ViewModels
             var updFormModel = new UpdFormModel();
             var vm = new UpdFormViewModel(new WindowService(), updFormModel);
             WindowManageService.ShowNonOwner<UpdForm>(vm);
+        }
+
+        public void OpenListUpdateHistory()
+        {
+            var model = _model.CreateListUpdateHistoryModel();
+            var vm = new ListUpdateHistoryViewModel(new WindowService(), this, model);
+            WindowManageService.Show<ListUpdateHistory>(vm);
         }
 
         public void OpenVersionInfo()
@@ -454,9 +464,38 @@ namespace CookInformationViewer.ViewModels
             SelectedCategory.Value = category;
         }
 
+        public void SelectCategory(UpdateRecipeItem item)
+        {
+            var category = _model.SelectCategory(item);
+            if (category == null)
+                return;
+
+            if (SelectedCategory.Value.Name != category.Name)
+                IgnoreEvent.Add(nameof(SelectedCategory));
+
+            SelectedCategory.Value = category;
+        }
+
         public void SelectRecipe(SearchNode node)
         {
             var recipe = _model.GetRecipeInfo(node);
+            if (recipe == null)
+                return;
+
+            RecipesListSelectionChanged(recipe);
+            recipe.Recipe.IsSelected = true;
+
+            if (_mainWindowService.MainWindow == null)
+                return;
+
+            _mainWindowService.MainWindow.IsSearched = true;
+            _mainWindowService.MainWindow.ScrollItem();
+            _mainWindowService.MainWindow.WindowFocus();
+        }
+
+        public void SelectRecipe(UpdateRecipeItem item)
+        {
+            var recipe = _model.GetRecipeInfo(item);
             if (recipe == null)
                 return;
 

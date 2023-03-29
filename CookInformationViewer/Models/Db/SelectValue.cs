@@ -1,25 +1,27 @@
-﻿namespace CookInformationViewer.Models.Db
+﻿using System;
+
+namespace CookInformationViewer.Models.Db
 {
     public class SelectValue
     {
-        private readonly object _value;
+        private readonly object? _value;
 
         private readonly ColumnType _type;
 
-        public SelectValue(object value, ColumnType type)
+        public SelectValue(object? value, ColumnType type)
         {
             _value = value;
             _type = type;
         }
 
-        public T GetValue<T>()
+        public T? GetValue<T>()
         {
             if (_value is T value)
                 return value;
             return default;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is SelectValue selectValue && Equals(selectValue);
         }
@@ -39,7 +41,7 @@
 
         public override string ToString()
         {
-            return GetValue<string>();
+            return GetValue<string>() ?? string.Empty;
         }
     }
 }

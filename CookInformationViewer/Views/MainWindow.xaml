@@ -87,7 +87,13 @@
                     <MenuItem Header="ヘルプ(_H)">
                         <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
                         <MenuItem Header="更新プログラムの確認" Command="{Binding OpenUpdateProgramCommand}" />
+
                         <Separator Style="{StaticResource MLB_Separator}" />
+
+                        <MenuItem Header="レシピの更新を確認" Command="{Binding OpenListUpdateHistoryCommand}" />
+
+                        <Separator Style="{StaticResource MLB_Separator}" />
+
                         <MenuItem Header="バージョン情報" Command="{Binding OpenVersionInfoCommand}" />
                     </MenuItem>
                 </Menu>
