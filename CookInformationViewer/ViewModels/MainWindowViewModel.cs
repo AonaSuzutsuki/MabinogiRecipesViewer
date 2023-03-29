@@ -240,7 +240,7 @@ namespace CookInformationViewer.ViewModels
         public void OpenSearchWindow()
         {
             var model = new SearchWindowModel();
-            var vm = new SearchWindowViewModel(new WindowService(), _mainWindowService, this, model, _model);
+            var vm = new SearchWindowViewModel(new WindowService(), this, model);
             WindowManageService.ShowNonOwner<SearchWindow>(vm);
         }
 
@@ -440,6 +440,35 @@ namespace CookInformationViewer.ViewModels
         {
             CanGoForward.Value = _historyForward.Any();
             CanGoBack.Value = _historyBack.Any();
+        }
+
+        public void SelectCategory(SearchNode node)
+        {
+            var category = _model.SelectCategory(node);
+            if (category == null)
+                return;
+
+            if (SelectedCategory.Value.Name != category.Name)
+                IgnoreEvent.Add(nameof(SelectedCategory));
+
+            SelectedCategory.Value = category;
+        }
+
+        public void SelectRecipe(SearchNode node)
+        {
+            var recipe = _model.GetRecipeInfo(node);
+            if (recipe == null)
+                return;
+
+            RecipesListSelectionChanged(recipe);
+            recipe.Recipe.IsSelected = true;
+
+            if (_mainWindowService.MainWindow == null)
+                return;
+
+            _mainWindowService.MainWindow.IsSearched = true;
+            _mainWindowService.MainWindow.ScrollItem();
+            _mainWindowService.MainWindow.WindowFocus();
         }
 
         public override void Dispose()
