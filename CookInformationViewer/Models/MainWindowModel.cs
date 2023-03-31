@@ -27,6 +27,7 @@ using Prism.Mvvm;
 using SavannahXmlLib.XmlWrapper;
 using UpdateLib.Http;
 using UpdateLib.Update;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using Brush = System.Windows.Media.Brush;
 
 namespace CookInformationViewer.Models
@@ -758,6 +759,15 @@ namespace CookInformationViewer.Models
             return recipe;
         }
 
+        public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)
+        {
+            var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == item.Name);
+            if (recipe == null)
+                return null;
+
+            return recipe;
+        }
+
         public CategoryInfo? SelectCategory(SearchNode node)
         {
             var parent = node.Parent;
@@ -765,6 +775,16 @@ namespace CookInformationViewer.Models
                 return null;
 
             var categoryInfo = Categories.FirstOrDefault(x => x.Name == parent.Name);
+            if (categoryInfo == null)
+                return null;
+
+            SelectCategory(categoryInfo);
+            return categoryInfo;
+        }
+
+        public CategoryInfo? SelectCategory(UpdateRecipeItem item)
+        {
+            var categoryInfo = Categories.FirstOrDefault(x => x.Name == item.CategoryName);
             if (categoryInfo == null)
                 return null;
 
@@ -799,6 +819,11 @@ namespace CookInformationViewer.Models
             _contextManager.Apply(x => x.Favorites.Remove(favorite));
 
             recipe.IsFavorite = false;
+        }
+
+        public ListUpdateHistoryModel CreateListUpdateHistoryModel()
+        {
+            return new ListUpdateHistoryModel(_contextManager);
         }
 
         public void Dispose()

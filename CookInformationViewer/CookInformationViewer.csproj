@@ -31,6 +31,7 @@
     <None Remove="Resources\gauge_overlay2.png" />
     <None Remove="Resources\line.png" />
     <None Remove="Resources\no-image.png" />
+    <None Remove="Resources\SQL\LatestRecipes.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,7 @@
     <Resource Include="Resources\gauge_overlay2.png" />
     <Resource Include="Resources\line.png" />
     <EmbeddedResource Include="Resources\no-image.png" />
+    <EmbeddedResource Include="Resources\SQL\*.xml" />
   </ItemGroup>
 
   <ItemGroup>

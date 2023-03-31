@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UpdateLogs", "UpdateLogs", 
 		UpdateLogs\updates.ja.xml = UpdateLogs\updates.ja.xml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Log|Any CPU = Debug Log|Any CPU
@@ -34,6 +36,12 @@ Global
 		{A5A55860-D4C1-4369-B652-0B1F3AA47FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5A55860-D4C1-4369-B652-0B1F3AA47FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5A55860-D4C1-4369-B652-0B1F3AA47FCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}.Debug Log|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}.Debug Log|Any CPU.Build.0 = Debug|Any CPU
+		{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EA9FCDC-3CD6-46AE-8F6B-31147191219E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

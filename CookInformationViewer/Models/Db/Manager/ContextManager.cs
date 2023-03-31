@@ -467,6 +467,16 @@ namespace CookInformationViewer.Models.Db.Manager
             }
         }
 
+        public void ExecuteNonQuery(SqlCreator creator)
+        {
+            Executor.ExecuteNonQuery(creator);
+        }
+
+        public IEnumerable<Dictionary<string, SelectValue>> Execute(SqlCreator creator)
+        {
+            return Executor.Execute(creator);
+        }
+
         public void Dispose()
         {
             Context.Dispose();
