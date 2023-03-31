@@ -443,15 +443,7 @@ namespace CookInformationViewer.Models.Db.Manager
             }
         }
 
-        public List<T> GetItems<T>(Func<CookInfoContext, IEnumerable<T>> whereFunc)
-        {
-            lock (Context)
-            {
-                return whereFunc.Invoke(Context).ToList();
-            }
-        }
-
-        public T GetRecipe<T>(Func<CookInfoContext, T> whereFunc)
+        public T GetItem<T>(Func<CookInfoContext, T> whereFunc)
         {
             lock (Context)
             {

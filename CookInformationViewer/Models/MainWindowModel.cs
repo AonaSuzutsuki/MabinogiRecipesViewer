@@ -461,7 +461,7 @@ namespace CookInformationViewer.Models
         public void SelectCategory(CategoryInfo category)
         {
             CurrentCategoryInfo = category;
-            var recipe = _contextManager.GetItems(x =>
+            var recipe = _contextManager.GetItem(x =>
             {
                 return (from m in x.CookRecipes
                     join cat in x.CookCategories on m.CategoryId equals cat.Id
@@ -512,14 +512,14 @@ namespace CookInformationViewer.Models
         {
             CurrentCategoryInfo = Categories.First();
 
-            var recipeIds = _contextManager.GetRecipe(x =>
+            var recipeIds = _contextManager.GetItem(x =>
                 x.Favorites
                     .Where(m => !m.IsDelete)
                     .OrderBy(m => m.CreateDate)
                     .Select(m => m.RecipeId)
                 );
             
-            var recipe = _contextManager.GetItems(x =>
+            var recipe = _contextManager.GetItem(x =>
             {
                 return (from m in x.CookRecipes
                         join cat in x.CookCategories on m.CategoryId equals cat.Id
@@ -578,7 +578,7 @@ namespace CookInformationViewer.Models
 
         public RecipeInfo? GetRecipe(int id)
         {
-            var recipe = _contextManager.GetRecipe(x =>
+            var recipe = _contextManager.GetItem(x =>
             {
                 var item = (from m in x.CookRecipes
                     join cat in x.CookCategories on m.CategoryId equals cat.Id 
@@ -663,7 +663,7 @@ namespace CookInformationViewer.Models
             if (materialId == null)
                 return locations;
 
-            var sellers = _contextManager.GetItems(x =>
+            var sellers = _contextManager.GetItem(x =>
             {
                 var items = from m in x.CookMaterialSellers
                     join seller in x.CookSellers on m.SellerId equals seller.Id
@@ -680,7 +680,7 @@ namespace CookInformationViewer.Models
             });
             locations.AddRange(sellers);
 
-            var drops = _contextManager.GetItems(x =>
+            var drops = _contextManager.GetItem(x =>
             {
                 var items = from m in x.CookMaterialDrops
                     join location in x.CookLocations on m.LocationId equals location.Id
@@ -702,9 +702,9 @@ namespace CookInformationViewer.Models
 
         private void SetEffects(RecipeInfo recipe)
         {
-            var effects = _contextManager.GetItems(x => (from m in x.CookEffects
+            var effects = _contextManager.GetItem(x => (from m in x.CookEffects
                 where m.RecipeId == recipe.Id
-                select m));
+                select m)).ToList();
 
             var max = effects.MaxBy(x => x.Star);
             recipe.Star = max?.Star ?? 0;
@@ -725,7 +725,7 @@ namespace CookInformationViewer.Models
 
         private void SetAdditional(RecipeInfo recipe)
         {
-            var item = _contextManager.GetItems(x => (from m in x.Additionals
+            var item = _contextManager.GetItem(x => (from m in x.Additionals
                 where m.RecipeId == recipe.Id
                 select m)).FirstOrDefault();
 
@@ -741,7 +741,7 @@ namespace CookInformationViewer.Models
 
         private void SetFavorite(RecipeInfo recipe)
         {
-            var favorite = _contextManager.GetRecipe(x =>
+            var favorite = _contextManager.GetItem(x =>
                 x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
 
             if (favorite == null)
@@ -753,8 +753,6 @@ namespace CookInformationViewer.Models
         public RecipeHeader? GetRecipeInfo(SearchNode node)
         {
             var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == node.Name);
-            if (recipe == null)
-                return null;
 
             return recipe;
         }
@@ -762,8 +760,6 @@ namespace CookInformationViewer.Models
         public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)
         {
             var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == item.Name);
-            if (recipe == null)
-                return null;
 
             return recipe;
         }
@@ -810,7 +806,7 @@ namespace CookInformationViewer.Models
 
         public void RemoveFavorite(RecipeInfo recipe)
         {
-            var favorite = _contextManager.GetRecipe(x =>
+            var favorite = _contextManager.GetItem(x =>
                 x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
 
             if (favorite == null)
