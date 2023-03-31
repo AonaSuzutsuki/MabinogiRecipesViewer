@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace CookInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db.Raw
 {
     public class ColumnInfo
     {
@@ -40,14 +40,14 @@ namespace CookInformationViewer.Models.Db
             unchecked
             {
                 var hashCode = Table != null ? Table.GetHashCode() : 0;
-                hashCode = (hashCode * 397) ^ (ColumnName != null ? ColumnName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (int) Type;
-                hashCode = (hashCode * 397) ^ PrimaryKey.GetHashCode();
-                hashCode = (hashCode * 397) ^ NotNull.GetHashCode();
-                hashCode = (hashCode * 397) ^ Unique.GetHashCode();
-                hashCode = (hashCode * 397) ^ AutoIncrement.GetHashCode();
-                hashCode = (hashCode * 397) ^ (Default != null ? Default.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (ForeignKey != null ? ForeignKey.GetHashCode() : 0);
+                hashCode = hashCode * 397 ^ (ColumnName != null ? ColumnName.GetHashCode() : 0);
+                hashCode = hashCode * 397 ^ (int)Type;
+                hashCode = hashCode * 397 ^ PrimaryKey.GetHashCode();
+                hashCode = hashCode * 397 ^ NotNull.GetHashCode();
+                hashCode = hashCode * 397 ^ Unique.GetHashCode();
+                hashCode = hashCode * 397 ^ AutoIncrement.GetHashCode();
+                hashCode = hashCode * 397 ^ (Default != null ? Default.GetHashCode() : 0);
+                hashCode = hashCode * 397 ^ (ForeignKey != null ? ForeignKey.GetHashCode() : 0);
                 return hashCode;
             }
         }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using CommonExtensionLib.Extensions;
+using CookInformationViewer.Models.Db.Raw;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

@@ -1,4 +1,4 @@
-﻿namespace CookInformationViewer.Models.Db
+﻿namespace CookInformationViewer.Models.Db.Raw
 {
     public static class ColumnConverter
     {

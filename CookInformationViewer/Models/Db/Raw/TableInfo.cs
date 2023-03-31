@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using CommonCoreLib.Bool;
 
-namespace CookInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db.Raw
 {
     public class TableInfo : ICloneable
     {
@@ -49,7 +49,7 @@ namespace CookInformationViewer.Models.Db
             var collector = new BoolCollector();
             collector.ChangeBool(nameof(left.TableName), left.TableName == right.TableName);
             collector.ChangeBool("count", left.Columns.Count() == right.Columns.Count());
-            
+
             var columnZip = left.Columns.Zip(right.Columns, (l, r) => new { Left = l, Right = r });
             foreach (var item in columnZip)
             {
@@ -100,7 +100,7 @@ namespace CookInformationViewer.Models.Db
                 var pk = dict["pk"].GetValue<long>();
                 var defaultValue = dict["dflt_value"].GetValue<object>();
 
-                if (defaultValue == System.DBNull.Value)
+                if (defaultValue == DBNull.Value)
                     defaultValue = null;
                 if (defaultValue is string defaultValueText)
                 {

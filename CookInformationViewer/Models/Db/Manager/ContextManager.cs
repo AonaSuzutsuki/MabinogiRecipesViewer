@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using UpdateLib.Http;
 using UpdateLib.Update;
+using CookInformationViewer.Models.Db.Raw;
 
 namespace CookInformationViewer.Models.Db.Manager
 {

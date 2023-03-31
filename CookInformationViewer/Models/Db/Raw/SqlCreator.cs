@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CookInformationViewer.Models.Db
+namespace CookInformationViewer.Models.Db.Raw
 {
     public class SqlCreator
     {

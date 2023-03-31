@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CommonExtensionLib.Extensions;
+using CookInformationViewer.Models.Db.Raw;
 using Newtonsoft.Json.Linq;
 using SavannahXmlLib.XmlWrapper;
 
