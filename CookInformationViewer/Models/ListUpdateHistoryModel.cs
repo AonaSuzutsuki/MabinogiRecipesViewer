@@ -9,9 +9,9 @@ using System.Windows.Media.Imaging;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
 using CookInformationViewer.Models.Converters;
-using CookInformationViewer.Models.Db;
 using CookInformationViewer.Models.Db.Loader;
 using CookInformationViewer.Models.Db.Manager;
+using CookInformationViewer.Models.Db.Raw;
 using CookInformationViewer.Models.Extensions;
 
 namespace CookInformationViewer.Models
@@ -75,10 +75,11 @@ namespace CookInformationViewer.Models
         public void GetRecipes(string date)
         {
             _sqlLoader.SetQuery("getLatestRecipeAndDate");
-            _sqlLoader.SetParameter("date", $"'{date}'");
+            _sqlLoader.SetParameter("date", $"{date}");
+            var parameters = _sqlLoader.GetParameters();
             var creator = SqlCreator.Create(_sqlLoader.ToString());
 
-            var items = _contextManager.Execute(creator).Select(x =>
+            var items = _contextManager.Execute(creator, parameters).Select(x =>
             {
                 var item = new UpdateRecipeItem
                 {

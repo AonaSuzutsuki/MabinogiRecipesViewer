@@ -18,6 +18,7 @@ namespace CookInformationViewer.Models.Db.Loader
         private readonly Stream _stream;
         private readonly SavannahXmlReader _reader;
         private TemplateLoader? _templateLoader;
+        private readonly Dictionary<string, SelectParameter> _parameters = new();
         private string _sqlId = string.Empty;
         
         public SqlLoader(string fileName, string @namespace = "CookInformationViewer.Resources.SQL", Assembly? assembly = null)
@@ -56,7 +57,17 @@ namespace CookInformationViewer.Models.Db.Loader
 
         public void SetParameter(string name, string value)
         {
-            _templateLoader?.Assign(name, value);
+            _parameters.Put(name, new SelectParameter
+            {
+                ColumnName = name,
+                Value = value
+            });
+            _templateLoader?.Assign(name, $"@{name}");
+        }
+
+        public SelectParameter[] GetParameters()
+        {
+            return _parameters.Values.ToArray();
         }
 
         public void SetStatement(string name)

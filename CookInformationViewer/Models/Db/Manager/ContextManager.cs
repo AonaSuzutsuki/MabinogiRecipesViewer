@@ -460,14 +460,14 @@ namespace CookInformationViewer.Models.Db.Manager
             }
         }
 
-        public void ExecuteNonQuery(SqlCreator creator)
+        public void ExecuteNonQuery(SqlCreator creator, params SelectParameter[] values)
         {
-            Executor.ExecuteNonQuery(creator);
+            Executor.ExecuteNonQuery(creator, values);
         }
 
-        public IEnumerable<Dictionary<string, SelectValue>> Execute(SqlCreator creator)
+        public IEnumerable<Dictionary<string, SelectValue>> Execute(SqlCreator creator, params SelectParameter[] values)
         {
-            return Executor.Execute(creator);
+            return Executor.Execute(creator, values);
         }
 
         public void Dispose()
