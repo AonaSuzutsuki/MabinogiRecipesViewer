@@ -16,7 +16,8 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using UpdateLib.Http;
 using UpdateLib.Update;
-using CookInformationViewer.Models.Db.Raw;
+using KimamaSqlExecutorLib.Db.Raw;
+using KimamaSqliteExecutorLib.Db.Raw;
 
 namespace CookInformationViewer.Models.Db.Manager
 {

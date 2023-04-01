@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using CookInformationViewer.Models.Db.Raw;
+using KimamaSqliteExecutorLib.Db.Raw;
 
 namespace CookInformationViewer.Models.Db
 {

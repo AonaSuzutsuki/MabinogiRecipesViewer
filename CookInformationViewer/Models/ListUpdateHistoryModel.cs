@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
 using CookInformationViewer.Models.Converters;
-using CookInformationViewer.Models.Db.Loader;
 using CookInformationViewer.Models.Db.Manager;
-using CookInformationViewer.Models.Db.Raw;
 using CookInformationViewer.Models.Extensions;
+using KimamaSqlExecutorLib.Db.Loader;
+using KimamaSqliteExecutorLib.Db.Raw;
 
 namespace CookInformationViewer.Models
 {
@@ -57,7 +58,7 @@ namespace CookInformationViewer.Models
         {
             _contextManager = contextManager;
 
-            var loader = new SqlLoader("LatestRecipes.xml");
+            var loader = new SqlLoader("LatestRecipes.xml", "CookInformationViewer.Resources.SQL", Assembly.GetExecutingAssembly());
             loader.SetQuery("getLatestDates");
             var creator = SqlCreator.Create(loader.ToString());
 
