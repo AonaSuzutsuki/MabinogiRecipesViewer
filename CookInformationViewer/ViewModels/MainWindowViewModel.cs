@@ -249,6 +249,13 @@ namespace CookInformationViewer.ViewModels
 
         public void UpdateTable()
         {
+            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                WindowManageService.MessageBoxShow("ネットワークに未接続な状態でこの機能はしようできません。",
+                    "ネットワーク未接続", ExMessageBoxBase.MessageType.Exclamation);
+                return;
+            }
+
             var model = new TableDownloadModel(_model);
             var vm = new TableDownloadViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<TableDownloadView>(vm);
@@ -258,6 +265,13 @@ namespace CookInformationViewer.ViewModels
 
         public void OpenUpdateProgram()
         {
+            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                WindowManageService.MessageBoxShow("ネットワークに未接続な状態でこの機能はしようできません。",
+                    "ネットワーク未接続", ExMessageBoxBase.MessageType.Exclamation);
+                return;
+            }
+
             var updFormModel = new UpdFormModel();
             var vm = new UpdFormViewModel(new WindowService(), updFormModel);
             WindowManageService.ShowNonOwner<UpdForm>(vm);

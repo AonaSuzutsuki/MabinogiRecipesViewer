@@ -393,7 +393,7 @@ namespace CookInformationViewer.Models
 
         public async Task CheckDatabaseUpdate()
         {
-            if (_setting.IsCheckDataUpdate)
+            if (_setting.IsCheckDataUpdate && System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
                 await _contextManager.AvailableTableUpdateCheck();
             }
@@ -401,7 +401,7 @@ namespace CookInformationViewer.Models
 
         public async Task<bool> CheckUpdate()
         {
-            if (_setting.IsCheckProgramUpdate)
+            if (_setting.IsCheckProgramUpdate && System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
                 var availableUpdate = await UpdateManager.CheckCanUpdate(UpdateManager.GetUpdateClient());
                 return availableUpdate;
