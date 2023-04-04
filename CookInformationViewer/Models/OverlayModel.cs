@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CookInformationViewer.Models.Settings;
+using CookInformationViewer.Models.DataValue;
 
 namespace CookInformationViewer.Models
 {

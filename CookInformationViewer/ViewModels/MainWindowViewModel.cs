@@ -31,6 +31,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
+using CookInformationViewer.Models.DataValue;
 
 namespace CookInformationViewer.ViewModels
 {

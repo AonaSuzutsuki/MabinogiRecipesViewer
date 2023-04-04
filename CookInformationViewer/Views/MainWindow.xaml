@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         xmlns:behaviors="clr-namespace:CookInformationViewer.Views.Behaviors"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
-        xmlns:models="clr-namespace:CookInformationViewer.Models"
+        xmlns:models="clr-namespace:CookInformationViewer.Models.DataValue"
         xmlns:converters="clr-namespace:CookInformationViewer.Views.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"

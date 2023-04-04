@@ -13,6 +13,7 @@ using CookInformationViewer.Models.Converters;
 using CookInformationViewer.Models.Db.Manager;
 using CookInformationViewer.Models.Extensions;
 using KimamaSqlExecutorLib.Db.Loader;
+using KimamaSqlExecutorLib.Db.Raw;
 using KimamaSqliteExecutorLib.Db.Raw;
 
 namespace CookInformationViewer.Models
@@ -65,7 +66,7 @@ namespace CookInformationViewer.Models
             var dates = contextManager.Execute(creator);
             var items = dates.Select(x => new UpdateHistoryItem
             {
-                Date = NullableDictionaryExtension.Get(x, "latest_date", new SelectValue("", ColumnType.Text)).GetValue<string>() ?? string.Empty
+                Date = NullableDictionaryExtension.Get(x, "latest_date", SelectValueCreator.Create("")).GetValue<string>() ?? string.Empty
             });
 
             _recipeDateItems = new ObservableCollection<UpdateHistoryItem>(items);
@@ -84,14 +85,14 @@ namespace CookInformationViewer.Models
             {
                 var item = new UpdateRecipeItem
                 {
-                    Id = (int)NullableDictionaryExtension.Get(x, "id", new SelectValue(0, ColumnType.Integer)).GetValue<long>(),
-                    Name = NullableDictionaryExtension.Get(x, "name", new SelectValue("", ColumnType.Text)).GetValue<string>() ?? string.Empty,
-                    Date = NullableDictionaryExtension.Get(x, "latest_date", new SelectValue("", ColumnType.Text)).GetValue<string>() ?? string.Empty,
-                    CategoryId = (int)NullableDictionaryExtension.Get(x, "category_id", new SelectValue("", ColumnType.Integer)).GetValue<long>(),
-                    CategoryName = NullableDictionaryExtension.Get(x, "category_name", new SelectValue("", ColumnType.Text)).GetValue<string>() ?? string.Empty
+                    Id = (int)NullableDictionaryExtension.Get(x, "id", SelectValueCreator.Create(0)).GetValue<long>(),
+                    Name = NullableDictionaryExtension.Get(x, "name", SelectValueCreator.Create("")).GetValue<string>() ?? string.Empty,
+                    Date = NullableDictionaryExtension.Get(x, "latest_date", SelectValueCreator.Create("")).GetValue<string>() ?? string.Empty,
+                    CategoryId = (int)NullableDictionaryExtension.Get(x, "category_id", SelectValueCreator.Create("")).GetValue<long>(),
+                    CategoryName = NullableDictionaryExtension.Get(x, "category_name", SelectValueCreator.Create("")).GetValue<string>() ?? string.Empty
                 };
 
-                var imageData = NullableDictionaryExtension.Get(x, "image_data", new SelectValue(null, ColumnType.Blob))
+                var imageData = NullableDictionaryExtension.Get(x, "image_data", new SelectValue(null, typeof(byte[])))
                     .GetValue<byte[]>();
                 
                 if (imageData == null)
