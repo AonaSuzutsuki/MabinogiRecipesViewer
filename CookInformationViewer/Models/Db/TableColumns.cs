@@ -517,6 +517,11 @@ namespace CookInformationViewer.Models.Db
                     },
                     new ColumnInfo
                     {
+                        ColumnName = "special",
+                        Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
                         ColumnName = "create_date",
                         Type = ColumnType.Text
                     },

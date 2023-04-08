@@ -22,6 +22,10 @@ namespace CookInformationViewer.Models.Db.Context
         [Column("not_festival")]
         public int NotFestival { get; set; }
 
+        [Column("special")]
+        public string? Special { get; set; }
+
+
         [Column("create_date")]
         public override DateTime? CreateDate { get; set; }
 
