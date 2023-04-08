@@ -47,7 +47,7 @@
   <ItemGroup>
     <PackageReference Include="CommonCoreLib" Version="1.0.6" />
     <PackageReference Include="CommonStyleLib" Version="1.0.24" />
-    <PackageReference Include="KimamaSqliteExecutorLib" Version="1.0.4" />
+    <PackageReference Include="KimamaSqliteExecutorLib" Version="1.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SavannahXmlLib" Version="1.0.5" />
