@@ -31,6 +31,8 @@ namespace CookInformationViewer.Models.Db.Manager
 
     public class UpdateContextManager : ContextManager
     {
+        private const string VersionColumnName = "db_version";
+
         public class FavoriteTuple
         {
             public int Id { get; set; }
@@ -160,6 +162,8 @@ namespace CookInformationViewer.Models.Db.Manager
 
         public async Task RebuildDataBase()
         {
+            RebuildContext(false);
+
             await Task.Factory.StartNew(() =>
             {
                 LockAction(context =>
@@ -180,12 +184,20 @@ namespace CookInformationViewer.Models.Db.Manager
                     RebuildItems(context, DownloadClient, context.CookEffects, TargetFiles["Effects"]);
 
                     RebuildFavorite(favoriteTable, context);
+
+                    UpdateDbVersion(context);
                 });
             });
         }
 
         public async Task UpdateDataBase(Dictionary<string, bool> targetFileName)
         {
+            if (IsUpdateDbVersion())
+            {
+                await RebuildDataBase();
+                return;
+            }
+
             await Task.Factory.StartNew(() =>
             {
                 LockAction(context =>
@@ -206,6 +218,8 @@ namespace CookInformationViewer.Models.Db.Manager
                     RebuildItems(context, DownloadClient, context.CookEffects, TargetFiles["Effects"], targetFileName.Get("Effects"));
 
                     RebuildFavorite(favoriteTable, context);
+
+                    UpdateDbVersion(context);
                 });
             });
         }
@@ -381,6 +395,33 @@ namespace CookInformationViewer.Models.Db.Manager
             });
         }
 
+        private void UpdateDbVersion(CookInfoContext context)
+        {
+            var dbVersion = context.Metas.FirstOrDefault(x => x.Id == VersionColumnName);
+            if (dbVersion == null)
+            {
+                context.Metas.Add(new DbMeta
+                {
+                    Id = VersionColumnName,
+                    Value = TableColumns.DbVersion
+                });
+            }
+            else
+            {
+                dbVersion.Value = TableColumns.DbVersion;
+            }
+
+            context.SaveChanges();
+        }
+
+        private bool IsUpdateDbVersion()
+        {
+            var dbVersion = LockFunction(context => context.Metas.FirstOrDefault(x => x.Id == VersionColumnName));
+            var version = dbVersion?.Value ?? "1.0";
+
+            return version != TableColumns.DbVersion;
+        }
+
         public static void RebuildFavorite(List<FavoriteTuple> favoriteTable, CookInfoContext context)
         {
             var newIdItems = (from x in favoriteTable
@@ -408,21 +449,41 @@ namespace CookInformationViewer.Models.Db.Manager
 
     public class ContextManager : IDisposable
     {
-        protected readonly CookInfoContext Context;
         protected readonly SemaphoreSlim Semaphore = new(1, 1);
 
+        private CookInfoContext _context;
         protected readonly SqlExecutor Executor;
         
         public ContextManager()
         {
-            Context = new CookInfoContext();
+            _context = new CookInfoContext();
             Executor = new SqlExecutor(Constants.DatabaseFileName);
 #if DEBUG
             Executor.SqlExecutedObservable.Subscribe(x => Debug.WriteLine(x));
 #endif
 
+            RebuildContext(true);
+        }
+
+        public void RebuildContext(bool isInit)
+        {
             var tables = TableColumns.GetTables();
-            var notExistsTables = Executor.ExistsObjects("table", 
+
+            if (!isInit)
+            {
+                Executor.ExecuteNonQuery(SqlCreator.Create("PRAGMA foreign_keys = 0"));
+                foreach (var table in tables.Select(x => x.Value).Where(x => 
+                             x.TableName != Constants.CookFavoritesTableName && x.TableName == Constants.MetaTableName))
+                {
+                    Executor.ExecuteNonQuery(SqlCreator.Create($"DROP TABLE {table.TableName}"));
+                }
+                Executor.ExecuteNonQuery(SqlCreator.Create("PRAGMA foreign_keys = 1"));
+
+                _context.Dispose();
+                _context = new CookInfoContext();
+            }
+
+            var notExistsTables = Executor.ExistsObjects("table",
                 tables.Values.Select(x => x.TableName).ToArray());
             foreach (var notExistsTable in notExistsTables)
             {
@@ -432,6 +493,8 @@ namespace CookInformationViewer.Models.Db.Manager
                 var tableInfo = tables[notExistsTable];
                 Executor.CreateTable(tableInfo);
             }
+
+            _context.SaveChanges();
         }
 
         public IList<DbCookCategories> GetCategories(Func<CookInfoContext, IEnumerable<DbCookCategories>>? whereFunc = null)
@@ -493,7 +556,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
         public void Dispose()
         {
-            Context.Dispose();
+            _context.Dispose();
             Executor.Dispose();
             Semaphore.Dispose();
         }
