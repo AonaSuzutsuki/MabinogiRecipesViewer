@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommonExtensionLib.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -149,7 +150,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
                 var version = versionNode.InnerText;
 
-                var history = Context.Histories.FirstOrDefault(x => x.Name == fileName);
+                var history = LockFunction(context => context.Histories.FirstOrDefault(x => x.Name == fileName));
                 if (history == null || history.Date != version)
                     AvailableTableUpdate[fileName] = new Tuple<string, bool>(version, true);
                 else
@@ -161,26 +162,25 @@ namespace CookInformationViewer.Models.Db.Manager
         {
             await Task.Factory.StartNew(() =>
             {
-                lock (DownloadClient)
-                    lock (Context)
-                    {
-                        var favoriteTable = (from x in Context.Favorites
-                            join rec in Context.CookRecipes on x.RecipeId equals rec.Id
-                            where !x.IsDelete
-                            select new FavoriteTuple(x.Id, x.RecipeId, rec.Name)).ToList();
+                LockAction(context =>
+                {
+                    var favoriteTable = (from x in context.Favorites
+                        join rec in context.CookRecipes on x.RecipeId equals rec.Id
+                        where !x.IsDelete
+                        select new FavoriteTuple(x.Id, x.RecipeId, rec.Name)).ToList();
 
-                        RebuildItems(DownloadClient, Context.CookMaterials, TargetFiles["Materials"]);
-                        RebuildItems(DownloadClient, Context.CookLocations, TargetFiles["Locations"]);
-                        RebuildItems(DownloadClient, Context.CookCategories, TargetFiles["Categories"]);
-                        RebuildItems(DownloadClient, Context.CookSellers, TargetFiles["Sellers"]);
-                        RebuildItems(DownloadClient, Context.CookMaterialDrops, TargetFiles["MaterialDrops"]);
-                        RebuildItems(DownloadClient, Context.CookMaterialSellers, TargetFiles["MaterialSellers"]);
-                        RebuildRecipes(DownloadClient, Context.CookRecipes, TargetFiles["Recipes"]);
-                        RebuildItems(DownloadClient, Context.Additionals, TargetFiles["Additionals"]);
-                        RebuildItems(DownloadClient, Context.CookEffects, TargetFiles["Effects"]);
+                    RebuildItems(context, DownloadClient, context.CookMaterials, TargetFiles["Materials"]);
+                    RebuildItems(context, DownloadClient, context.CookLocations, TargetFiles["Locations"]);
+                    RebuildItems(context, DownloadClient, context.CookCategories, TargetFiles["Categories"]);
+                    RebuildItems(context, DownloadClient, context.CookSellers, TargetFiles["Sellers"]);
+                    RebuildItems(context, DownloadClient, context.CookMaterialDrops, TargetFiles["MaterialDrops"]);
+                    RebuildItems(context, DownloadClient, context.CookMaterialSellers, TargetFiles["MaterialSellers"]);
+                    RebuildRecipes(context, DownloadClient, context.CookRecipes, TargetFiles["Recipes"]);
+                    RebuildItems(context, DownloadClient, context.Additionals, TargetFiles["Additionals"]);
+                    RebuildItems(context, DownloadClient, context.CookEffects, TargetFiles["Effects"]);
 
-                        RebuildFavorite(favoriteTable, Context);
-                    }
+                    RebuildFavorite(favoriteTable, context);
+                });
             });
         }
 
@@ -188,38 +188,34 @@ namespace CookInformationViewer.Models.Db.Manager
         {
             await Task.Factory.StartNew(() =>
             {
-                lock (DownloadClient)
-                    lock (Context)
-                    {
-                        var favoriteTable = (from x in Context.Favorites
-                            join rec in Context.CookRecipes on x.RecipeId equals rec.Id
-                            where !x.IsDelete
-                            select new FavoriteTuple(x.Id, x.RecipeId, rec.Name)).ToList();
+                LockAction(context =>
+                {
+                    var favoriteTable = (from x in context.Favorites
+                        join rec in context.CookRecipes on x.RecipeId equals rec.Id
+                        where !x.IsDelete
+                        select new FavoriteTuple(x.Id, x.RecipeId, rec.Name)).ToList();
 
-                        RebuildItems(DownloadClient, Context.CookMaterials, TargetFiles["Materials"], targetFileName.Get("Materials"));
-                        RebuildItems(DownloadClient, Context.CookLocations, TargetFiles["Locations"], targetFileName.Get("Locations"));
-                        RebuildItems(DownloadClient, Context.CookCategories, TargetFiles["Categories"], targetFileName.Get("Categories"));
-                        RebuildItems(DownloadClient, Context.CookSellers, TargetFiles["Sellers"], targetFileName.Get("Sellers"));
-                        RebuildItems(DownloadClient, Context.CookMaterialDrops, TargetFiles["MaterialDrops"], targetFileName.Get("MaterialDrops"));
-                        RebuildItems(DownloadClient, Context.CookMaterialSellers, TargetFiles["MaterialSellers"], targetFileName.Get("MaterialSellers"));
-                        RebuildRecipes(DownloadClient, Context.CookRecipes, TargetFiles["Recipes"], targetFileName.Get("Recipes"));
-                        RebuildItems(DownloadClient, Context.Additionals, TargetFiles["Additionals"], targetFileName.Get("Additionals"));
-                        RebuildItems(DownloadClient, Context.CookEffects, TargetFiles["Effects"], targetFileName.Get("Effects"));
+                    RebuildItems(context, DownloadClient, context.CookMaterials, TargetFiles["Materials"], targetFileName.Get("Materials"));
+                    RebuildItems(context, DownloadClient, context.CookLocations, TargetFiles["Locations"], targetFileName.Get("Locations"));
+                    RebuildItems(context, DownloadClient, context.CookCategories, TargetFiles["Categories"], targetFileName.Get("Categories"));
+                    RebuildItems(context, DownloadClient, context.CookSellers, TargetFiles["Sellers"], targetFileName.Get("Sellers"));
+                    RebuildItems(context, DownloadClient, context.CookMaterialDrops, TargetFiles["MaterialDrops"], targetFileName.Get("MaterialDrops"));
+                    RebuildItems(context, DownloadClient, context.CookMaterialSellers, TargetFiles["MaterialSellers"], targetFileName.Get("MaterialSellers"));
+                    RebuildRecipes(context, DownloadClient, context.CookRecipes, TargetFiles["Recipes"], targetFileName.Get("Recipes"));
+                    RebuildItems(context, DownloadClient, context.Additionals, TargetFiles["Additionals"], targetFileName.Get("Additionals"));
+                    RebuildItems(context, DownloadClient, context.CookEffects, TargetFiles["Effects"], targetFileName.Get("Effects"));
 
-                        RebuildFavorite(favoriteTable, Context);
-                    }
+                    RebuildFavorite(favoriteTable, context);
+                });
             });
         }
 
         public Dictionary<string, string> CurrentTableVersion()
         {
-            lock (Context)
-            {
-                return Context.Histories.ToDictionary(x => x.Name, x => x.Date);
-            }
+            return LockFunction(context => context.Histories.ToDictionary(x => x.Name, x => x.Date));
         }
 
-        private void RebuildItems<T>(UpdateClient downloadClient, DbSet<T> db, string fileName, bool canUpdate = true) where T : class
+        private void RebuildItems<T>(CookInfoContext context, UpdateClient downloadClient, DbSet<T> db, string fileName, bool canUpdate = true) where T : class
         {
             if (!canUpdate)
                 return;
@@ -247,7 +243,7 @@ namespace CookInformationViewer.Models.Db.Manager
                     count++;
                 }
 
-                Context.SaveChanges();
+                context.SaveChanges();
 
                 foreach (var material in materials)
                 {
@@ -264,11 +260,11 @@ namespace CookInformationViewer.Models.Db.Manager
             }
 
             var version = AvailableTableUpdate[fileName].Item1;
-            var history = Context.Histories.FirstOrDefault(x => x.Name == fileName);
+            var history = context.Histories.FirstOrDefault(x => x.Name == fileName);
 
             if (history == null)
             {
-                Context.Histories.Add(new DbDownloadHistory
+                context.Histories.Add(new DbDownloadHistory
                 {
                     Name = fileName,
                     Date = version,
@@ -281,7 +277,7 @@ namespace CookInformationViewer.Models.Db.Manager
                 history.UpdateDate = DateTime.Now;
             }
 
-            Context.SaveChanges();
+            context.SaveChanges();
 
             _progressChangedSubject.OnNext(new UpdateEventArgs
             {
@@ -291,7 +287,7 @@ namespace CookInformationViewer.Models.Db.Manager
             });
         }
 
-        private void RebuildRecipes(UpdateClient downloadClient, DbSet<DbCookRecipes> db, string fileName, bool canUpdate = true)
+        private void RebuildRecipes(CookInfoContext context, UpdateClient downloadClient, DbSet<DbCookRecipes> db, string fileName, bool canUpdate = true)
         {
             if (!canUpdate)
                 return;
@@ -324,7 +320,7 @@ namespace CookInformationViewer.Models.Db.Manager
                     count++;
                 }
 
-                Context.SaveChanges();
+                context.SaveChanges();
 
                 foreach (var material in materials)
                 {
@@ -345,7 +341,7 @@ namespace CookInformationViewer.Models.Db.Manager
                         }
                     }
 
-                    Context.Add(material);
+                    context.Add(material);
 
                     _progressChangedSubject.OnNext(new UpdateEventArgs
                     {
@@ -358,11 +354,11 @@ namespace CookInformationViewer.Models.Db.Manager
             }
 
             var version = AvailableTableUpdate[fileName].Item1;
-            var history = Context.Histories.FirstOrDefault(x => x.Name == fileName);
+            var history = context.Histories.FirstOrDefault(x => x.Name == fileName);
 
             if (history == null)
             {
-                Context.Histories.Add(new DbDownloadHistory
+                context.Histories.Add(new DbDownloadHistory
                 {
                     Name = fileName,
                     Date = version,
@@ -375,7 +371,7 @@ namespace CookInformationViewer.Models.Db.Manager
                 history.UpdateDate = DateTime.Now;
             }
 
-            Context.SaveChanges();
+            context.SaveChanges();
 
             _progressChangedSubject.OnNext(new UpdateEventArgs
             {
@@ -413,6 +409,8 @@ namespace CookInformationViewer.Models.Db.Manager
     public class ContextManager : IDisposable
     {
         protected readonly CookInfoContext Context;
+        protected readonly SemaphoreSlim Semaphore = new(1, 1);
+
         protected readonly SqlExecutor Executor;
         
         public ContextManager()
@@ -438,26 +436,48 @@ namespace CookInformationViewer.Models.Db.Manager
 
         public IList<DbCookCategories> GetCategories(Func<CookInfoContext, IEnumerable<DbCookCategories>>? whereFunc = null)
         {
-            lock (Context)
-            {
-                return whereFunc != null ? whereFunc.Invoke(Context).ToList() : Context.CookCategories.ToList();
-            }
+            return LockFunction(context => whereFunc != null ? whereFunc.Invoke(context).ToList() : context.CookCategories.ToList());
         }
 
         public T GetItem<T>(Func<CookInfoContext, T> whereFunc)
         {
-            lock (Context)
-            {
-                return whereFunc.Invoke(Context);
-            }
+            return LockFunction(whereFunc.Invoke);
         }
 
         public void Apply(Action<CookInfoContext> whereAction)
         {
-            lock (Context)
+            LockAction(context =>
             {
-                whereAction.Invoke(Context);
-                Context.SaveChanges();
+                whereAction.Invoke(context);
+                context.SaveChanges();
+            });
+        }
+
+        protected T LockFunction<T>(Func<CookInfoContext, T> whereFunc)
+        {
+            Semaphore.Wait();
+
+            try
+            {
+                return whereFunc.Invoke(_context);
+            }
+            finally
+            {
+                Semaphore.Release();
+            }
+        }
+
+        protected void LockAction(Action<CookInfoContext> whereAction)
+        {
+            Semaphore.Wait();
+
+            try
+            {
+                whereAction.Invoke(_context);
+            }
+            finally
+            {
+                Semaphore.Release();
             }
         }
 
@@ -475,6 +495,7 @@ namespace CookInformationViewer.Models.Db.Manager
         {
             Context.Dispose();
             Executor.Dispose();
+            Semaphore.Dispose();
         }
     }
 }
