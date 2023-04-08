@@ -40,7 +40,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -82,7 +82,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -119,7 +119,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -161,7 +161,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -259,7 +259,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -299,7 +299,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -350,7 +350,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -476,7 +476,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -507,13 +507,13 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_material",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     },
                     new ColumnInfo
                     {
                         ColumnName = "not_festival",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     },
                     new ColumnInfo
                     {
@@ -529,7 +529,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -570,7 +570,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -606,7 +606,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
