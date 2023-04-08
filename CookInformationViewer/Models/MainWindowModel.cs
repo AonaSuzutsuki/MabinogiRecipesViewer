@@ -83,9 +83,13 @@ namespace CookInformationViewer.Models
             return false;
         }
 
-        public void Reload()
+        public void CloseContext()
         {
             _contextManager.Dispose();
+        }
+
+        public void Reload()
+        {
             _contextManager = new UpdateContextManager();
 
             LoadCategories();

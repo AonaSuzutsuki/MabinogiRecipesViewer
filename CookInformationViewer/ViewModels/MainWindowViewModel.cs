@@ -257,6 +257,8 @@ namespace CookInformationViewer.ViewModels
                 return;
             }
 
+            _model.CloseContext();
+
             var model = new TableDownloadModel(_model);
             var vm = new TableDownloadViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<TableDownloadView>(vm);
