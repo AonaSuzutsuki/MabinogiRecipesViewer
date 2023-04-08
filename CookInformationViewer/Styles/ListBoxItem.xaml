@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:models="clr-namespace:CookInformationViewer.Models">
+                    xmlns:models="clr-namespace:CookInformationViewer.Models"
+                    xmlns:dataValue="clr-namespace:CookInformationViewer.Models.DataValue">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/CommonStyleLib;component/Styles/Constants.xaml" />
@@ -10,7 +11,7 @@
     <Style x:Key="Item1LocationListBox" TargetType="{x:Type ListBox}">
         <Setter Property="ItemTemplate">
             <Setter.Value>
-                <DataTemplate DataType="models:LocationItemInfo">
+                <DataTemplate DataType="{x:Type dataValue:LocationItemInfo}">
                     <Grid Background="#4F000E">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -39,7 +40,7 @@
     <Style x:Key="Item2LocationListBox" TargetType="{x:Type ListBox}">
         <Setter Property="ItemTemplate">
             <Setter.Value>
-                <DataTemplate DataType="models:LocationItemInfo">
+                <DataTemplate DataType="{x:Type dataValue:LocationItemInfo}">
                     <Grid Background="#00579e">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -68,7 +69,7 @@
     <Style x:Key="Item3LocationListBox" TargetType="{x:Type ListBox}">
         <Setter Property="ItemTemplate">
             <Setter.Value>
-                <DataTemplate DataType="models:LocationItemInfo">
+                <DataTemplate DataType="{x:Type dataValue:LocationItemInfo}">
                     <Grid Background="#008111">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
