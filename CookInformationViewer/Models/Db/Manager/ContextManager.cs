@@ -29,7 +29,7 @@ namespace CookInformationViewer.Models.Db.Manager
         public long Percentage { get; set; }
     }
 
-    public class UpdateContextManager : ContextManager
+    public class UpdateContextManager : IDisposable
     {
         private const string VersionColumnName = "db_version";
 
@@ -46,6 +46,8 @@ namespace CookInformationViewer.Models.Db.Manager
                 RecipeName = recipeName;
             }
         }
+
+        private ContextManager _contextManager = new();
 
         public SavannahXmlReader? VersionReader { get; private set; }
         public UpdateClient DownloadClient { get; }
@@ -66,7 +68,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
         #endregion
 
-        public Dictionary<string, string> TargetFiles => new()
+        private static Dictionary<string, string> TargetFiles => new()
         {
             { "Materials", "Materials.json"},
             { "Locations", "Locations.json"},
@@ -152,7 +154,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
                 var version = versionNode.InnerText;
 
-                var history = LockFunction(context => context.Histories.FirstOrDefault(x => x.Name == fileName));
+                var history = _contextManager.GetItem(context => context.Histories.FirstOrDefault(x => x.Name == fileName));
                 if (history == null || history.Date != version)
                     AvailableTableUpdate[fileName] = new Tuple<string, bool>(version, true);
                 else
@@ -162,11 +164,13 @@ namespace CookInformationViewer.Models.Db.Manager
 
         public async Task RebuildDataBase()
         {
-            RebuildContext(false);
+            _contextManager.RebuildContext(false);
+            _contextManager.Dispose();
+            _contextManager = new ContextManager();
 
             await Task.Factory.StartNew(() =>
             {
-                LockAction(context =>
+                _contextManager.ApplyNonSave(context =>
                 {
                     var favoriteTable = (from x in context.Favorites
                         join rec in context.CookRecipes on x.RecipeId equals rec.Id
@@ -200,7 +204,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
             await Task.Factory.StartNew(() =>
             {
-                LockAction(context =>
+                _contextManager.ApplyNonSave(context =>
                 {
                     var favoriteTable = (from x in context.Favorites
                         join rec in context.CookRecipes on x.RecipeId equals rec.Id
@@ -226,7 +230,7 @@ namespace CookInformationViewer.Models.Db.Manager
 
         public Dictionary<string, string> CurrentTableVersion()
         {
-            return LockFunction(context => context.Histories.ToDictionary(x => x.Name, x => x.Date));
+            return _contextManager.GetItem(context => context.Histories.ToDictionary(x => x.Name, x => x.Date));
         }
 
         private void RebuildItems<T>(CookInfoContext context, UpdateClient downloadClient, DbSet<T> db, string fileName, bool canUpdate = true) where T : class
@@ -395,7 +399,7 @@ namespace CookInformationViewer.Models.Db.Manager
             });
         }
 
-        private void UpdateDbVersion(CookInfoContext context)
+        private static void UpdateDbVersion(CookInfoContext context)
         {
             var dbVersion = context.Metas.FirstOrDefault(x => x.Id == VersionColumnName);
             if (dbVersion == null)
@@ -416,13 +420,13 @@ namespace CookInformationViewer.Models.Db.Manager
 
         private bool IsUpdateDbVersion()
         {
-            var dbVersion = LockFunction(context => context.Metas.FirstOrDefault(x => x.Id == VersionColumnName));
+            var dbVersion = _contextManager.GetItem(context => context.Metas.FirstOrDefault(x => x.Id == VersionColumnName));
             var version = dbVersion?.Value ?? "1.0";
 
             return version != TableColumns.DbVersion;
         }
 
-        public static void RebuildFavorite(List<FavoriteTuple> favoriteTable, CookInfoContext context)
+        private static void RebuildFavorite(List<FavoriteTuple> favoriteTable, CookInfoContext context)
         {
             var newIdItems = (from x in favoriteTable
                 join rec in context.CookRecipes on x.RecipeName equals rec.Name
@@ -445,13 +449,20 @@ namespace CookInformationViewer.Models.Db.Manager
             context.SaveChanges();
         }
 
+        public void Dispose()
+        {
+            _contextManager.Dispose();
+            _progressChangedSubject.Dispose();
+
+            GC.SuppressFinalize(this);
+        }
     }
 
     public class ContextManager : IDisposable
     {
         protected readonly SemaphoreSlim Semaphore = new(1, 1);
 
-        private CookInfoContext _context;
+        private readonly CookInfoContext _context;
         protected readonly SqlExecutor Executor;
         
         public ContextManager()
@@ -478,9 +489,6 @@ namespace CookInformationViewer.Models.Db.Manager
                     Executor.ExecuteNonQuery(SqlCreator.Create($"DROP TABLE {table.TableName}"));
                 }
                 Executor.ExecuteNonQuery(SqlCreator.Create("PRAGMA foreign_keys = 1"));
-
-                _context.Dispose();
-                _context = new CookInfoContext();
             }
 
             var notExistsTables = Executor.ExistsObjects("table",
@@ -514,6 +522,11 @@ namespace CookInformationViewer.Models.Db.Manager
                 whereAction.Invoke(context);
                 context.SaveChanges();
             });
+        }
+
+        public void ApplyNonSave(Action<CookInfoContext> whereAction)
+        {
+            LockAction(whereAction.Invoke);
         }
 
         protected T LockFunction<T>(Func<CookInfoContext, T> whereFunc)
@@ -559,6 +572,8 @@ namespace CookInformationViewer.Models.Db.Manager
             _context.Dispose();
             Executor.Dispose();
             Semaphore.Dispose();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

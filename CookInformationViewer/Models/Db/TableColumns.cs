@@ -6,7 +6,7 @@ namespace CookInformationViewer.Models.Db
 {
     internal static class TableColumns
     {
-        public const string DbVersion = "1.0";
+        public const string DbVersion = "1.1";
 
         public static Dictionary<string, TableInfo> GetTables()
         {
