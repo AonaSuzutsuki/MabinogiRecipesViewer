@@ -69,6 +69,7 @@ namespace CookInformationViewer.Models.Db.Context
         public DbSet<DbCookAdditionals> Additionals { get; set; }
         public DbSet<DbDownloadHistory> Histories { get; set; }
         public DbSet<DbCookFavorites> Favorites { get; set; }
+        public DbSet<DbMeta> Metas { get; set; }
 
         public CookInfoContext()
         {
@@ -143,26 +144,6 @@ namespace CookInformationViewer.Models.Db.Context
                 Debug.WriteLine(x);
             });
 #endif
-        }
-
-        public static Type ConvertType(ManageType manageType)
-        {
-            var typeMap = new Dictionary<ManageType, Type>
-            {
-                { ManageType.CookMaterials, typeof(DbCookMaterials) },
-                { ManageType.CookCategories, typeof(DbCookCategories) },
-                { ManageType.CookLocations, typeof(DbCookLocations) },
-                { ManageType.CookSellers, typeof(DbCookSellers) },
-                { ManageType.CookRecipes, typeof(DbCookRecipes) },
-                { ManageType.CookMaterialSellers, typeof(DbCookMaterialSellers) },
-                { ManageType.CookMaterialDrops, typeof(DbCookMaterialDrops) },
-                { ManageType.CookEffects, typeof(DbCookEffects) },
-                { ManageType.History, typeof(DbDownloadHistory) },
-                { ManageType.CookAdditionals, typeof(DbCookAdditionals) },
-                { ManageType.CookFavorites, typeof(DbCookFavorites) }
-            };
-
-            return typeMap.Get(manageType);
         }
 
         public override void Dispose()

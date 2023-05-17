@@ -17,7 +17,8 @@ namespace CookInformationViewer.Models
     public class MainWindowModel : ModelBase, IDisposable
     {
 
-        private UpdateContextManager _contextManager = new();
+        private ContextManager _contextManager = new();
+        private UpdateContextManager _updateContextManager = new();
         private readonly SettingLoader _setting = SettingLoader.Instance;
 
         private ObservableCollection<CategoryInfo> _categories = new();
@@ -55,7 +56,7 @@ namespace CookInformationViewer.Models
             set => SetProperty(ref _selectedCategoryIndex, value);
         }
 
-        public bool AvailableUpdate => _contextManager.AvailableUpdate;
+        public bool AvailableUpdate => _updateContextManager.AvailableUpdate;
 
         #endregion
         
@@ -69,7 +70,7 @@ namespace CookInformationViewer.Models
         {
             if (_setting.IsCheckDataUpdate && System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
-                await _contextManager.AvailableTableUpdateCheck();
+                await _updateContextManager.AvailableTableUpdateCheck();
             }
         }
 
@@ -83,10 +84,14 @@ namespace CookInformationViewer.Models
             return false;
         }
 
-        public void Reload()
+        public void CloseContext()
         {
             _contextManager.Dispose();
-            _contextManager = new UpdateContextManager();
+        }
+
+        public void Reload()
+        {
+            _contextManager = new ContextManager();
 
             LoadCategories();
 
@@ -499,7 +504,7 @@ namespace CookInformationViewer.Models
         public void Dispose()
         {
             _contextManager.Dispose();
-
+            _updateContextManager.Dispose();
             _setting.Save();
         }
     }
