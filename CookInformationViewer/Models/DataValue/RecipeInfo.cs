@@ -62,6 +62,8 @@ public class RecipeInfo : BindableBase
 
     public bool IsNotFestival { get; set; }
 
+    public string? Special { get; set; }
+
     public int Star { get; set; }
 
     public bool IsFavorite
@@ -80,6 +82,9 @@ public class RecipeInfo : BindableBase
         {
             if (IsMaterial)
                 return "料理素材 専用 (食べられないよ)";
+
+            if (!string.IsNullOrEmpty(Special))
+                return Special;
 
             return Star switch
             {

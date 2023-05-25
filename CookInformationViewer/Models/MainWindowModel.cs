@@ -416,6 +416,7 @@ namespace CookInformationViewer.Models
 
             recipe.IsMaterial = isMaterials;
             recipe.IsNotFestival = isNotFestival;
+            recipe.Special = item.Special;
         }
 
         private void SetFavorite(RecipeInfo recipe)
