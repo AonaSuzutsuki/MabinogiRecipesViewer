@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using KimamaSqliteExecutorLib.Db.Raw;
 
 namespace CookInformationViewer.Models.Db
 {
     internal static class TableColumns
     {
+        public const string DbVersion = "1.1";
+
         public static Dictionary<string, TableInfo> GetTables()
         {
             var cookMaterials = new TableInfo
@@ -39,7 +42,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -81,7 +84,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -118,7 +121,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -160,7 +163,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -258,7 +261,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -298,7 +301,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -349,7 +352,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -475,7 +478,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -506,13 +509,18 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_material",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     },
                     new ColumnInfo
                     {
                         ColumnName = "not_festival",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "special",
+                        Type = ColumnType.Text
                     },
                     new ColumnInfo
                     {
@@ -528,7 +536,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -569,7 +577,7 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
                     }
                 }
             };
@@ -605,7 +613,26 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "is_delete",
                         Type = ColumnType.Integer,
-                        Default = "0"
+                        Default = 0L
+                    }
+                }
+            };
+
+            var meta = new TableInfo
+            {
+                TableName = Constants.MetaTableName,
+                Columns = new []
+                {
+                    new ColumnInfo
+                    {
+                        ColumnName = "id",
+                        Type = ColumnType.Text,
+                        PrimaryKey = true
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "value",
+                        Type = ColumnType.Text,
                     }
                 }
             };
@@ -622,7 +649,8 @@ namespace CookInformationViewer.Models.Db
                 { cookEffects.TableName, cookEffects },
                 { additional.TableName, additional },
                 { downloadHistory.TableName, downloadHistory },
-                { favorite.TableName, favorite }
+                { favorite.TableName, favorite },
+                { meta.TableName, meta }
             };
         }
     }

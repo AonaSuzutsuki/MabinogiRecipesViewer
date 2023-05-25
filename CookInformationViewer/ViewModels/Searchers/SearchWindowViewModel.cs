@@ -23,8 +23,6 @@ namespace CookInformationViewer.ViewModels.Searchers
     {
         private readonly SearchWindowModel _model;
         private readonly MainWindowViewModel _mainWindowViewModel;
-        private readonly MainWindowModel _mainWindowModel;
-        private readonly MainWindowWindowService _mainWindowService;
 
         public ReactiveProperty<string> SearchText { get; set; }
         public ReactiveProperty<bool> IsMaterialSearch { get; set; }
@@ -33,13 +31,11 @@ namespace CookInformationViewer.ViewModels.Searchers
         public ICommand SearchCommand { get; set; }
         public ICommand SearchSelectedItemChangedCommand { get; set; }
 
-        public SearchWindowViewModel(IWindowService windowService, MainWindowWindowService mainWindowService, MainWindowViewModel mainWindowViewModel,
-            SearchWindowModel model, MainWindowModel mainWindowModel) : base(windowService, model)
+        public SearchWindowViewModel(IWindowService windowService, MainWindowViewModel mainWindowViewModel,
+            SearchWindowModel model) : base(windowService, model)
         {
             _model = model;
             _mainWindowViewModel = mainWindowViewModel;
-            _mainWindowModel = mainWindowModel;
-            _mainWindowService = mainWindowService;
 
             SearchText = new ReactiveProperty<string>();
             IsMaterialSearch = new ReactiveProperty<bool>();
@@ -59,29 +55,9 @@ namespace CookInformationViewer.ViewModels.Searchers
             if (args == null || args.IsCategory)
                 return;
 
+            _mainWindowViewModel.SelectCategory(args);
 
-            var category = _mainWindowModel.SelectCategory(args);
-            if (category == null)
-                return;
-
-            if (_mainWindowViewModel.SelectedCategory.Value.Name != category.Name)
-                _mainWindowViewModel.IgnoreEvent.Add(nameof(_mainWindowViewModel.SelectedCategory));
-
-            _mainWindowViewModel.SelectedCategory.Value = category;
-
-            var recipe = _mainWindowModel.GetRecipeInfo(args);
-            if (recipe == null)
-                return;
-
-            _mainWindowViewModel.RecipesListSelectionChanged(recipe);
-            recipe.Recipe.IsSelected = true;
-
-            if (_mainWindowService.MainWindow == null)
-                return;
-
-            _mainWindowService.MainWindow.IsSearched = true;
-            _mainWindowService.MainWindow.ScrollItem();
-            _mainWindowService.MainWindow.WindowFocus();
+            _mainWindowViewModel.SelectRecipe(args);
         }
     }
 }

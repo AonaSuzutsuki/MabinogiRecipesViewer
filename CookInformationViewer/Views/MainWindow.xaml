@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         xmlns:behaviors="clr-namespace:CookInformationViewer.Views.Behaviors"
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels"
-        xmlns:models="clr-namespace:CookInformationViewer.Models"
+        xmlns:models="clr-namespace:CookInformationViewer.Models.DataValue"
         xmlns:converters="clr-namespace:CookInformationViewer.Views.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
@@ -87,7 +87,13 @@
                     <MenuItem Header="ヘルプ(_H)">
                         <MenuItem Header="データ更新の確認" Command="{Binding UpdateTableCommand}" />
                         <MenuItem Header="更新プログラムの確認" Command="{Binding OpenUpdateProgramCommand}" />
+
                         <Separator Style="{StaticResource MLB_Separator}" />
+
+                        <MenuItem Header="レシピの更新を確認" Command="{Binding OpenListUpdateHistoryCommand}" />
+
+                        <Separator Style="{StaticResource MLB_Separator}" />
+
                         <MenuItem Header="バージョン情報" Command="{Binding OpenVersionInfoCommand}" />
                     </MenuItem>
                 </Menu>

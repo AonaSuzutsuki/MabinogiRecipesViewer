@@ -1,348 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
-using CookInformationViewer.Models.Converters;
-using CookInformationViewer.Models.Db;
+using CookInformationViewer.Models.DataValue;
 using CookInformationViewer.Models.Db.Context;
 using CookInformationViewer.Models.Db.Manager;
 using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Models.Settings;
 using CookInformationViewer.Models.Updates;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Prism.Mvvm;
-using SavannahXmlLib.XmlWrapper;
-using UpdateLib.Http;
-using UpdateLib.Update;
-using Brush = System.Windows.Media.Brush;
 
 namespace CookInformationViewer.Models
 {
-    public class CategoryInfo : BindableBase
-    {
-        public static CategoryInfo Favorite => new()
-        {
-            Id = 0,
-            Name = FavoriteContent
-        };
-
-        public const string FavoriteContent = "お気に入り";
-
-        private bool _isSelected;
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => SetProperty(ref _isSelected, value);
-        }
-
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-
-        public Brush Foreground => SameFavorite() ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
-
-        public bool SameFavorite()
-        {
-            return Name == FavoriteContent;
-        }
-    }
-
-    public class RecipeInfo : BindableBase
-    {
-        private bool _isSelected;
-        private bool _isFavorite;
-        private Brush _foreground = new SolidColorBrush(Colors.White);
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => SetProperty(ref _isSelected, value);
-        }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string? Item1Name { get; set; }
-        public string? Item2Name { get; set; }
-        public string? Item3Name { get; set; }
-
-        public bool IsItem1Material => Item1RecipeId == null;
-        public bool IsItem2Material => Item2RecipeId == null;
-        public bool IsItem3Material => Item3RecipeId == null;
-
-        public int? Item1Id { get; set; }
-        
-        public int? Item2Id { get; set; }
-        
-        public int? Item3Id { get; set; }
-        
-        public int? Item1RecipeId { get; set; }
-        
-        public int? Item2RecipeId { get; set; }
-        
-        public int? Item3RecipeId { get; set; }
-        
-        public decimal Item1Amount { get; set; }
-        
-        public decimal Item2Amount { get; set; }
-        
-        public decimal Item3Amount { get; set; }
-
-        public CategoryInfo? Category { get; set; }
-
-        public IEnumerable<LocationItemInfo>? Item1Locations { get; set; }
-        public IEnumerable<LocationItemInfo>? Item2Locations { get; set; }
-        public IEnumerable<LocationItemInfo>? Item3Locations { get; set; }
-
-        public DateTime? UpdateDate { get; set; }
-        public BitmapImage? Image { get; set; }
-
-        public bool IsMaterial { get; set; }
-
-        public bool IsNotFestival { get; set; }
-
-        public int Star { get; set; }
-
-        public bool IsFavorite
-        {
-            get => _isFavorite;
-            set
-            {
-                Foreground = value ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
-                SetProperty(ref _isFavorite, value);
-            }
-        }
-
-        public string StarText
-        {
-            get
-            {
-                if (IsMaterial)
-                    return "料理素材 専用 (食べられないよ)";
-
-                return Star switch
-                {
-                    1 => "★☆☆☆☆",
-                    2 => "★★☆☆☆",
-                    3 => "★★★☆☆",
-                    4 => "★★★★☆",
-                    5 => "★★★★★",
-                    6 => "★★★★★",
-                    _ => "未確認"
-                };
-            }
-        }
-
-        public string StarMessage
-        {
-            get
-            {
-                var text = Star switch
-                {
-                    1 => "確認済み",
-                    2 => "確認済み",
-                    3 => "確認済み",
-                    4 => "究極の料理 確認済み",
-                    5 => "天国の料理 確認済み",
-                    6 => "最高の料理 確認済み",
-                    _ => ""
-                };
-
-                if (IsNotFestival)
-                    text = $"{text} フェスティバルフード不可";
-
-                return text;
-            }
-        }
-
-        public Brush StarBrush
-        {
-            get
-            {
-                return Star switch
-                {
-                    6 => Constants.StarSixForeground,
-                    _ => new SolidColorBrush(Colors.White)
-                };
-            }
-        }
-
-        public Brush Foreground
-        {
-            get => _foreground;
-            set => SetProperty(ref _foreground, value);
-        }
-
-        public string Url { get; set; }
-
-        public IEnumerable<QualityItemInfo>? Effects { get; set; }
-
-        public RecipeInfo(DbCookRecipes recipe)
-        {
-            Id = recipe.Id;
-            Name = recipe.Name;
-            Item1Id = recipe.Item1Id;
-            Item2Id = recipe.Item2Id;
-            Item3Id = recipe.Item3Id;
-            Item1RecipeId = recipe.Item1RecipeId;
-            Item2RecipeId = recipe.Item2RecipeId;
-            Item3RecipeId = recipe.Item3RecipeId;
-            Item1Amount = recipe.Item1Amount;
-            Item2Amount = recipe.Item2Amount;
-            Item3Amount = recipe.Item3Amount;
-            UpdateDate = recipe.UpdateDate ?? recipe.CreateDate;
-
-            Url = $"https://mabicook.aonsztk.xyz/Home/Recipe?recipeId={Id}";
-
-            if (recipe.ImageData == null)
-            {
-                Image = ImageLoader.GetNoImage();
-            }
-            else
-            {
-                using var ms = new MemoryStream(recipe.ImageData);
-                Image = ImageLoader.CreateBitmapImage(ms, 80, 80);
-            }
-        }
-
-        public RecipeInfo()
-        {
-            Name = "";
-            Url = "";
-        }
-    }
-
-    public class LocationItemInfo
-    {
-        public string? Name { get; set; }
-        public string? Type { get; set; }
-        public string? Location { get; set; }
-    }
-
-    public class QualityItemInfo
-    {
-        public int Star { get; set; }
-        public string Quality { get; set; }
-        public System.Windows.Media.Brush StarBrush
-        {
-            get
-            {
-                return Star switch
-                {
-                    6 => Constants.StarSixForeground,
-                    _ => new SolidColorBrush(Colors.White)
-                };
-            }
-        }
-
-        public string Hp { get; set; }
-        public string Mp { get; set; }
-        public string Sp { get; set; }
-        public string Str { get; set; }
-        public string Int { get; set; }
-        public string Dex { get; set; }
-        public string Will { get; set; }
-        public string Luck { get; set; }
-        public string MaxDamage { get; set; }
-        public string MinDamage { get; set; }
-        public string MagicDamage { get; set; }
-        public string Protection { get; set; }
-        public string Defense { get; set; }
-        public string MagicProtection { get; set; }
-        public string MagicDefense { get; set; }
-
-        public QualityItemInfo(int star, IEnumerable<DbCookEffects> effects)
-        {
-            var list = effects.ToList();
-
-            Star = star;
-            Quality = star switch
-            {
-                1 => "★☆☆☆☆",
-                2 => "★★☆☆☆",
-                3 => "★★★☆☆",
-                4 => "★★★★☆",
-                5 => "★★★★★",
-                6 => "★★★★★",
-                _ => "",
-            };
-
-            Hp = MinMaxString(list, x => x.Hp);
-            Mp = MinMaxString(list, x => x.Mana);
-            Sp = MinMaxString(list, x => x.Stamina);
-            Str = MinMaxString(list, x => x.Str);
-            Int = MinMaxString(list, x => x.Int);
-            Dex = MinMaxString(list, x => x.Dex);
-            Will = MinMaxString(list, x => x.Will);
-            Luck = MinMaxString(list, x => x.Luck);
-            MaxDamage = MinMaxString(list, x => x.Damage);
-            MinDamage = MinMaxString(list, x => x.MinDamage);
-            MagicDamage = MinMaxString(list, x => x.MagicDamage);
-            Protection = MinMaxString(list, x => x.Protection);
-            Defense = MinMaxString(list, x => x.Defense);
-            MagicProtection = MinMaxString(list, x => x.MagicProtection);
-            MagicDefense = MinMaxString(list, x => x.MagicDefense);
-        }
-
-        private string MinMaxString(List<DbCookEffects> effects, Func<DbCookEffects, int> selector)
-        {
-            var min = effects.MinBy(selector);
-            var max = effects.MaxBy(selector);
-
-            if (min == null || max == null)
-                return string.Empty;
-
-            var minValue = selector(min);
-            var maxValue = selector(max);
-
-            if (minValue == 0 || maxValue == 0)
-                return string.Empty;
-            
-            return minValue.Equals(maxValue) ? minValue.ToString() : $"{minValue}-{maxValue}";
-        }
-    }
-
-    public class RecipeHeader
-    {
-        public bool IsHeader { get; set; }
-
-        public CategoryInfo Category { get; set; }
-
-        public RecipeInfo Recipe { get; set; }
-
-        public RecipeHeader(RecipeInfo recipe)
-        {
-            Recipe = recipe;
-            Category = recipe.Category ?? new CategoryInfo();
-        }
-
-        public RecipeHeader(string name)
-        {
-            IsHeader = true;
-            Recipe = new RecipeInfo();
-            Category = new CategoryInfo
-            {
-                Name = name
-            };
-        }
-    }
-
     public class MainWindowModel : ModelBase, IDisposable
     {
 
-        private UpdateContextManager _contextManager = new();
+        private ContextManager _contextManager = new();
+        private UpdateContextManager _updateContextManager = new();
         private readonly SettingLoader _setting = SettingLoader.Instance;
 
         private ObservableCollection<CategoryInfo> _categories = new();
@@ -380,7 +56,7 @@ namespace CookInformationViewer.Models
             set => SetProperty(ref _selectedCategoryIndex, value);
         }
 
-        public bool AvailableUpdate => _contextManager.AvailableUpdate;
+        public bool AvailableUpdate => _updateContextManager.AvailableUpdate;
 
         #endregion
         
@@ -392,15 +68,15 @@ namespace CookInformationViewer.Models
 
         public async Task CheckDatabaseUpdate()
         {
-            if (_setting.IsCheckDataUpdate)
+            if (_setting.IsCheckDataUpdate && System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
-                await _contextManager.AvailableTableUpdateCheck();
+                await _updateContextManager.AvailableTableUpdateCheck();
             }
         }
 
         public async Task<bool> CheckUpdate()
         {
-            if (_setting.IsCheckProgramUpdate)
+            if (_setting.IsCheckProgramUpdate && System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
                 var availableUpdate = await UpdateManager.CheckCanUpdate(UpdateManager.GetUpdateClient());
                 return availableUpdate;
@@ -408,10 +84,14 @@ namespace CookInformationViewer.Models
             return false;
         }
 
-        public void Reload()
+        public void CloseContext()
         {
             _contextManager.Dispose();
-            _contextManager = new UpdateContextManager();
+        }
+
+        public void Reload()
+        {
+            _contextManager = new ContextManager();
 
             LoadCategories();
 
@@ -460,7 +140,7 @@ namespace CookInformationViewer.Models
         public void SelectCategory(CategoryInfo category)
         {
             CurrentCategoryInfo = category;
-            var recipe = _contextManager.GetItems(x =>
+            var recipe = _contextManager.GetItem(x =>
             {
                 return (from m in x.CookRecipes
                     join cat in x.CookCategories on m.CategoryId equals cat.Id
@@ -511,14 +191,14 @@ namespace CookInformationViewer.Models
         {
             CurrentCategoryInfo = Categories.First();
 
-            var recipeIds = _contextManager.GetRecipe(x =>
+            var recipeIds = _contextManager.GetItem(x =>
                 x.Favorites
                     .Where(m => !m.IsDelete)
                     .OrderBy(m => m.CreateDate)
                     .Select(m => m.RecipeId)
                 );
             
-            var recipe = _contextManager.GetItems(x =>
+            var recipe = _contextManager.GetItem(x =>
             {
                 return (from m in x.CookRecipes
                         join cat in x.CookCategories on m.CategoryId equals cat.Id
@@ -577,7 +257,7 @@ namespace CookInformationViewer.Models
 
         public RecipeInfo? GetRecipe(int id)
         {
-            var recipe = _contextManager.GetRecipe(x =>
+            var recipe = _contextManager.GetItem(x =>
             {
                 var item = (from m in x.CookRecipes
                     join cat in x.CookCategories on m.CategoryId equals cat.Id 
@@ -662,7 +342,7 @@ namespace CookInformationViewer.Models
             if (materialId == null)
                 return locations;
 
-            var sellers = _contextManager.GetItems(x =>
+            var sellers = _contextManager.GetItem(x =>
             {
                 var items = from m in x.CookMaterialSellers
                     join seller in x.CookSellers on m.SellerId equals seller.Id
@@ -679,7 +359,7 @@ namespace CookInformationViewer.Models
             });
             locations.AddRange(sellers);
 
-            var drops = _contextManager.GetItems(x =>
+            var drops = _contextManager.GetItem(x =>
             {
                 var items = from m in x.CookMaterialDrops
                     join location in x.CookLocations on m.LocationId equals location.Id
@@ -701,9 +381,9 @@ namespace CookInformationViewer.Models
 
         private void SetEffects(RecipeInfo recipe)
         {
-            var effects = _contextManager.GetItems(x => (from m in x.CookEffects
+            var effects = _contextManager.GetItem(x => (from m in x.CookEffects
                 where m.RecipeId == recipe.Id
-                select m));
+                select m)).ToList();
 
             var max = effects.MaxBy(x => x.Star);
             recipe.Star = max?.Star ?? 0;
@@ -724,7 +404,7 @@ namespace CookInformationViewer.Models
 
         private void SetAdditional(RecipeInfo recipe)
         {
-            var item = _contextManager.GetItems(x => (from m in x.Additionals
+            var item = _contextManager.GetItem(x => (from m in x.Additionals
                 where m.RecipeId == recipe.Id
                 select m)).FirstOrDefault();
 
@@ -736,11 +416,12 @@ namespace CookInformationViewer.Models
 
             recipe.IsMaterial = isMaterials;
             recipe.IsNotFestival = isNotFestival;
+            recipe.Special = item.Special;
         }
 
         private void SetFavorite(RecipeInfo recipe)
         {
-            var favorite = _contextManager.GetRecipe(x =>
+            var favorite = _contextManager.GetItem(x =>
                 x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
 
             if (favorite == null)
@@ -752,8 +433,13 @@ namespace CookInformationViewer.Models
         public RecipeHeader? GetRecipeInfo(SearchNode node)
         {
             var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == node.Name);
-            if (recipe == null)
-                return null;
+
+            return recipe;
+        }
+
+        public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)
+        {
+            var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == item.Name);
 
             return recipe;
         }
@@ -765,6 +451,16 @@ namespace CookInformationViewer.Models
                 return null;
 
             var categoryInfo = Categories.FirstOrDefault(x => x.Name == parent.Name);
+            if (categoryInfo == null)
+                return null;
+
+            SelectCategory(categoryInfo);
+            return categoryInfo;
+        }
+
+        public CategoryInfo? SelectCategory(UpdateRecipeItem item)
+        {
+            var categoryInfo = Categories.FirstOrDefault(x => x.Name == item.CategoryName);
             if (categoryInfo == null)
                 return null;
 
@@ -790,7 +486,7 @@ namespace CookInformationViewer.Models
 
         public void RemoveFavorite(RecipeInfo recipe)
         {
-            var favorite = _contextManager.GetRecipe(x =>
+            var favorite = _contextManager.GetItem(x =>
                 x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
 
             if (favorite == null)
@@ -801,10 +497,15 @@ namespace CookInformationViewer.Models
             recipe.IsFavorite = false;
         }
 
+        public ListUpdateHistoryModel CreateListUpdateHistoryModel()
+        {
+            return new ListUpdateHistoryModel(_contextManager);
+        }
+
         public void Dispose()
         {
             _contextManager.Dispose();
-
+            _updateContextManager.Dispose();
             _setting.Save();
         }
     }
