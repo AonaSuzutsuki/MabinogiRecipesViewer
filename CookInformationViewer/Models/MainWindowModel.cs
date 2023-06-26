@@ -430,13 +430,6 @@ namespace CookInformationViewer.Models
             recipe.IsFavorite = true;
         }
 
-        public RecipeHeader? GetRecipeInfo(SearchNode node)
-        {
-            var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == node.Name);
-
-            return recipe;
-        }
-
         public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)
         {
             var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == item.Name);
@@ -444,13 +437,16 @@ namespace CookInformationViewer.Models
             return recipe;
         }
 
-        public CategoryInfo? SelectCategory(SearchNode node)
+        public RecipeHeader? GetRecipeInfo(RecipeHeader recipeHeader)
         {
-            var parent = node.Parent;
-            if (parent == null)
-                return null;
+            var recipe = Recipes.FirstOrDefault(x => x.Recipe.Name == recipeHeader.Recipe.Name);
 
-            var categoryInfo = Categories.FirstOrDefault(x => x.Name == parent.Name);
+            return recipe;
+        }
+
+        public CategoryInfo? SelectCategory(UpdateRecipeItem item)
+        {
+            var categoryInfo = Categories.FirstOrDefault(x => x.Name == item.CategoryName);
             if (categoryInfo == null)
                 return null;
 
@@ -458,9 +454,10 @@ namespace CookInformationViewer.Models
             return categoryInfo;
         }
 
-        public CategoryInfo? SelectCategory(UpdateRecipeItem item)
+        public CategoryInfo? SelectCategory(RecipeHeader item)
         {
-            var categoryInfo = Categories.FirstOrDefault(x => x.Name == item.CategoryName);
+            var category = item.Category;
+            var categoryInfo = Categories.FirstOrDefault(x => x.Name == category.Name);
             if (categoryInfo == null)
                 return null;
 

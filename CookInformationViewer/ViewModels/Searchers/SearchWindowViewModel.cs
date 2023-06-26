@@ -9,6 +9,7 @@ using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
+using CookInformationViewer.Models.DataValue;
 using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Views;
 using CookInformationViewer.Views.Searches;
@@ -26,7 +27,7 @@ namespace CookInformationViewer.ViewModels.Searchers
 
         public ReactiveProperty<string> SearchText { get; set; }
         public ReactiveProperty<bool> IsMaterialSearch { get; set; }
-        public ReadOnlyReactiveCollection<SearchNode> SearchItems { get; set; }
+        public ReadOnlyReactiveCollection<RecipeHeader> RecipesList { get; set; }
 
         public ICommand SearchCommand { get; set; }
         public ICommand SearchSelectedItemChangedCommand { get; set; }
@@ -39,10 +40,10 @@ namespace CookInformationViewer.ViewModels.Searchers
 
             SearchText = new ReactiveProperty<string>();
             IsMaterialSearch = new ReactiveProperty<bool>();
-            SearchItems = model.SearchItems.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+            RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
 
             SearchCommand = new DelegateCommand(Search);
-            SearchSelectedItemChangedCommand = new DelegateCommand<SearchNode?>(SearchSelectedItemChanged);
+            SearchSelectedItemChangedCommand = new DelegateCommand<RecipeHeader>(SearchSelectedItemChanged);
         }
 
         public void Search()
@@ -50,14 +51,14 @@ namespace CookInformationViewer.ViewModels.Searchers
             _model.Search(SearchText.Value, IsMaterialSearch.Value);
         }
 
-        public void SearchSelectedItemChanged(SearchNode? args)
+        public void SearchSelectedItemChanged(RecipeHeader? recipeHeader)
         {
-            if (args == null || args.IsCategory)
+            if (recipeHeader == null || recipeHeader.Category.Id == 0)
                 return;
 
-            _mainWindowViewModel.SelectCategory(args);
+            _mainWindowViewModel.SelectCategory(recipeHeader);
 
-            _mainWindowViewModel.SelectRecipe(args);
+            _mainWindowViewModel.SelectRecipe(recipeHeader);
         }
     }
 }

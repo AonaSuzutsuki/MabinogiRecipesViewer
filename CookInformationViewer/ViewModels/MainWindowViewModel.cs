@@ -469,18 +469,6 @@ namespace CookInformationViewer.ViewModels
             CanGoBack.Value = _historyBack.Any();
         }
 
-        public void SelectCategory(SearchNode node)
-        {
-            var category = _model.SelectCategory(node);
-            if (category == null)
-                return;
-
-            if (SelectedCategory.Value.Name != category.Name)
-                IgnoreEvent.Add(nameof(SelectedCategory));
-
-            SelectedCategory.Value = category;
-        }
-
         public void SelectCategory(UpdateRecipeItem item)
         {
             var category = _model.SelectCategory(item);
@@ -493,9 +481,21 @@ namespace CookInformationViewer.ViewModels
             SelectedCategory.Value = category;
         }
 
-        public void SelectRecipe(SearchNode node)
+        public void SelectCategory(RecipeHeader recipeHeader)
         {
-            var recipe = _model.GetRecipeInfo(node);
+            var category = _model.SelectCategory(recipeHeader);
+            if (category == null)
+                return;
+
+            if (SelectedCategory.Value.Name != category.Name)
+                IgnoreEvent.Add(nameof(SelectedCategory));
+
+            SelectedCategory.Value = category;
+        }
+
+        public void SelectRecipe(UpdateRecipeItem item)
+        {
+            var recipe = _model.GetRecipeInfo(item);
             if (recipe == null)
                 return;
 
@@ -510,9 +510,9 @@ namespace CookInformationViewer.ViewModels
             _mainWindowService.MainWindow.WindowFocus();
         }
 
-        public void SelectRecipe(UpdateRecipeItem item)
+        public void SelectRecipe(RecipeHeader recipeHeader)
         {
-            var recipe = _model.GetRecipeInfo(item);
+            var recipe = _model.GetRecipeInfo(recipeHeader);
             if (recipe == null)
                 return;
 
