@@ -14,7 +14,7 @@
         xmlns:dataValue="clr-namespace:CookInformationViewer.Models.DataValue"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:SearchWindowViewModel}"
-        Title="レシピ検索" Height="450" Width="300" Style="{DynamicResource WindowStyle}">
+        Title="レシピ検索" Height="500" Width="400" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -93,6 +93,8 @@
                         <RowDefinition />
                         <RowDefinition Height="5" />
                         <RowDefinition />
+                        <RowDefinition Height="5" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
 
                     <Grid Height="25">
@@ -111,6 +113,29 @@
                     </Grid>
 
                     <Grid Grid.Row="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="5" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox Content="ステータス検索" IsChecked="{Binding IsStatusSearch.Value}" />
+
+                        <Border Grid.Row="2" Padding="5" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" IsEnabled="{Binding IsStatusSearch.Value}">
+                            <StackPanel>
+                                <ComboBox ItemsSource="{Binding StatusItems}" SelectedItem="{Binding SelectedStatusItem.Value}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <CheckBox Margin="0,5,0,0" Content="フェスティバルフード不可を除く" IsChecked="{Binding IgnoreNotFestival.Value}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="6">
                         <Button Content="検索" Width="100" Height="30" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding SearchCommand}" />
                     </Grid>
                 </Grid>
@@ -128,7 +153,7 @@
                             <DataTemplate DataType="{x:Type dataValue:RecipeHeader}">
                                 <Border Name="bd">
                                     <Grid>
-                                        <Grid Visibility="{Binding IsHeader, Converter={converters:ReverseBooleanVisibilityConverter}}">
+                                        <Grid Margin="5" Visibility="{Binding IsHeader, Converter={converters:ReverseBooleanVisibilityConverter}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="40" />
                                                 <ColumnDefinition Width="5" />
@@ -136,7 +161,21 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Image Source="{Binding Recipe.Image}" />
-                                            <Label Grid.Column="2" Content="{Binding Recipe.Name}" VerticalAlignment="Center" Foreground="{Binding Recipe.Foreground}" />
+
+                                            <Grid Grid.Column="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <Label Content="{Binding Recipe.Name}" Padding="0" Foreground="{Binding Recipe.Foreground}" />
+                                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                                    <Label Content="確認済み " Padding="0"  />
+                                                    <Label Content="{Binding Recipe.StarText}" Foreground="{Binding Recipe.StarBrush}" Padding="0"  />
+                                                </StackPanel>
+                                                <Label Grid.Row="2" Content="{Binding Additional}" Padding="0"  />
+                                            </Grid>
                                         </Grid>
 
                                         <Grid Name="Header" Visibility="{Binding IsHeader, Converter={converters:BooleanVisibilityConverter}}">
