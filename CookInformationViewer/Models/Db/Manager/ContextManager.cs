@@ -502,6 +502,28 @@ namespace CookInformationViewer.Models.Db.Manager
                 Executor.CreateTable(tableInfo);
             }
 
+            // Create a column that does not exist.
+            foreach (var tableInfo in TableColumns.GetTables())
+            {
+                var definitionColumns = tableInfo.Value.Columns.ToDictionary(x => x.ColumnName);
+                var rawColumns = Executor.Execute(SqlCreator.Create($"PRAGMA table_info('{tableInfo.Value.TableName}')"))
+                    .Select(x => x["name"].ToString());
+
+                var except = definitionColumns.Keys.Except(rawColumns).ToList();
+
+                if (except.Any())
+                {
+                    foreach (var columnName in except)
+                    {
+                        if (!definitionColumns.ContainsKey(columnName))
+                            continue;
+
+                        var columnInfo = definitionColumns[columnName];
+                        Executor.ExecuteNonQuery(SqlCreator.Create($"ALTER TABLE {tableInfo.Value.TableName} ADD COLUMN {columnInfo.ColumnName} {columnInfo}"));
+                    }
+                }
+            }
+
             _context.SaveChanges();
         }
 
