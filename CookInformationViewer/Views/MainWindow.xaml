@@ -497,35 +497,59 @@
                                     </Grid>
                                 </ScrollViewer>
 
-                                <Grid Grid.Row="5" Visibility="{Binding SelectedRecipe.Value.IsMaterial, Converter={converters:ReverseBooleanVisibilityConverter}}" Height="150">
-                                    <ListView ItemsSource="{Binding SelectedRecipe.Value.Effects}">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridViewColumn Width="80" Header="品質">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate DataType="{x:Type models:QualityItemInfo}">
-                                                            <TextBlock Text="{Binding Quality}" Foreground="{Binding StarBrush}" />
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                                <GridViewColumn Width="50" Header="HP" DisplayMemberBinding="{Binding Path=Hp}" />
-                                                <GridViewColumn Width="50" Header="MP" DisplayMemberBinding="{Binding Path=Mp}" />
-                                                <GridViewColumn Width="50" Header="Sp" DisplayMemberBinding="{Binding Path=Sp}" />
-                                                <GridViewColumn Width="50" Header="Str" DisplayMemberBinding="{Binding Path=Str}" />
-                                                <GridViewColumn Width="50" Header="Int" DisplayMemberBinding="{Binding Path=Int}" />
-                                                <GridViewColumn Width="50" Header="Dex" DisplayMemberBinding="{Binding Path=Dex}" />
-                                                <GridViewColumn Width="50" Header="Will" DisplayMemberBinding="{Binding Path=Will}" />
-                                                <GridViewColumn Width="50" Header="Luck" DisplayMemberBinding="{Binding Path=Luck}" />
-                                                <GridViewColumn Width="60" Header="最大攻撃" DisplayMemberBinding="{Binding Path=MaxDamage}" />
-                                                <GridViewColumn Width="60" Header="最小攻撃" DisplayMemberBinding="{Binding Path=MinDamage}" />
-                                                <GridViewColumn Width="60" Header="魔法攻撃" DisplayMemberBinding="{Binding Path=MagicDamage}" />
-                                                <GridViewColumn Width="50" Header="保護" DisplayMemberBinding="{Binding Path=Protection}" />
-                                                <GridViewColumn Width="50" Header="防御" DisplayMemberBinding="{Binding Path=Defense}" />
-                                                <GridViewColumn Width="60" Header="魔法保護" DisplayMemberBinding="{Binding Path=MagicProtection}" />
-                                                <GridViewColumn Width="60" Header="魔法防御" DisplayMemberBinding="{Binding Path=MagicDefense}" />
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
+                                <Grid Grid.Row="5" Height="150">
+                                    <TabControl>
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding BottomTabChangedCommand}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+
+                                        <TabItem Header="Effects" Visibility="{Binding SelectedRecipe.Value.IsMaterial, Converter={converters:ReverseBooleanVisibilityConverter}}" IsSelected="{Binding IsEffectSelected.Value}">
+                                            <ListView ItemsSource="{Binding SelectedRecipe.Value.Effects}">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridViewColumn Width="80" Header="品質">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate DataType="{x:Type models:QualityItemInfo}">
+                                                                    <TextBlock Text="{Binding Quality}" Foreground="{Binding StarBrush}" />
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Width="50" Header="HP" DisplayMemberBinding="{Binding Path=Hp}" />
+                                                        <GridViewColumn Width="50" Header="MP" DisplayMemberBinding="{Binding Path=Mp}" />
+                                                        <GridViewColumn Width="50" Header="Sp" DisplayMemberBinding="{Binding Path=Sp}" />
+                                                        <GridViewColumn Width="50" Header="Str" DisplayMemberBinding="{Binding Path=Str}" />
+                                                        <GridViewColumn Width="50" Header="Int" DisplayMemberBinding="{Binding Path=Int}" />
+                                                        <GridViewColumn Width="50" Header="Dex" DisplayMemberBinding="{Binding Path=Dex}" />
+                                                        <GridViewColumn Width="50" Header="Will" DisplayMemberBinding="{Binding Path=Will}" />
+                                                        <GridViewColumn Width="50" Header="Luck" DisplayMemberBinding="{Binding Path=Luck}" />
+                                                        <GridViewColumn Width="60" Header="最大攻撃" DisplayMemberBinding="{Binding Path=MaxDamage}" />
+                                                        <GridViewColumn Width="60" Header="最小攻撃" DisplayMemberBinding="{Binding Path=MinDamage}" />
+                                                        <GridViewColumn Width="60" Header="魔法攻撃" DisplayMemberBinding="{Binding Path=MagicDamage}" />
+                                                        <GridViewColumn Width="50" Header="保護" DisplayMemberBinding="{Binding Path=Protection}" />
+                                                        <GridViewColumn Width="50" Header="防御" DisplayMemberBinding="{Binding Path=Defense}" />
+                                                        <GridViewColumn Width="60" Header="魔法保護" DisplayMemberBinding="{Binding Path=MagicProtection}" />
+                                                        <GridViewColumn Width="60" Header="魔法防御" DisplayMemberBinding="{Binding Path=MagicDefense}" />
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                        </TabItem>
+
+                                        <TabItem Header="Memo" IsSelected="{Binding IsMemoSelected.Value}">
+                                            <TextBox Margin="5" Padding="5" Text="{Binding SelectedRecipe.Value.Memo}" AcceptsReturn="True" TextWrapping="WrapWithOverflow">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="LostFocus">
+                                                        <i:InvokeCommandAction Command="{Binding MemoTextBoxLostFocusCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}, Path=Text}" />
+                                                    </i:EventTrigger>
+
+                                                    <i:EventTrigger EventName="TextChanged">
+                                                        <i:InvokeCommandAction Command="{Binding MemoTextBoxTextChangedCommand}" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </TextBox>
+                                        </TabItem>
+                                    </TabControl>
                                 </Grid>
 
                             </Grid>

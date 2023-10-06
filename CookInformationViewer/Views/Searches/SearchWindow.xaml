@@ -10,9 +10,11 @@
         xmlns:viewModels="clr-namespace:CookInformationViewer.ViewModels.Searchers"
         xmlns:models="clr-namespace:CookInformationViewer.Models.Searchers"
         xmlns:controls="clr-namespace:CookInformationViewer.Views.UserControls"
+        xmlns:converters="clr-namespace:CookInformationViewer.Views.Converters"
+        xmlns:dataValue="clr-namespace:CookInformationViewer.Models.DataValue"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:SearchWindowViewModel}"
-        Title="レシピ検索" Height="450" Width="300" Style="{DynamicResource WindowStyle}">
+        Title="レシピ検索" Height="500" Width="400" Style="{DynamicResource WindowStyle}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -91,6 +93,8 @@
                         <RowDefinition />
                         <RowDefinition Height="5" />
                         <RowDefinition />
+                        <RowDefinition Height="5" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
 
                     <Grid Height="25">
@@ -109,32 +113,118 @@
                     </Grid>
 
                     <Grid Grid.Row="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="5" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox Content="ステータス検索" IsChecked="{Binding IsStatusSearch.Value}" />
+
+                        <Border Grid.Row="2" Padding="5" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" IsEnabled="{Binding IsStatusSearch.Value}">
+                            <StackPanel>
+                                <ComboBox ItemsSource="{Binding StatusItems}" SelectedItem="{Binding SelectedStatusItem.Value}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Content="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <CheckBox Margin="0,5,0,0" Content="フェスティバルフード不可を除く" IsChecked="{Binding IgnoreNotFestival.Value}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="6">
                         <Button Content="検索" Width="100" Height="30" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding SearchCommand}" />
                     </Grid>
                 </Grid>
 
-                <controls:BindableSelectedItemTreeView Grid.Row="2" ItemsSource="{Binding SearchItems}" Background="Transparent">
-                    <i:Interaction.Triggers>
-                        <!--<i:EventTrigger EventName="SelectedItemChanged">
-                            <i:InvokeCommandAction Command="{Binding SearchSelectedItemChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=controls:BindableSelectedItemTreeView}, Path=SelectedItem}" />
-                        </i:EventTrigger>-->
-                        <i:EventTrigger EventName="MouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding SearchSelectedItemChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=controls:BindableSelectedItemTreeView}, Path=SelectedItem}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                <Grid Grid.Row="2">
+                    <ListBox Name="RecipesListBox" ItemsSource="{Binding RecipesList}" Background="Transparent" Foreground="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Style="{StaticResource NonGridListBox2}">
 
-                    <controls:BindableSelectedItemTreeView.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type models:SearchNode}" ItemsSource="{Binding Children}">
-                            <Label Content="{Binding Name}" />
-                        </HierarchicalDataTemplate>
-                    </controls:BindableSelectedItemTreeView.ItemTemplate>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding SearchSelectedItemChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedItem}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
 
-                    <controls:BindableSelectedItemTreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}">
-                            <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded}"/>
-                        </Style>
-                    </controls:BindableSelectedItemTreeView.ItemContainerStyle>
-                </controls:BindableSelectedItemTreeView>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type dataValue:RecipeHeader}">
+                                <Border Name="bd">
+                                    <Grid>
+                                        <Grid Margin="5" Visibility="{Binding IsHeader, Converter={converters:ReverseBooleanVisibilityConverter}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40" />
+                                                <ColumnDefinition Width="5" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Image Source="{Binding Recipe.Image}" />
+
+                                            <Grid Grid.Column="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <Label Content="{Binding Recipe.Name}" Padding="0" Foreground="{Binding Recipe.Foreground}" />
+                                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                                    <Label Content="確認済み " Padding="0"  />
+                                                    <Label Content="{Binding Recipe.StarText}" Foreground="{Binding Recipe.StarBrush}" Padding="0"  />
+                                                </StackPanel>
+                                                <Label Grid.Row="2" Content="{Binding Additional}" Padding="0"  />
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid Name="Header" Visibility="{Binding IsHeader, Converter={converters:BooleanVisibilityConverter}}">
+                                            <Label Content="{Binding Category.Name}" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="true">
+                                        <Setter Property="Background" Value="#4090ff" TargetName="bd" />
+                                        <Setter Property="BorderBrush" Value="#FF2B4A76" TargetName="bd" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsMouseOver}" Value="true">
+                                        <Setter Property="Background" Value="#444" TargetName="bd" />
+                                        <Setter Property="BorderBrush" Value="#444" TargetName="bd" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsHeader}" Value="true">
+                                        <Setter Property="Background" Value="Transparent" TargetName="bd" />
+                                        <Setter Property="BorderBrush" Value="Transparent" TargetName="bd" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="IsSelected" Value="{Binding Path=Recipe.IsSelected}"/>
+
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Grid>
+                                                <Border
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                                                </Border>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
             </Grid>
 
         </Grid>

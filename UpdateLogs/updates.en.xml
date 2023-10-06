@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.4.4b">
+    1. Added memo function.
+  </update>
   <update version="1.0.3.3b">
     1. added a screen to display the last update history
     2. support notation of specially treated dishes such as fortune cookies

@@ -9,6 +9,7 @@ using CommonStyleLib.Models;
 using CommonStyleLib.ViewModels;
 using CommonStyleLib.Views;
 using CookInformationViewer.Models;
+using CookInformationViewer.Models.DataValue;
 using CookInformationViewer.Models.Searchers;
 using CookInformationViewer.Views;
 using CookInformationViewer.Views.Searches;
@@ -24,9 +25,31 @@ namespace CookInformationViewer.ViewModels.Searchers
         private readonly SearchWindowModel _model;
         private readonly MainWindowViewModel _mainWindowViewModel;
 
+        public List<SearchStatusItem> StatusItems { get; set; } = new List<SearchStatusItem>
+        {
+            new("体力", SearchStatusItem.SearchStatusEnum.Hp),
+            new("マナ", SearchStatusItem.SearchStatusEnum.Mp),
+            new("スタミナ", SearchStatusItem.SearchStatusEnum.Sp),
+            new("Str", SearchStatusItem.SearchStatusEnum.Str),
+            new("Int", SearchStatusItem.SearchStatusEnum.Int),
+            new("Dex", SearchStatusItem.SearchStatusEnum.Dex),
+            new("Will", SearchStatusItem.SearchStatusEnum.Will),
+            new("Luck", SearchStatusItem.SearchStatusEnum.Luck),
+            new("最大攻撃", SearchStatusItem.SearchStatusEnum.MaxDamage),
+            new("最小攻撃", SearchStatusItem.SearchStatusEnum.MinDamage),
+            new("魔法攻撃", SearchStatusItem.SearchStatusEnum.MagicDamage),
+            new("防御", SearchStatusItem.SearchStatusEnum.Defense),
+            new("保護", SearchStatusItem.SearchStatusEnum.Protection),
+            new("魔法防御", SearchStatusItem.SearchStatusEnum.MagicDefense),
+            new("魔法保護", SearchStatusItem.SearchStatusEnum.MagicProtection)
+        };
+        public ReactiveProperty<SearchStatusItem?> SelectedStatusItem { get; set; }
+
         public ReactiveProperty<string> SearchText { get; set; }
         public ReactiveProperty<bool> IsMaterialSearch { get; set; }
-        public ReadOnlyReactiveCollection<SearchNode> SearchItems { get; set; }
+        public ReactiveProperty<bool> IsStatusSearch { get; set; }
+        public ReactiveProperty<bool> IgnoreNotFestival { get; set; }
+        public ReadOnlyReactiveCollection<RecipeHeader> RecipesList { get; set; }
 
         public ICommand SearchCommand { get; set; }
         public ICommand SearchSelectedItemChangedCommand { get; set; }
@@ -37,27 +60,33 @@ namespace CookInformationViewer.ViewModels.Searchers
             _model = model;
             _mainWindowViewModel = mainWindowViewModel;
 
+            SelectedStatusItem = new ReactiveProperty<SearchStatusItem?>();
             SearchText = new ReactiveProperty<string>();
             IsMaterialSearch = new ReactiveProperty<bool>();
-            SearchItems = model.SearchItems.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+            IsStatusSearch = new ReactiveProperty<bool>();
+            IgnoreNotFestival = new ReactiveProperty<bool>();
+            RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
 
             SearchCommand = new DelegateCommand(Search);
-            SearchSelectedItemChangedCommand = new DelegateCommand<SearchNode?>(SearchSelectedItemChanged);
+            SearchSelectedItemChangedCommand = new DelegateCommand<RecipeHeader>(SearchSelectedItemChanged);
         }
 
         public void Search()
         {
-            _model.Search(SearchText.Value, IsMaterialSearch.Value);
+            if (!IsStatusSearch.Value)
+                _model.Search(SearchText.Value, IsMaterialSearch.Value);
+            else
+                _model.StatusSearch(SearchText.Value, IsMaterialSearch.Value, SelectedStatusItem.Value, IgnoreNotFestival.Value);
         }
 
-        public void SearchSelectedItemChanged(SearchNode? args)
+        public void SearchSelectedItemChanged(RecipeHeader? recipeHeader)
         {
-            if (args == null || args.IsCategory)
+            if (recipeHeader == null || recipeHeader.Category.Id == 0)
                 return;
 
-            _mainWindowViewModel.SelectCategory(args);
+            _mainWindowViewModel.SelectCategory(recipeHeader);
 
-            _mainWindowViewModel.SelectRecipe(args);
+            _mainWindowViewModel.SelectRecipe(recipeHeader);
         }
     }
 }

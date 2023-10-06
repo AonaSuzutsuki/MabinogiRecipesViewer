@@ -8,6 +8,8 @@ public class RecipeHeader
 
     public RecipeInfo Recipe { get; set; }
 
+    public string Additional { get; set; } = "";
+
     public RecipeHeader(RecipeInfo recipe)
     {
         Recipe = recipe;

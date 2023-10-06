@@ -188,6 +188,7 @@ namespace CookInformationViewer.Models.Db.Manager
                     RebuildItems(context, DownloadClient, context.CookEffects, TargetFiles["Effects"]);
 
                     RebuildFavorite(favoriteTable, context);
+                    RebuildMemos(favoriteTable, context);
 
                     UpdateDbVersion(context);
                 });
@@ -222,6 +223,7 @@ namespace CookInformationViewer.Models.Db.Manager
                     RebuildItems(context, DownloadClient, context.CookEffects, TargetFiles["Effects"], targetFileName.Get("Effects"));
 
                     RebuildFavorite(favoriteTable, context);
+                    RebuildMemos(favoriteTable, context);
 
                     UpdateDbVersion(context);
                 });
@@ -449,6 +451,29 @@ namespace CookInformationViewer.Models.Db.Manager
             context.SaveChanges();
         }
 
+        private static void RebuildMemos(List<FavoriteTuple> favoriteTable, CookInfoContext context)
+        {
+            var newIdItems = (from x in favoriteTable
+                join rec in context.CookRecipes on x.RecipeName equals rec.Name
+                select new
+                {
+                    Recipe = rec,
+                    FavoriteTable = x
+                }).ToList();
+
+            foreach (var newIdItem in newIdItems)
+            {
+                var memo = context.Memos.FirstOrDefault(x => x.Id == newIdItem.FavoriteTable.Id);
+                if (memo == null)
+                    continue;
+
+                memo.RecipeId = newIdItem.Recipe.Id;
+                memo.UpdateDate = DateTime.Now;
+            }
+
+            context.SaveChanges();
+        }
+
         public void Dispose()
         {
             _contextManager.Dispose();
@@ -479,7 +504,7 @@ namespace CookInformationViewer.Models.Db.Manager
         public void RebuildContext(bool isInit)
         {
             var tables = TableColumns.GetTables();
-
+            
             if (!isInit)
             {
                 Executor.ExecuteNonQuery(SqlCreator.Create("PRAGMA foreign_keys = 0"));
@@ -500,6 +525,28 @@ namespace CookInformationViewer.Models.Db.Manager
 
                 var tableInfo = tables[notExistsTable];
                 Executor.CreateTable(tableInfo);
+            }
+
+            // Create a column that does not exist.
+            foreach (var tableInfo in TableColumns.GetTables())
+            {
+                var definitionColumns = tableInfo.Value.Columns.ToDictionary(x => x.ColumnName);
+                var rawColumns = Executor.Execute(SqlCreator.Create($"PRAGMA table_info('{tableInfo.Value.TableName}')"))
+                    .Select(x => x["name"].ToString());
+
+                var except = definitionColumns.Keys.Except(rawColumns).ToList();
+
+                if (except.Any())
+                {
+                    foreach (var columnName in except)
+                    {
+                        if (!definitionColumns.ContainsKey(columnName))
+                            continue;
+
+                        var columnInfo = definitionColumns[columnName];
+                        Executor.ExecuteNonQuery(SqlCreator.Create($"ALTER TABLE {tableInfo.Value.TableName} ADD COLUMN {columnInfo.ColumnName} {columnInfo}"));
+                    }
+                }
             }
 
             _context.SaveChanges();

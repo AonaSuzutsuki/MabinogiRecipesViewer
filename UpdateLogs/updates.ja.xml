@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.4.4b">
+    1. メモ機能を追加しました。
+  </update>
   <update version="1.0.3.3b">
     1. 最終更新履歴を表示する画面を追加
     2. フォーチュンクッキー等の特殊扱い料理の表記に対応

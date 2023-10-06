@@ -31,6 +31,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
+using CommonExtensionLib.Extensions;
 using CookInformationViewer.Models.DataValue;
 
 namespace CookInformationViewer.ViewModels
@@ -83,6 +84,10 @@ namespace CookInformationViewer.ViewModels
         private readonly Stack<RecipeInfo> _historyBack = new();
         private readonly Stack<RecipeInfo> _historyForward = new();
 
+        private readonly Dictionary<string, bool> _previousTabSelectedMap = new();
+
+        private bool _isMemoChanged;
+
         #endregion
 
         #region Properties
@@ -105,6 +110,10 @@ namespace CookInformationViewer.ViewModels
         public ReadOnlyReactiveCollection<RecipeHeader> RecipesList { get; set; }
 
         public ReactiveProperty<RecipeInfo?> SelectedRecipe { get; set; }
+
+        public ReactiveProperty<bool> IsEffectSelected { get; set; }
+
+        public ReactiveProperty<bool> IsMemoSelected { get; set; }
 
         #endregion
 
@@ -129,6 +138,10 @@ namespace CookInformationViewer.ViewModels
         public ICommand MaterialLinkCommand { get; set; }
 
         public ICommand OpenBrowserCommand { get; set; }
+
+        public ICommand BottomTabChangedCommand { get; set; }
+        public ICommand MemoTextBoxLostFocusCommand { get; set; }
+        public ICommand MemoTextBoxTextChangedCommand { get; set; }
 
         #endregion
 
@@ -170,6 +183,8 @@ namespace CookInformationViewer.ViewModels
             });
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
             SelectedRecipe = new ReactiveProperty<RecipeInfo?>();
+            IsEffectSelected = new ReactiveProperty<bool>(true);
+            IsMemoSelected = new ReactiveProperty<bool>();
 
             OpenSettingCommand = new DelegateCommand(OpenSetting);
             OpenDatabaseCommand = new DelegateCommand(OpenDatabase);
@@ -186,6 +201,9 @@ namespace CookInformationViewer.ViewModels
             NavigateGoCommand = new DelegateCommand(NavigateGo);
             MaterialLinkCommand = new DelegateCommand<int?>(NavigateMaterialLink);
             OpenBrowserCommand = new DelegateCommand(OpenBrowser);
+            BottomTabChangedCommand = new DelegateCommand(BottomTabChanged);
+            MemoTextBoxLostFocusCommand = new DelegateCommand<string?>(MemoTextBoxLostFocus);
+            MemoTextBoxTextChangedCommand = new DelegateCommand(() => _isMemoChanged = true);
         }
 
         protected override void MainWindow_Loaded()
@@ -320,14 +338,7 @@ namespace CookInformationViewer.ViewModels
             _historyBack.Clear();
             _historyForward.Clear();
 
-            SetEnabledNavigateButton();
-
-            if (_mainWindowService.GaugeResize == null)
-                return;
-
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item1Amount, 0);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item2Amount, 1);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item3Amount, 2);
+            ChangeRecipeCommon(header.Recipe);
 
             SetMessage();
         }
@@ -387,14 +398,7 @@ namespace CookInformationViewer.ViewModels
             _historyForward.Push(SelectedRecipe.Value);
             SelectedRecipe.Value = recipe;
 
-            SetEnabledNavigateButton();
-
-            if (_mainWindowService.GaugeResize == null)
-                return;
-
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item1Amount, 0);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item2Amount, 1);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item3Amount, 2);
+            ChangeRecipeCommon(recipe);
         }
 
         public void NavigateGo()
@@ -406,14 +410,7 @@ namespace CookInformationViewer.ViewModels
             _historyBack.Push(SelectedRecipe.Value);
             SelectedRecipe.Value = recipe;
 
-            SetEnabledNavigateButton();
-
-            if (_mainWindowService.GaugeResize == null)
-                return;
-
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item1Amount, 0);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item2Amount, 1);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item3Amount, 2);
+            ChangeRecipeCommon(recipe);
         }
 
         public void NavigateMaterialLink(int? arg)
@@ -434,14 +431,7 @@ namespace CookInformationViewer.ViewModels
             _historyForward.Clear();
             SelectedRecipe.Value = recipe;
 
-            SetEnabledNavigateButton();
-
-            if (_mainWindowService.GaugeResize == null)
-                return;
-
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item1Amount, 0);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item2Amount, 1);
-            _mainWindowService.GaugeResize.SetGaugeLength((double)SelectedRecipe.Value.Item3Amount, 2);
+            ChangeRecipeCommon(recipe);
         }
 
         public void OpenBrowser()
@@ -469,18 +459,6 @@ namespace CookInformationViewer.ViewModels
             CanGoBack.Value = _historyBack.Any();
         }
 
-        public void SelectCategory(SearchNode node)
-        {
-            var category = _model.SelectCategory(node);
-            if (category == null)
-                return;
-
-            if (SelectedCategory.Value.Name != category.Name)
-                IgnoreEvent.Add(nameof(SelectedCategory));
-
-            SelectedCategory.Value = category;
-        }
-
         public void SelectCategory(UpdateRecipeItem item)
         {
             var category = _model.SelectCategory(item);
@@ -493,21 +471,16 @@ namespace CookInformationViewer.ViewModels
             SelectedCategory.Value = category;
         }
 
-        public void SelectRecipe(SearchNode node)
+        public void SelectCategory(RecipeHeader recipeHeader)
         {
-            var recipe = _model.GetRecipeInfo(node);
-            if (recipe == null)
+            var category = _model.SelectCategory(recipeHeader);
+            if (category == null)
                 return;
 
-            RecipesListSelectionChanged(recipe);
-            recipe.Recipe.IsSelected = true;
+            if (SelectedCategory.Value.Name != category.Name)
+                IgnoreEvent.Add(nameof(SelectedCategory));
 
-            if (_mainWindowService.MainWindow == null)
-                return;
-
-            _mainWindowService.MainWindow.IsSearched = true;
-            _mainWindowService.MainWindow.ScrollItem();
-            _mainWindowService.MainWindow.WindowFocus();
+            SelectedCategory.Value = category;
         }
 
         public void SelectRecipe(UpdateRecipeItem item)
@@ -527,12 +500,80 @@ namespace CookInformationViewer.ViewModels
             _mainWindowService.MainWindow.WindowFocus();
         }
 
+        public void SelectRecipe(RecipeHeader recipeHeader)
+        {
+            var recipe = _model.GetRecipeInfo(recipeHeader);
+            if (recipe == null)
+                return;
+
+            RecipesListSelectionChanged(recipe);
+            recipe.Recipe.IsSelected = true;
+
+            if (_mainWindowService.MainWindow == null)
+                return;
+
+            _mainWindowService.MainWindow.IsSearched = true;
+            _mainWindowService.MainWindow.ScrollItem();
+            _mainWindowService.MainWindow.WindowFocus();
+        }
+
+        public void MemoTextBoxLostFocus(string? text)
+        {
+            if (text == null || !_isMemoChanged)
+                return;
+
+            _model.SaveMemo(text);
+            _isMemoChanged = false;
+        }
+
+        public void BottomTabChanged()
+        {
+            if (SelectedRecipe.Value == null)
+                return;
+
+            if (SelectedRecipe.Value.IsMaterial)
+                return;
+
+            // Save selected if no material is selected.
+            _previousTabSelectedMap.Put(nameof(IsEffectSelected), IsEffectSelected.Value);
+            _previousTabSelectedMap.Put(nameof(IsMemoSelected), IsMemoSelected.Value);
+
+        }
+
         public override void Dispose()
         {
             base.Dispose();
 
             _overlayWindowService?.Close();
             _model.Dispose();
+        }
+
+        private void ChangeRecipeCommon(RecipeInfo recipe)
+        {
+            SetEnabledNavigateButton();
+
+            if (_mainWindowService.GaugeResize == null)
+                return;
+
+            _mainWindowService.GaugeResize.SetGaugeLength((double)recipe.Item1Amount, 0);
+            _mainWindowService.GaugeResize.SetGaugeLength((double)recipe.Item2Amount, 1);
+            _mainWindowService.GaugeResize.SetGaugeLength((double)recipe.Item3Amount, 2);
+
+            SelectTabItem(recipe);
+        }
+
+        private void SelectTabItem(RecipeInfo recipe)
+        {
+            if (recipe.IsMaterial && IsEffectSelected.Value)
+            {
+                IsEffectSelected.Value = false;
+                IsMemoSelected.Value = true;
+            }
+            else
+            {
+                IsEffectSelected.Value = _previousTabSelectedMap.Get(nameof(IsEffectSelected), true);
+                IsMemoSelected.Value = _previousTabSelectedMap.Get(nameof(IsMemoSelected));
+            }
         }
 
         private async Task CheckUpdate()

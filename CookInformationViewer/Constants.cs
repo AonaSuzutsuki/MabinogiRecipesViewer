@@ -19,6 +19,7 @@ namespace CookInformationViewer
         public const string CookAdditionalsTableName = "cook_additionals";
         public const string CookFavoritesTableName = "cook_favorites";
         public const string MetaTableName = "meta";
+        public const string CookMemosTableName = "cook_memos";
 
         public const string DatabaseFileName = "Data\\CookInfo.dat";
 
