@@ -9,7 +9,7 @@
 	<Copyright>Copyright (C) Aona Suzutsuki 2022 - 2023</Copyright>
 	<Configurations>Debug;Release;Debug Log</Configurations>
 	<AssemblyName>MabinogiRecipesViewer</AssemblyName>
-	<Version>1.0.3.3</Version>
+	<Version>1.0.4.4</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,6 +47,7 @@
   <ItemGroup>
     <PackageReference Include="CommonCoreLib" Version="1.0.6" />
     <PackageReference Include="CommonStyleLib" Version="1.0.24" />
+    <PackageReference Include="KimamaSqlExecutorLib" Version="1.0.5" />
     <PackageReference Include="KimamaSqliteExecutorLib" Version="1.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

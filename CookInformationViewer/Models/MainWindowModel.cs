@@ -307,6 +307,7 @@ namespace CookInformationViewer.Models
             SetEffects(recipe);
             SetAdditional(recipe);
             SetFavorite(recipe);
+            SetMemo(recipe);
 
             return recipe;
         }
@@ -379,6 +380,37 @@ namespace CookInformationViewer.Models
             return locations;
         }
 
+        public void SaveMemo(string text)
+        {
+            if (_currentRecipeInfo == null)
+                return;
+
+            var recipeId = _currentRecipeInfo.Id;
+
+            _contextManager.Apply(context =>
+            {
+                var memo = context.Memos.FirstOrDefault(x => x.RecipeId == recipeId);
+
+                if (memo == null)
+                {
+                    memo = new DbCookMemos
+                    {
+                        RecipeId = recipeId,
+                        Memo = text,
+                        CreateDate = DateTime.Now
+                    };
+
+                    context.Memos.Add(memo);
+                }
+                else
+                {
+                    memo.Memo = text;
+                    memo.UpdateDate = DateTime.Now;
+                }
+
+            });
+        }
+
         private void SetEffects(RecipeInfo recipe)
         {
             var effects = _contextManager.GetItem(x => (from m in x.CookEffects
@@ -428,6 +460,16 @@ namespace CookInformationViewer.Models
                 return;
 
             recipe.IsFavorite = true;
+        }
+
+        private void SetMemo(RecipeInfo recipe)
+        {
+            var memo = _contextManager.GetItem(x => x.Memos.FirstOrDefault(m => m.RecipeId == recipe.Id));
+
+            if (memo == null)
+                return;
+
+            recipe.Memo = memo.Memo;
         }
 
         public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)

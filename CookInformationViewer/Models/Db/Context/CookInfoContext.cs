@@ -70,6 +70,7 @@ namespace CookInformationViewer.Models.Db.Context
         public DbSet<DbDownloadHistory> Histories { get; set; }
         public DbSet<DbCookFavorites> Favorites { get; set; }
         public DbSet<DbMeta> Metas { get; set; }
+        public DbSet<DbCookMemos> Memos { get; set; }
 
         public CookInfoContext()
         {
@@ -89,7 +90,8 @@ namespace CookInformationViewer.Models.Db.Context
                 { typeof(DbCookEffects), new DbSetWrapper<DbCookEffects>(CookEffects) },
                 { typeof(DbDownloadHistory), new DbSetWrapper<DbDownloadHistory>(Histories) },
                 { typeof(DbCookAdditionals), new DbSetWrapper<DbCookAdditionals>(Additionals) },
-                { typeof(DbCookFavorites), new DbSetWrapper<DbCookFavorites>(Favorites) }
+                { typeof(DbCookFavorites), new DbSetWrapper<DbCookFavorites>(Favorites) },
+                { typeof(DbCookMemos), new DbSetWrapper<DbCookMemos>(Memos) }
             };
         }
 

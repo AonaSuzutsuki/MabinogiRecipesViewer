@@ -6,7 +6,7 @@ namespace CookInformationViewer.Models.Db
 {
     internal static class TableColumns
     {
-        public const string DbVersion = "1.1";
+        public const string DbVersion = "1.2";
 
         public static Dictionary<string, TableInfo> GetTables()
         {
@@ -637,6 +637,47 @@ namespace CookInformationViewer.Models.Db
                 }
             };
 
+            var memos = new TableInfo
+            {
+                TableName = Constants.CookMemosTableName,
+                Columns = new []
+                {
+                    new ColumnInfo
+                    {
+                        ColumnName = "id",
+                        Type = ColumnType.Integer,
+                        PrimaryKey = true,
+                        AutoIncrement = true
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "recipe_id",
+                        Type = ColumnType.Integer
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "memo",
+                        Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "create_date",
+                        Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "update_date",
+                        Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "is_delete",
+                        Type = ColumnType.Integer,
+                        Default = 0L
+                    }
+                }
+            };
+
             return new Dictionary<string, TableInfo>
             {
                 { cookMaterials.TableName, cookMaterials },
@@ -650,7 +691,8 @@ namespace CookInformationViewer.Models.Db
                 { additional.TableName, additional },
                 { downloadHistory.TableName, downloadHistory },
                 { favorite.TableName, favorite },
-                { meta.TableName, meta }
+                { meta.TableName, meta },
+                { memos.TableName, memos }
             };
         }
     }

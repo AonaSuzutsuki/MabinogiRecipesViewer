@@ -126,8 +126,11 @@ namespace CookInformationViewer.Models.Searchers
             }
         }
 
-        public void StatusSearch(string word, bool isMaterialSearch, SearchStatusItem statusItem, bool ignoreNotFestival)
+        public void StatusSearch(string word, bool isMaterialSearch, SearchStatusItem? statusItem, bool ignoreNotFestival)
         {
+            if (statusItem == null)
+                return;
+
             var selectQuery = "eff.recipe_id, " +
                               "rec.name, " +
                               "MAX({0}) as status, " +
@@ -196,10 +199,10 @@ namespace CookInformationViewer.Models.Searchers
                 }
             }
 
-            var rowItems = _contextManager.Execute(sql).OrderByDescending(x => x["status"].GetValue<long>()).ToList();
+            var rowItems = _contextManager.Execute(sql).OrderByDescending(x => x["status"].GetLong()).ToList();
 
-            var recipeIds = new HashSet<long>(rowItems.Select(x => x["recipe_id"].GetValue<long>()));
-            var statusIdMap = rowItems.ToDictionary(x => x["recipe_id"].GetValue<long>(),
+            var recipeIds = new HashSet<long>(rowItems.Select(x => x["recipe_id"].GetLong()));
+            var statusIdMap = rowItems.ToDictionary(x => x["recipe_id"].GetLong(),
                 x => x);
 
             var items = _contextManager.GetItem(context => (from x in context.CookRecipes
@@ -217,7 +220,7 @@ namespace CookInformationViewer.Models.Searchers
                     x.category,
                     status = statusIdMap[x.recipe.Id]
                 })
-                .OrderByDescending(x => statusIdMap[x.recipe.Id]["status"].GetValue<long>())
+                .OrderByDescending(x => statusIdMap[x.recipe.Id]["status"].GetLong())
                 .ToList();
 
             Recipes.Clear();
@@ -232,11 +235,11 @@ namespace CookInformationViewer.Models.Searchers
 
                 var recipe = new RecipeHeader(new RecipeInfo(item.recipe)
                 {
-                    Star = (int)item.status["star"].GetValue<long>(),
+                    Star = item.status["star"].GetInt(),
                     Category = category
                 })
                 {
-                    Additional = $"{statusItem.ConvertLogicStatus()} {item.status["status"].GetValue<long>()}",
+                    Additional = $"{statusItem.ConvertLogicStatus()} {item.status["status"].GetLong()}",
                     Category = category
                 };
                 Recipes.Add(recipe);

@@ -43,7 +43,7 @@ namespace CookInformationViewer.ViewModels.Searchers
             new("魔法防御", SearchStatusItem.SearchStatusEnum.MagicDefense),
             new("魔法保護", SearchStatusItem.SearchStatusEnum.MagicProtection)
         };
-        public ReactiveProperty<SearchStatusItem> SelectedStatusItem { get; set; }
+        public ReactiveProperty<SearchStatusItem?> SelectedStatusItem { get; set; }
 
         public ReactiveProperty<string> SearchText { get; set; }
         public ReactiveProperty<bool> IsMaterialSearch { get; set; }
@@ -60,7 +60,7 @@ namespace CookInformationViewer.ViewModels.Searchers
             _model = model;
             _mainWindowViewModel = mainWindowViewModel;
 
-            SelectedStatusItem = new ReactiveProperty<SearchStatusItem>();
+            SelectedStatusItem = new ReactiveProperty<SearchStatusItem?>();
             SearchText = new ReactiveProperty<string>();
             IsMaterialSearch = new ReactiveProperty<bool>();
             IsStatusSearch = new ReactiveProperty<bool>();
