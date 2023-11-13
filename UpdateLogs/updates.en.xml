@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.5.5b">
+    1. Supported to copy a recipe name.
+  </update>
   <update version="1.0.4.4b">
     1. Added memo function.
   </update>
