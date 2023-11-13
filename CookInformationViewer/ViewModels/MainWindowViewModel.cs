@@ -143,6 +143,8 @@ namespace CookInformationViewer.ViewModels
         public ICommand MemoTextBoxLostFocusCommand { get; set; }
         public ICommand MemoTextBoxTextChangedCommand { get; set; }
 
+        public ICommand CopyRecipeNameCommand { get; set; }
+
         #endregion
 
         public MainWindowViewModel(MainWindowWindowService windowService, MainWindowModel model) : base(windowService, model)
@@ -204,6 +206,7 @@ namespace CookInformationViewer.ViewModels
             BottomTabChangedCommand = new DelegateCommand(BottomTabChanged);
             MemoTextBoxLostFocusCommand = new DelegateCommand<string?>(MemoTextBoxLostFocus);
             MemoTextBoxTextChangedCommand = new DelegateCommand(() => _isMemoChanged = true);
+            CopyRecipeNameCommand = new DelegateCommand(CopyRecipeName);
         }
 
         protected override void MainWindow_Loaded()
@@ -538,6 +541,21 @@ namespace CookInformationViewer.ViewModels
             _previousTabSelectedMap.Put(nameof(IsEffectSelected), IsEffectSelected.Value);
             _previousTabSelectedMap.Put(nameof(IsMemoSelected), IsMemoSelected.Value);
 
+        }
+
+        public void CopyRecipeName()
+        {
+            if (SelectedRecipe.Value == null)
+                return;
+
+            Clipboard.SetText(SelectedRecipe.Value.Name);
+
+            SetMessage("レシピ名のコピーが完了しました。");
+
+            _ = Task.Delay(5000).ContinueWith(_ =>
+            {
+                WindowManageService.Dispatch(() => SetMessage());
+            });
         }
 
         public override void Dispose()
