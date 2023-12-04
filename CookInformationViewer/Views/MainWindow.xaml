@@ -83,6 +83,7 @@
                     </MenuItem>
                     <MenuItem Header="ツール(_T)">
                         <MenuItem Header="設定(_O)" Command="{Binding OpenSettingCommand}" />
+                        <MenuItem Header="素材数計算機(_S)" Command="{Binding OpenCalcMaterialsCommand}" />
                         <MenuItem Header="Database" Command="{Binding OpenDatabaseCommand}" Visibility="{Binding IsDebugMode, Converter={converters:BooleanVisibilityConverter}}" />
                     </MenuItem>
                     <MenuItem Header="ヘルプ(_H)">

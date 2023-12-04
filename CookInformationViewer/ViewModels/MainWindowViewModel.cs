@@ -120,6 +120,7 @@ namespace CookInformationViewer.ViewModels
         #region Event Properties
 
         public ICommand OpenSettingCommand { get; set; }
+        public ICommand OpenCalcMaterialsCommand { get; set; }
         public ICommand OpenDatabaseCommand { get; set; }
         public ICommand OpenSearchWindowCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
@@ -189,6 +190,7 @@ namespace CookInformationViewer.ViewModels
             IsMemoSelected = new ReactiveProperty<bool>();
 
             OpenSettingCommand = new DelegateCommand(OpenSetting);
+            OpenCalcMaterialsCommand = new DelegateCommand(OpenCalcMaterials);
             OpenDatabaseCommand = new DelegateCommand(OpenDatabase);
             OpenSearchWindowCommand = new DelegateCommand(OpenSearchWindow);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
@@ -255,6 +257,18 @@ namespace CookInformationViewer.ViewModels
             var model = new SettingModel();
             var vm = new SettingViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<SettingView>(vm);
+        }
+
+        public void OpenCalcMaterials()
+        {
+            if (SelectedRecipe.Value == null)
+                return;
+
+            var model = new CalcMaterialsModel();
+            var vm = new CalcMaterialsViewModel(new WindowService(), model);
+            WindowManageService.Show<CalcMaterials>(vm);
+
+            model.Create(SelectedRecipe.Value);
         }
 
         public void OpenDatabase()
