@@ -19,6 +19,7 @@ namespace CookInformationViewer.ViewModels
     public class CalcMaterialsViewModel : ViewModelWindowStyleBase
     {
         private readonly CalcMaterialsModel _model;
+        private readonly MainWindowViewModel _mainWindowViewModel;
 
         public ReactiveProperty<bool> IgnoreCanPurchasableChecked { get; set; }
         public ReactiveProperty<string> RecipeCountText { get; set; }
@@ -28,10 +29,12 @@ namespace CookInformationViewer.ViewModels
         public ICommand RecipeCountTextChangedCommand { get; set; }
         public ICommand ReduceRecipeCountCommand { get; set; }
         public ICommand IncreaseRecipeCountCommand { get; set; }
+        public ICommand UsedRecipesMouseDoubleClickCommand { get; set; }
 
-        public CalcMaterialsViewModel(IWindowService windowService, CalcMaterialsModel model) : base(windowService, model)
+        public CalcMaterialsViewModel(IWindowService windowService, CalcMaterialsModel model, MainWindowViewModel mainWindowViewModel) : base(windowService, model)
         {
             _model = model;
+            _mainWindowViewModel = mainWindowViewModel;
 
             IgnoreCanPurchasableChecked = model.ToReactivePropertyAsSynchronized(x => x.IgnoreCanPurchasableChecked)
                 .AddTo(CompositeDisposable);
@@ -43,6 +46,7 @@ namespace CookInformationViewer.ViewModels
             RecipeCountTextChangedCommand = new DelegateCommand(RecipeCountTextChanged);
             ReduceRecipeCountCommand = new DelegateCommand(ReduceRecipeCount);
             IncreaseRecipeCountCommand = new DelegateCommand(IncreaseRecipeCount);
+            UsedRecipesMouseDoubleClickCommand = new DelegateCommand<CalcMaterialInfo?>(UsedRecipesMouseDoubleClick);
         }
 
         private void IgnoreCanPurchasableCheckedOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -90,6 +94,21 @@ namespace CookInformationViewer.ViewModels
             count++;
 
             RecipeCountText.Value = count.ToString();
+        }
+
+        private void UsedRecipesMouseDoubleClick(CalcMaterialInfo? materialInfo)
+        {
+            if (materialInfo == null)
+                return;
+
+            var recipeHeader = _model.ToRecipeHeader(materialInfo);
+
+            if (recipeHeader == null)
+                return;
+
+            _mainWindowViewModel.SelectCategory(recipeHeader);
+
+            _mainWindowViewModel.SelectRecipe(recipeHeader);
         }
     }
 }

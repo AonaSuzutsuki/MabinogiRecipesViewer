@@ -265,10 +265,10 @@ namespace CookInformationViewer.ViewModels
                 return;
 
             var model = new CalcMaterialsModel();
-            var vm = new CalcMaterialsViewModel(new WindowService(), model);
+            var vm = new CalcMaterialsViewModel(new WindowService(), model, this);
             WindowManageService.Show<CalcMaterials>(vm);
 
-            model.Create(SelectedRecipe.Value);
+            _ = model.Create(SelectedRecipe.Value);
         }
 
         public void OpenDatabase()
