@@ -137,8 +137,8 @@
                             <DataTemplate>
                                 <Grid>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding Name}" FontSize="12" Foreground="White" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" />
-                                        <Label Content="{Binding Count}" FontSize="16" HorizontalAlignment="Center" />
+                                        <TextBlock Text="{Binding Name}" FontSize="13" Foreground="White" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" />
+                                        <Label Content="{Binding Count}" FontSize="18" HorizontalAlignment="Center" />
                                     </StackPanel>
 
                                 </Grid>
@@ -156,65 +156,41 @@
 
                         <Label Content="▼ 素材入手先"  />
 
-                        <ListBox ItemsSource="{Binding MaterialSelectedItem.Value.LocationItems}" Grid.Row="1" BorderThickness="1" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource NonGridListBox2}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Name="bd">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label Content="{Binding Name}" Foreground="White" VerticalAlignment="Center" FontSize="14" />
-                                            <Label Content="{Binding Location}" Foreground="White" VerticalAlignment="Center" FontSize="14" />
-                                        </StackPanel>
-                                    </Border>
-
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsMouseOver}" Value="true">
-                                            <Setter Property="Background" Value="#444" TargetName="bd" />
-                                            <Setter Property="BorderBrush" Value="#444" TargetName="bd" />
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListBoxItem}">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="BorderBrush" Value="Transparent" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                                <Grid>
-                                                    <Border
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Background="{TemplateBinding Background}">
-                                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" />
-                                                    </Border>
-                                                </Grid>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
+                        <ListView ItemsSource="{Binding MaterialSelectedItem.Value.LocationItems}" Grid.Row="1" BorderThickness="1" Background="Transparent">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="100" Header="素材名" DisplayMemberBinding="{Binding Path=Name}" />
+                                    <GridViewColumn Width="140" Header="場所" DisplayMemberBinding="{Binding Path=Location}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
 
                         <Label Grid.Row="2" Content="▼ 使用料理"  />
 
-                        <ListBox ItemsSource="{Binding MaterialSelectedItem.Value.UsedRecipes}" Grid.Row="3" BorderThickness="1" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource NonGridListBox2}">
+                        <ListBox ItemsSource="{Binding MaterialSelectedItem.Value.UsedRecipes}" Grid.Row="3" BorderThickness="1" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding UsedRecipesMouseDoubleClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedItem}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Border Name="bd">
                                         <Grid>
-                                            <Label Content="{Binding Name}" Foreground="White" VerticalAlignment="Center" FontSize="14" />
-
-                                            <Button Name="openButton" Opacity="0" Content="..." Width="25" Height="25" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" />
+                                            <Label Content="{Binding Name}" Foreground="White" VerticalAlignment="Center" FontSize="12" />
                                         </Grid>
                                     </Border>
 
                                     <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="true">
+                                            <Setter Property="Background" Value="#4090ff" TargetName="bd" />
+                                            <Setter Property="BorderBrush" Value="#FF2B4A76" TargetName="bd" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsMouseOver}" Value="true">
                                             <Setter Property="Background" Value="#444" TargetName="bd" />
                                             <Setter Property="BorderBrush" Value="#444" TargetName="bd" />
-                                            <Setter Property="Opacity" Value="1" TargetName="openButton" />
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
                                 </DataTemplate>

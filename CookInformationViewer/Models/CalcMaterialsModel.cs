@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Media3D;
 using CommonStyleLib.Models;
@@ -47,19 +48,6 @@ namespace CookInformationViewer.Models
         public int Count { get; set; }
         public ObservableCollection<CalcMaterialInfo> UsedRecipes { get; set; } = new();
         public ObservableCollection<LocationItemInfo> LocationItems { get; set; } = new();
-
-        public string UsedRecipeTitle
-        {
-            get
-            {
-                return UsedRecipes.Count switch
-                {
-                    1 => UsedRecipes[0].Name,
-                    > 1 => $"{UsedRecipes.First().Name}\r\n...",
-                    _ => string.Empty
-                };
-            }
-        }
     }
 
     public class CalcMaterialsModel : ModelBase
@@ -78,7 +66,7 @@ namespace CookInformationViewer.Models
             set => SetProperty(ref _ignoreCanPurchasableChecked, value);
         }
 
-        public void Create(RecipeInfo recipe)
+        public async Task Create(RecipeInfo recipe)
         {
             _root = new CalcMaterialInfo()
             {
@@ -87,8 +75,11 @@ namespace CookInformationViewer.Models
                 IsRecipe = true
             };
 
-            Open(_root, recipe);
-            Analyze(1);
+            await Task.Run(() =>
+            {
+                Open(_root, recipe);
+                Analyze(1);
+            });
         }
 
         public void Open(CalcMaterialInfo parent, RecipeInfo recipe)
@@ -133,6 +124,30 @@ namespace CookInformationViewer.Models
                     LocationItems = new ObservableCollection<LocationItemInfo>(keyValue.Value.First().LocationItems)
                 });
             }
+        }
+
+        public RecipeHeader? ToRecipeHeader(CalcMaterialInfo materialInfo)
+        {
+            var recipe = _contextManager.GetItem(c => (
+                    from x in c.CookRecipes
+                    join category in c.CookCategories on x.CategoryId equals category.Id
+                    where x.Id == materialInfo.Id
+                    select new
+                    {
+                        recipe = x,
+                        category
+                    }
+            ).ToList().FirstOrDefault());
+
+            if (recipe == null)
+                return null;
+
+            var header = new RecipeHeader(new RecipeInfo(recipe.recipe)
+            {
+                Category = new CategoryInfo(recipe.category) 
+            });
+
+            return header;
         }
 
         private void InternalAnalyze(CalcMaterialInfo parent, List<CalcMaterialInfo> recipes, bool onlyCanPurchasable)
@@ -189,7 +204,7 @@ namespace CookInformationViewer.Models
                         from x in c.CookMaterialSellers
                         join seller in c.CookSellers on x.SellerId equals seller.Id
                         join location in c.CookLocations on seller.LocationId equals location.Id
-                        where x.Id == materialId
+                        where x.MaterialId == materialId
                         select new
                         {
                             seller,
