@@ -18,7 +18,7 @@ namespace CookInformationViewer.Models
     {
 
         private ContextManager _contextManager = new();
-        private UpdateContextManager _updateContextManager = new();
+        private readonly UpdateContextManager _updateContextManager = new();
         private readonly SettingLoader _setting = SettingLoader.Instance;
 
         private ObservableCollection<CategoryInfo> _categories = new();
@@ -332,12 +332,7 @@ namespace CookInformationViewer.Models
             var locations = new List<LocationItemInfo>();
             if (recipeId != null)
             {
-                locations.Add(new LocationItemInfo
-                {
-                    Name = "料理",
-                    Location = "スキル",
-                    Type = "クラフト"
-                });
+                locations.Add(LocationItemInfo.CookItem);
             }
 
             if (materialId == null)
@@ -354,7 +349,7 @@ namespace CookInformationViewer.Models
                     {
                         Name = seller.Name,
                         Location = location.Name,
-                        Type = "NPC"
+                        Type = LocationItemInfo.TypeNpc
                     };
                 return items;
             });
@@ -370,7 +365,7 @@ namespace CookInformationViewer.Models
                     {
                         Name = m.DropName,
                         Location = location.Name,
-                        Type = "ドロップ"
+                        Type = LocationItemInfo.TypeDrop
                     };
                 return items;
             });

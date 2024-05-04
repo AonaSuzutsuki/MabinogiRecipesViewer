@@ -396,6 +396,8 @@
                                         <Label Content="{Binding SelectedRecipe.Value.StarText}" Foreground="{Binding SelectedRecipe.Value.StarBrush}" />
                                         <Label Content="{Binding SelectedRecipe.Value.StarMessage}"></Label>
                                     </StackPanel>
+
+                                    <Button Content="素材数確認" Width="100" Height="25" HorizontalAlignment="Right" Margin="0,0,25,0" Style="{StaticResource FlatButton}" Command="{Binding OpenCalcMaterialsCommand}" />
                                 </Grid>
 
                                 <Grid Grid.Row="3">

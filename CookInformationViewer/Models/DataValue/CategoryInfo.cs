@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using CookInformationViewer.Models.Db.Context;
 using Prism.Mvvm;
 
 namespace CookInformationViewer.Models.DataValue;
@@ -25,6 +26,16 @@ public class CategoryInfo : BindableBase
     public string Name { get; set; } = string.Empty;
 
     public Brush Foreground => SameFavorite() ? Constants.FavoriteForeground : new SolidColorBrush(Colors.White);
+
+    public CategoryInfo()
+    {
+    }
+
+    public CategoryInfo(DbCookCategories category)
+    {
+        Id = category.Id;
+        Name = category.Name;
+    }
 
     public bool SameFavorite()
     {
