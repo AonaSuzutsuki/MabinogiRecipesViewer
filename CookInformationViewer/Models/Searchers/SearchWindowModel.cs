@@ -148,7 +148,7 @@ namespace CookInformationViewer.Models.Searchers
                 SearchStatusItem.SearchStatusEnum.Mp => SqlCreator.Select(selectQuery.FormatString("mana"), tableName).Where("mana > 0"),
                 SearchStatusItem.SearchStatusEnum.Sp => SqlCreator.Select(selectQuery.FormatString("stamina"), tableName).Where("stamina > 0"),
                 SearchStatusItem.SearchStatusEnum.Str => SqlCreator.Select(selectQuery.FormatString("str"), tableName).Where("str > 0"),
-                SearchStatusItem.SearchStatusEnum.Int => SqlCreator.Select(selectQuery.FormatString("int"), tableName).Where("int > 0"),
+                SearchStatusItem.SearchStatusEnum.Int => SqlCreator.Select(selectQuery.FormatString("inteli"), tableName).Where("inteli > 0"),
                 SearchStatusItem.SearchStatusEnum.Dex => SqlCreator.Select(selectQuery.FormatString("dex"), tableName).Where("dex > 0"),
                 SearchStatusItem.SearchStatusEnum.Will => SqlCreator.Select(selectQuery.FormatString("will"), tableName).Where("will > 0"),
                 SearchStatusItem.SearchStatusEnum.Luck => SqlCreator.Select(selectQuery.FormatString("luck"), tableName).Where("luck > 0"),
