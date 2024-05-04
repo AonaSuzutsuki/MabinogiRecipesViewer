@@ -84,16 +84,50 @@ namespace CookInformationViewer.Models.Searchers
 
     public class SearchWindowModel : ModelBase
     {
+        #region Fields
+
+        public ObservableCollection<SearchStatusItem> StatusItems { get; set; } = new ObservableCollection<SearchStatusItem>
+        {
+            new("体力", SearchStatusItem.SearchStatusEnum.Hp),
+            new("マナ", SearchStatusItem.SearchStatusEnum.Mp),
+            new("スタミナ", SearchStatusItem.SearchStatusEnum.Sp),
+            new("Str", SearchStatusItem.SearchStatusEnum.Str),
+            new("Int", SearchStatusItem.SearchStatusEnum.Int),
+            new("Dex", SearchStatusItem.SearchStatusEnum.Dex),
+            new("Will", SearchStatusItem.SearchStatusEnum.Will),
+            new("Luck", SearchStatusItem.SearchStatusEnum.Luck),
+            new("最大攻撃", SearchStatusItem.SearchStatusEnum.MaxDamage),
+            new("最小攻撃", SearchStatusItem.SearchStatusEnum.MinDamage),
+            new("魔法攻撃", SearchStatusItem.SearchStatusEnum.MagicDamage),
+            new("防御", SearchStatusItem.SearchStatusEnum.Defense),
+            new("保護", SearchStatusItem.SearchStatusEnum.Protection),
+            new("魔法防御", SearchStatusItem.SearchStatusEnum.MagicDefense),
+            new("魔法保護", SearchStatusItem.SearchStatusEnum.MagicProtection)
+        };
+
         private readonly ContextManager _contextManager = new();
-        
+
         private ObservableCollection<RecipeHeader> _recipes = new();
-        
+
+        #endregion
+
+        #region Properties
+        public bool IsOpened { get; set; }
+
+        public SearchStatusItem? SelectedStatusItem { get; set; }
+
+        public string SearchText { get; set; } = string.Empty;
+        public bool IsMaterialSearch { get; set; }
+        public bool IsStatusSearch { get; set; }
+        public bool IgnoreNotFestival { get; set; }
 
         public ObservableCollection<RecipeHeader> Recipes
         {
             get => _recipes;
             set => SetProperty(ref _recipes, value);
         }
+
+        #endregion
 
         public SearchWindowModel()
         {

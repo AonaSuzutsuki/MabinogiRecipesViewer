@@ -81,6 +81,8 @@ namespace CookInformationViewer.ViewModels
         private OverlayModel? _overlayModel;
         private MainWindowWindowService? _overlayWindowService;
 
+        private SearchWindowModel? _searchWindowModel;
+
         private readonly Stack<RecipeInfo> _historyBack = new();
         private readonly Stack<RecipeInfo> _historyForward = new();
 
@@ -264,8 +266,13 @@ namespace CookInformationViewer.ViewModels
 
         public void OpenSearchWindow()
         {
-            var model = new SearchWindowModel();
-            var vm = new SearchWindowViewModel(new WindowService(), this, model);
+            _searchWindowModel ??= new SearchWindowModel();
+
+            if (_searchWindowModel.IsOpened)
+                return;
+
+            var vm = new SearchWindowViewModel(new WindowService(), this, _searchWindowModel);
+
             WindowManageService.ShowNonOwner<SearchWindow>(vm);
         }
 
