@@ -25,24 +25,7 @@ namespace CookInformationViewer.ViewModels.Searchers
         private readonly SearchWindowModel _model;
         private readonly MainWindowViewModel _mainWindowViewModel;
 
-        public List<SearchStatusItem> StatusItems { get; set; } = new List<SearchStatusItem>
-        {
-            new("体力", SearchStatusItem.SearchStatusEnum.Hp),
-            new("マナ", SearchStatusItem.SearchStatusEnum.Mp),
-            new("スタミナ", SearchStatusItem.SearchStatusEnum.Sp),
-            new("Str", SearchStatusItem.SearchStatusEnum.Str),
-            new("Int", SearchStatusItem.SearchStatusEnum.Int),
-            new("Dex", SearchStatusItem.SearchStatusEnum.Dex),
-            new("Will", SearchStatusItem.SearchStatusEnum.Will),
-            new("Luck", SearchStatusItem.SearchStatusEnum.Luck),
-            new("最大攻撃", SearchStatusItem.SearchStatusEnum.MaxDamage),
-            new("最小攻撃", SearchStatusItem.SearchStatusEnum.MinDamage),
-            new("魔法攻撃", SearchStatusItem.SearchStatusEnum.MagicDamage),
-            new("防御", SearchStatusItem.SearchStatusEnum.Defense),
-            new("保護", SearchStatusItem.SearchStatusEnum.Protection),
-            new("魔法防御", SearchStatusItem.SearchStatusEnum.MagicDefense),
-            new("魔法保護", SearchStatusItem.SearchStatusEnum.MagicProtection)
-        };
+        public ReadOnlyReactiveCollection<SearchStatusItem> StatusItems { get; set; }
         public ReactiveProperty<SearchStatusItem?> SelectedStatusItem { get; set; }
 
         public ReactiveProperty<string> SearchText { get; set; }
@@ -60,15 +43,18 @@ namespace CookInformationViewer.ViewModels.Searchers
             _model = model;
             _mainWindowViewModel = mainWindowViewModel;
 
-            SelectedStatusItem = new ReactiveProperty<SearchStatusItem?>();
-            SearchText = new ReactiveProperty<string>();
-            IsMaterialSearch = new ReactiveProperty<bool>();
-            IsStatusSearch = new ReactiveProperty<bool>();
-            IgnoreNotFestival = new ReactiveProperty<bool>();
+            StatusItems = model.StatusItems.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
+            SelectedStatusItem = model.ToReactivePropertyAsSynchronized(m => m.SelectedStatusItem).AddTo(CompositeDisposable);
+            SearchText = model.ToReactivePropertyAsSynchronized(m => m.SearchText).AddTo(CompositeDisposable);
+            IsMaterialSearch = model.ToReactivePropertyAsSynchronized(m => m.IsMaterialSearch).AddTo(CompositeDisposable);
+            IsStatusSearch = model.ToReactivePropertyAsSynchronized(m => m.IsStatusSearch).AddTo(CompositeDisposable);
+            IgnoreNotFestival = model.ToReactivePropertyAsSynchronized(m => m.IgnoreNotFestival).AddTo(CompositeDisposable);
             RecipesList = model.Recipes.ToReadOnlyReactiveCollection().AddTo(CompositeDisposable);
 
             SearchCommand = new DelegateCommand(Search);
             SearchSelectedItemChangedCommand = new DelegateCommand<RecipeHeader>(SearchSelectedItemChanged);
+
+            _model.IsOpened = true;
         }
 
         public void Search()
@@ -87,6 +73,13 @@ namespace CookInformationViewer.ViewModels.Searchers
             _mainWindowViewModel.SelectCategory(recipeHeader);
 
             _mainWindowViewModel.SelectRecipe(recipeHeader);
+        }
+
+        protected override void MainWindowCloseBt_Click()
+        {
+            _model.IsOpened = false;
+
+            base.MainWindowCloseBt_Click();
         }
     }
 }
