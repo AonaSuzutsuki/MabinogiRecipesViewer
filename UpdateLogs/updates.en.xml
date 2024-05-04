@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.6.6b">
+    1. Fixed crash when selecting int in status search.
+  </update>
   <update version="1.0.5.5b">
     1. Supported to copy a recipe name.
   </update>
