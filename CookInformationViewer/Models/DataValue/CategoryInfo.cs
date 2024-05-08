@@ -6,6 +6,8 @@ namespace CookInformationViewer.Models.DataValue;
 
 public class CategoryInfo : BindableBase
 {
+    public static CategoryInfo Empty { get; } = new();
+
     public static CategoryInfo Favorite => new()
     {
         Id = 0,

@@ -83,6 +83,13 @@
                     </MenuItem>
                     <MenuItem Header="ツール(_T)">
                         <MenuItem Header="設定(_O)" Command="{Binding OpenSettingCommand}" />
+
+                        <Separator Style="{StaticResource MLB_Separator}" />
+
+                        <MenuItem Header="フェスティバルフードシミュレータ(_O)" Command="{Binding OpenFestivalFoodSimCommand}" />
+
+                        <Separator Style="{StaticResource MLB_Separator}"  Visibility="{Binding IsDebugMode, Converter={converters:BooleanVisibilityConverter}}" />
+
                         <MenuItem Header="Database" Command="{Binding OpenDatabaseCommand}" Visibility="{Binding IsDebugMode, Converter={converters:BooleanVisibilityConverter}}" />
                     </MenuItem>
                     <MenuItem Header="ヘルプ(_H)">

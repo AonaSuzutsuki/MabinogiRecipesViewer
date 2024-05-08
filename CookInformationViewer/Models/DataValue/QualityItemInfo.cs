@@ -43,16 +43,31 @@ public class QualityItemInfo
         var list = effects.ToList();
 
         Star = star;
-        Quality = star switch
-        {
-            1 => "★☆☆☆☆",
-            2 => "★★☆☆☆",
-            3 => "★★★☆☆",
-            4 => "★★★★☆",
-            5 => "★★★★★",
-            6 => "★★★★★",
-            _ => "",
-        };
+        Quality = GetStarString(star);
+
+        Hp = MinMaxString(list, x => x.Hp);
+        Mp = MinMaxString(list, x => x.Mana);
+        Sp = MinMaxString(list, x => x.Stamina);
+        Str = MinMaxString(list, x => x.Str);
+        Int = MinMaxString(list, x => x.Int);
+        Dex = MinMaxString(list, x => x.Dex);
+        Will = MinMaxString(list, x => x.Will);
+        Luck = MinMaxString(list, x => x.Luck);
+        MaxDamage = MinMaxString(list, x => x.Damage);
+        MinDamage = MinMaxString(list, x => x.MinDamage);
+        MagicDamage = MinMaxString(list, x => x.MagicDamage);
+        Protection = MinMaxString(list, x => x.Protection);
+        Defense = MinMaxString(list, x => x.Defense);
+        MagicProtection = MinMaxString(list, x => x.MagicProtection);
+        MagicDefense = MinMaxString(list, x => x.MagicDefense);
+    }
+
+    public QualityItemInfo(int star, IEnumerable<EffectInfo> effects)
+    {
+        var list = effects.ToList();
+
+        Star = star;
+        Quality = GetStarString(star);
 
         Hp = MinMaxString(list, x => x.Hp);
         Mp = MinMaxString(list, x => x.Mana);
@@ -86,5 +101,36 @@ public class QualityItemInfo
             return string.Empty;
 
         return minValue.Equals(maxValue) ? minValue.ToString() : $"{minValue}-{maxValue}";
+    }
+
+    private string MinMaxString(List<EffectInfo> effects, Func<EffectInfo, int> selector)
+    {
+        var min = effects.MinBy(selector);
+        var max = effects.MaxBy(selector);
+
+        if (min == null || max == null)
+            return string.Empty;
+
+        var minValue = selector(min);
+        var maxValue = selector(max);
+
+        if (minValue == 0 || maxValue == 0)
+            return string.Empty;
+
+        return minValue.Equals(maxValue) ? minValue.ToString() : $"{minValue}-{maxValue}";
+    }
+
+    public static string GetStarString(int star)
+    {
+        return star switch
+        {
+            1 => "★☆☆☆☆",
+            2 => "★★☆☆☆",
+            3 => "★★★☆☆",
+            4 => "★★★★☆",
+            5 => "★★★★★",
+            6 => "★★★★★",
+            _ => "",
+        };
     }
 }

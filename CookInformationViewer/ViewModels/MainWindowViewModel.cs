@@ -33,6 +33,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using CommonExtensionLib.Extensions;
 using CookInformationViewer.Models.DataValue;
+using CookInformationViewer.Models.FestivalFood;
+using CookInformationViewer.ViewModels.FestivalFood;
 
 namespace CookInformationViewer.ViewModels
 {
@@ -129,6 +131,7 @@ namespace CookInformationViewer.ViewModels
         public ICommand OpenUpdateProgramCommand { get; set; }
         public ICommand OpenListUpdateHistoryCommand { get; set; }
         public ICommand OpenVersionInfoCommand { get; set; }
+        public ICommand OpenFestivalFoodSimCommand { get; set; }
 
         public ICommand CategoriesSelectionChangedCommand { get; set; }
         public ICommand RecipesListSelectionChangedCommand { get; set; }
@@ -199,6 +202,7 @@ namespace CookInformationViewer.ViewModels
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             OpenListUpdateHistoryCommand = new DelegateCommand(OpenListUpdateHistory);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
+            OpenFestivalFoodSimCommand = new DelegateCommand(OpenFestivalFoodSim);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeHeader>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
@@ -334,6 +338,13 @@ namespace CookInformationViewer.ViewModels
             var model = new VersionInfoModel();
             var vm = new VersionInfoViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<VersionInfo>(vm);
+        }
+
+        public void OpenFestivalFoodSim()
+        {
+            var model = new FestivalFoodSimulatorModel();
+            var vm = new FestivalFoodSimulatorViewModel(new WindowService(), model);
+            WindowManageService.Show<FestivalFoodSimulator>(vm);
         }
 
         public void CategoriesSelectionChanged(CategoryInfo? category)
