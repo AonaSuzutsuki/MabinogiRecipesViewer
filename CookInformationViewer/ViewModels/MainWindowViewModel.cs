@@ -88,8 +88,6 @@ namespace CookInformationViewer.ViewModels
         private readonly Stack<RecipeInfo> _historyBack = new();
         private readonly Stack<RecipeInfo> _historyForward = new();
 
-        private readonly Dictionary<string, bool> _previousTabSelectedMap = new();
-
         private bool _isMemoChanged;
 
         #endregion
@@ -569,10 +567,6 @@ namespace CookInformationViewer.ViewModels
             if (SelectedRecipe.Value.IsMaterial)
                 return;
 
-            // Save selected if no material is selected.
-            _previousTabSelectedMap.Put(nameof(IsEffectSelected), IsEffectSelected.Value);
-            _previousTabSelectedMap.Put(nameof(IsMemoSelected), IsMemoSelected.Value);
-
         }
 
         public void CopyRecipeName()
@@ -614,15 +608,15 @@ namespace CookInformationViewer.ViewModels
 
         private void SelectTabItem(RecipeInfo recipe)
         {
-            if (recipe.IsMaterial && IsEffectSelected.Value)
+            if (recipe.IsMaterial)
             {
                 IsEffectSelected.Value = false;
                 IsMemoSelected.Value = true;
             }
             else
             {
-                IsEffectSelected.Value = _previousTabSelectedMap.Get(nameof(IsEffectSelected), true);
-                IsMemoSelected.Value = _previousTabSelectedMap.Get(nameof(IsMemoSelected));
+                IsEffectSelected.Value = true;
+                IsMemoSelected.Value = false;
             }
         }
 
