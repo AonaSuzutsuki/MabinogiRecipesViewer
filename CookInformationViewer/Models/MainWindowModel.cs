@@ -384,12 +384,16 @@ namespace CookInformationViewer.Models
             return locations;
         }
 
-        public void SaveMemo(string text)
+        public bool SaveMemo(string text)
         {
             if (_currentRecipeInfo == null)
-                return;
+                return false;
 
             var recipeId = _currentRecipeInfo.Id;
+            var originalMemo = _currentRecipeInfo.Memo;
+
+            if (originalMemo == text)
+                return false;
 
             _contextManager.Apply(context =>
             {
@@ -413,6 +417,8 @@ namespace CookInformationViewer.Models
                 }
 
             });
+
+            return true;
         }
 
         private void SetEffects(RecipeInfo recipe)
@@ -474,6 +480,7 @@ namespace CookInformationViewer.Models
                 return;
 
             recipe.Memo = memo.Memo;
+            recipe.OriginalMemo = memo.Memo;
         }
 
         public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)
