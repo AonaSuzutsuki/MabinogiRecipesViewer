@@ -508,16 +508,17 @@ namespace CookInformationViewer.Models.Db.Manager
             if (!isInit)
             {
                 Executor.ExecuteNonQuery(SqlCreator.Create("PRAGMA foreign_keys = 0"));
-                foreach (var table in tables.Select(x => x.Value).Where(x => 
-                             x.TableName != Constants.CookFavoritesTableName && x.TableName == Constants.MetaTableName))
+                var targetTables = tables.Select(x => x.Value).Where(x =>
+                    !TableColumns.IsSystemTable(x.TableName));
+                foreach (var table in targetTables)
                 {
                     Executor.ExecuteNonQuery(SqlCreator.Create($"DROP TABLE {table.TableName}"));
                 }
                 Executor.ExecuteNonQuery(SqlCreator.Create("PRAGMA foreign_keys = 1"));
             }
 
-            var notExistsTables = Executor.ExistsObjects("table",
-                tables.Values.Select(x => x.TableName).ToArray());
+            var realTables = Executor.ExistsObjects("table", tables.Values.Select(x => x.TableName).ToArray());
+            var notExistsTables = tables.Select(x => x.Value.TableName).Except(realTables);
             foreach (var notExistsTable in notExistsTables)
             {
                 if (!tables.ContainsKey(notExistsTable))
@@ -544,7 +545,7 @@ namespace CookInformationViewer.Models.Db.Manager
                             continue;
 
                         var columnInfo = definitionColumns[columnName];
-                        Executor.ExecuteNonQuery(SqlCreator.Create($"ALTER TABLE {tableInfo.Value.TableName} ADD COLUMN {columnInfo.ColumnName} {columnInfo}"));
+                        Executor.ExecuteNonQuery(SqlCreator.Create($"ALTER TABLE {tableInfo.Value.TableName} ADD COLUMN {columnInfo}"));
                     }
                 }
             }
