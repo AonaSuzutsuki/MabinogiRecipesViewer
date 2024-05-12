@@ -12,7 +12,7 @@
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:FestivalFoodSimulatorViewModel}"
-        Title="FestivalFoodSimulator" Height="460" Width="800" Style="{DynamicResource WindowStyle}">
+        Title="Festival Food Simulator" Height="620" Width="710" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding Loaded}" />
@@ -70,7 +70,6 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top">
                 <Button Name="MainWindowMinimumBt" Content="{Binding MainWindowMinimumBtContent}" Style="{StaticResource CaptionButtonStyleKey}" Command="{Binding MainWindowMinimumBtClick}" />
-                <Button Name="MainMaximumBt" Content="{Binding MainWindowMaximumBtContent}" Style="{StaticResource CaptionButtonStyleKey}" Command="{Binding MainWindowMaximumBtClick}" />
                 <Button Name="MainWindowCloseBt" Content="{Binding MainWindowCloseBtContent}" Style="{StaticResource CaptionButtonStyleKey}" Command="{Binding MainWindowCloseBtClick}" />
             </StackPanel>
 
@@ -194,125 +193,132 @@
                 <Grid Grid.Column="1" Margin="5,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="180" />
                         <RowDefinition Height="30" />
-                        <RowDefinition Height="177" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Content="選択した料理のステータス" />
 
                     <Border Grid.Row="1" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-                        <Grid>
+                        <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30" />
-                                <RowDefinition />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="品質" />
-                                <ComboBox Margin="5,0,0,0" Width="150" ItemsSource="{Binding QualityItems}" SelectedIndex="{Binding QualityItemsSelectedIndex.Value}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
-                                            <i:InvokeCommandAction Command="{Binding QualityItemsSelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedItem}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                            <Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="品質" />
 
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Label Content="{Binding Name}" Foreground="{Binding StarBrush}" />
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                            </StackPanel>
+                                    <ComboBox Margin="5,0,0,0" Width="150" ItemsSource="{Binding QualityItems}" SelectedIndex="{Binding QualityItemsSelectedIndex.Value}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding QualityItemsSelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedItem}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Content="{Binding Name}" Foreground="{Binding StarBrush}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <Button Margin="5,0,0,0" Content="追加" Width="100" IsEnabled="{Binding AddRecipeToFestivalEnabled.Value}" Style="{StaticResource FlatButton}" Command="{Binding AddRecipeToFestivalCommand}" />
+                                </StackPanel>
+
+                                <Button Content="{Binding SelectedRecipe.Value.IsFavorite, FallbackValue=☆, Converter={converters:BooleanFavoriteConverter}}" Width="25" Margin="0,5,5,0" Foreground="{Binding SelectedRecipe.Value.Foreground}" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding FavoriteCommand}" />
+                            </Grid>
 
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="90*" />
+                                    <ColumnDefinition Width="90*" />
+                                    <ColumnDefinition Width="120*" />
+                                    <ColumnDefinition Width="110*" />
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="HP" />
-                                        <Label Content="{Binding SelectedEffect.Value.Hp}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Hp}" Foreground="{Binding SelectedEffect.Value.Hp, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="MP" />
-                                        <Label Content="{Binding SelectedEffect.Value.Mana}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Mana}" Foreground="{Binding SelectedEffect.Value.Mana, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="SP" />
-                                        <Label Content="{Binding SelectedEffect.Value.Stamina}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Stamina}" Foreground="{Binding SelectedEffect.Value.Stamina, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Str" />
-                                        <Label Content="{Binding SelectedEffect.Value.Str}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Str}" Foreground="{Binding SelectedEffect.Value.Str, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Int" />
-                                        <Label Content="{Binding SelectedEffect.Value.Int}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Int}" Foreground="{Binding SelectedEffect.Value.Int, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Dex" />
-                                        <Label Content="{Binding SelectedEffect.Value.Dex}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Dex}" Foreground="{Binding SelectedEffect.Value.Dex, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Will" />
-                                        <Label Content="{Binding SelectedEffect.Value.Will}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Will}" Foreground="{Binding SelectedEffect.Value.Will, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="Luck" />
-                                        <Label Content="{Binding SelectedEffect.Value.Luck}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Luck}" Foreground="{Binding SelectedEffect.Value.Luck, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="2">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="最小攻撃力" />
-                                        <Label Content="{Binding SelectedEffect.Value.MinDamage}" />
+                                        <Label Content="{Binding SelectedEffect.Value.MinDamage}" Foreground="{Binding SelectedEffect.Value.MinDamage, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="最大攻撃力" />
-                                        <Label Content="{Binding SelectedEffect.Value.Damage}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Damage}" Foreground="{Binding SelectedEffect.Value.Damage, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="魔法攻撃力" />
-                                        <Label Content="{Binding SelectedEffect.Value.MagicDamage}" />
+                                        <Label Content="{Binding SelectedEffect.Value.MagicDamage}" Foreground="{Binding SelectedEffect.Value.MagicDamage, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="3">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="防御" />
-                                        <Label Content="{Binding SelectedEffect.Value.Defense}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Defense}" Foreground="{Binding SelectedEffect.Value.Defense, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="保護" />
-                                        <Label Content="{Binding SelectedEffect.Value.Protection}" />
+                                        <Label Content="{Binding SelectedEffect.Value.Protection}" Foreground="{Binding SelectedEffect.Value.Protection, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="魔法防御" />
-                                        <Label Content="{Binding SelectedEffect.Value.MagicDefense}" />
+                                        <Label Content="{Binding SelectedEffect.Value.MagicDefense}" Foreground="{Binding SelectedEffect.Value.MagicDefense, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="魔法保護" />
-                                        <Label Content="{Binding SelectedEffect.Value.MagicProtection}" />
+                                        <Label Content="{Binding SelectedEffect.Value.MagicProtection}" Foreground="{Binding SelectedEffect.Value.MagicProtection, Converter={converters:ZeroNumForegroundConverter}}" />
                                     </StackPanel>
                                 </StackPanel>
 
@@ -325,10 +331,14 @@
                     <Border Grid.Row="3" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="420" />
-                                <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="5" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -339,59 +349,233 @@
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="80" />
                                 </Grid.ColumnDefinitions>
 
 
                                 <!-- 上段 -->
                                 <Border Grid.Row="0" Grid.Column="0" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-                                    
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem1.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="0" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="0" Grid.Column="2" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="0" Grid.Column="2" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem2.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="1" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="0" Grid.Column="4" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="0" Grid.Column="4" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem3.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="2" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="0" Grid.Column="6" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="0" Grid.Column="6" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem4.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="3" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="0" Grid.Column="8" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="0" Grid.Column="8" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem5.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="4" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
                                 <!-- 下段 -->
-                                <Border Grid.Row="2" Grid.Column="0" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="2" Grid.Column="0" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem6.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="5" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="2" Grid.Column="2" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="2" Grid.Column="2" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem7.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="6" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="2" Grid.Column="4" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="2" Grid.Column="4" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem8.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="7" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="2" Grid.Column="6" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="2" Grid.Column="6" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem9.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="8" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
 
-                                <Border Grid.Row="2" Grid.Column="8" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
-
+                                <Border Grid.Row="2" Grid.Column="8" Width="80" Height="80" BorderBrush="{StaticResource  BorderColor}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding SettingItem10.Value.RecipeInfo.Image, FallbackValue={x:Null}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <commonViews:InvokeDelegateCommandAction Command="{Binding RemoveFestivalFoodCommand}" CommandParameter="9" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Image>
+                                    </Grid>
                                 </Border>
                             </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="90*" />
+                                    <ColumnDefinition Width="90*" />
+                                    <ColumnDefinition Width="120*" />
+                                    <ColumnDefinition Width="110*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="HP" />
+                                        <Label Content="{Binding TotalEffect.Value.Hp}" Foreground="{Binding TotalEffect.Value.Hp, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="MP" />
+                                        <Label Content="{Binding TotalEffect.Value.Mana}" Foreground="{Binding TotalEffect.Value.Mana, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="SP" />
+                                        <Label Content="{Binding TotalEffect.Value.Stamina}" Foreground="{Binding TotalEffect.Value.Stamina, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Str" />
+                                        <Label Content="{Binding TotalEffect.Value.Str}" Foreground="{Binding TotalEffect.Value.Str, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Int" />
+                                        <Label Content="{Binding TotalEffect.Value.Int}" Foreground="{Binding TotalEffect.Value.Int, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Dex" />
+                                        <Label Content="{Binding TotalEffect.Value.Dex}" Foreground="{Binding TotalEffect.Value.Dex, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Will" />
+                                        <Label Content="{Binding TotalEffect.Value.Will}" Foreground="{Binding TotalEffect.Value.Will, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Luck" />
+                                        <Label Content="{Binding TotalEffect.Value.Luck}" Foreground="{Binding TotalEffect.Value.Luck, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="最小攻撃力" />
+                                        <Label Content="{Binding TotalEffect.Value.MinDamage}" Foreground="{Binding TotalEffect.Value.MinDamage, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="最大攻撃力" />
+                                        <Label Content="{Binding TotalEffect.Value.Damage}" Foreground="{Binding TotalEffect.Value.Damage, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="魔法攻撃力" />
+                                        <Label Content="{Binding TotalEffect.Value.MagicDamage}" Foreground="{Binding TotalEffect.Value.MagicDamage, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="3">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="防御" />
+                                        <Label Content="{Binding TotalEffect.Value.Defense}" Foreground="{Binding TotalEffect.Value.Defense, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="保護" />
+                                        <Label Content="{Binding TotalEffect.Value.Protection}" Foreground="{Binding TotalEffect.Value.Protection, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="魔法防御" />
+                                        <Label Content="{Binding TotalEffect.Value.MagicDefense}" Foreground="{Binding TotalEffect.Value.MagicDefense, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="魔法保護" />
+                                        <Label Content="{Binding TotalEffect.Value.MagicProtection}" Foreground="{Binding TotalEffect.Value.MagicProtection, Converter={converters:ZeroNumForegroundConverter}}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </Grid>
+
                         </Grid>
                     </Border>
                 </Grid>
