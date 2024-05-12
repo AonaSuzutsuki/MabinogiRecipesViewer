@@ -16,6 +16,9 @@ namespace CookInformationViewer.Models.Db.Context
         [Column("skill_rank")]
         public string SkillRank { get; set; }
 
+        [Column("is_hidden")]
+        public bool IsHidden { get; set; }
+
         [Column("create_date")]
         public override DateTime? CreateDate { get; set; }
 
@@ -34,6 +37,7 @@ namespace CookInformationViewer.Models.Db.Context
 
             Name = categories.Name;
             SkillRank = categories.SkillRank;
+            IsHidden = categories.IsHidden;
         }
     }
 }
