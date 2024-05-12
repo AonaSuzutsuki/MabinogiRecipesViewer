@@ -6,7 +6,7 @@ namespace CookInformationViewer.Models.Db
 {
     internal static class TableColumns
     {
-        public const string DbVersion = "1.2";
+        public const string DbVersion = "1.3";
 
         public static Dictionary<string, TableInfo> GetTables()
         {
@@ -69,6 +69,12 @@ namespace CookInformationViewer.Models.Db
                     {
                         ColumnName = "skill_rank",
                         Type = ColumnType.Text
+                    },
+                    new ColumnInfo
+                    {
+                        ColumnName = "is_hidden",
+                        Type = ColumnType.Integer,
+                        Default = 0L
                     },
                     new ColumnInfo
                     {
@@ -524,6 +530,12 @@ namespace CookInformationViewer.Models.Db
                     },
                     new ColumnInfo
                     {
+                        ColumnName = "can_not_make",
+                        Type = ColumnType.Integer,
+                        Default = 0L
+                    },
+                    new ColumnInfo
+                    {
                         ColumnName = "create_date",
                         Type = ColumnType.Text
                     },
@@ -694,6 +706,14 @@ namespace CookInformationViewer.Models.Db
                 { meta.TableName, meta },
                 { memos.TableName, memos }
             };
+        }
+
+        public static bool IsSystemTable(string tableName)
+        {
+            return tableName == Constants.CookFavoritesTableName
+                   || tableName == Constants.MetaTableName
+                   || tableName == Constants.DownloadHistoriesTableName
+                   || tableName == Constants.CookMemosTableName;
         }
     }
 }
