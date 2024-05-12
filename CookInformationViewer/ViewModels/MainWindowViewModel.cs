@@ -341,7 +341,10 @@ namespace CookInformationViewer.ViewModels
         public void OpenFestivalFoodSim()
         {
             var model = new FestivalFoodSimulatorModel();
-            var vm = new FestivalFoodSimulatorViewModel(new WindowService(), model);
+            var vm = new FestivalFoodSimulatorViewModel(new WindowService(), model)
+            {
+                MainModel = _model
+            };
             WindowManageService.Show<FestivalFoodSimulator>(vm);
         }
 

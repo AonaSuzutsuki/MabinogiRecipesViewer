@@ -24,6 +24,7 @@ namespace CookInformationViewer.Models.FestivalFood
     {
         private readonly ContextManager _contextManager = new();
 
+        private ObservableCollection<FestivalFoodRecipeHeader> _recipeHeadersOrig = new();
         private ObservableCollection<FestivalFoodRecipeHeader> _recipeHeaders = new();
 
         public ObservableCollection<FestivalFoodSearchStatusItem> StatusNames = new()
@@ -88,6 +89,7 @@ namespace CookInformationViewer.Models.FestivalFood
                         n.Select(m => new EffectInfo(m.Effect)).ToList()
                     ));
 
+            _recipeHeadersOrig.Clear();
             RecipeHeaders.Clear();
 
             foreach (var item in recipes)
@@ -111,7 +113,8 @@ namespace CookInformationViewer.Models.FestivalFood
                 {
                     Star = item.Additional.CheckStar,
                     Category = category,
-                    Effects = qualityList
+                    Effects = qualityList,
+                    IsFavorite = true
                 })
                 {
                     Category = category,
@@ -119,6 +122,8 @@ namespace CookInformationViewer.Models.FestivalFood
                 };
                 RecipeHeaders.Add(recipe);
             }
+
+            _recipeHeadersOrig.AddRange(RecipeHeaders);
         }
 
         public void SearchRecipes(SearchStatusItem statusItem)
@@ -155,18 +160,22 @@ namespace CookInformationViewer.Models.FestivalFood
                 x => x);
 
             var items = _contextManager.GetItem(context => (from x in context.CookRecipes
-                    join category in context.CookCategories on x.CategoryId equals category.Id
-                    where !x.IsDelete && recipeIds.Any(m => m == x.Id)
-                    select new
-                    {
-                        recipe = x,
-                        category
-                    })).ToList();
+                join category in context.CookCategories on x.CategoryId equals category.Id
+                join fav in context.Favorites on x.Id equals fav.RecipeId into favItem
+                from favorite in favItem.DefaultIfEmpty()
+                where !x.IsDelete && recipeIds.Any(m => m == x.Id)
+                select new
+                {
+                    recipe = x,
+                    favorite = favorite,
+                    category
+                })).ToList();
 
             var sortedItems = items.Select(x => new
             {
                 x.recipe,
                 x.category,
+                x.favorite,
                 status = statusIdMap[x.recipe.Id]
             })
                 .OrderByDescending(x => statusIdMap[x.recipe.Id]["status"].GetLong())
@@ -188,6 +197,7 @@ namespace CookInformationViewer.Models.FestivalFood
                         SortEffectList(statusItem, n.Select(m => new EffectInfo(m.Effect)).ToList())
                         ));
 
+            _recipeHeadersOrig.Clear();
             RecipeHeaders.Clear();
 
             foreach (var item in sortedItems)
@@ -211,7 +221,8 @@ namespace CookInformationViewer.Models.FestivalFood
                 {
                     Star = item.status["star"].GetInt(),
                     Category = category,
-                    Effects = qualityList
+                    Effects = qualityList,
+                    IsFavorite = item.favorite != null
                 })
                 {
                     Additional = $"{statusItem.ConvertLogicStatus()} {item.status["status"].GetLong()}",
@@ -220,6 +231,52 @@ namespace CookInformationViewer.Models.FestivalFood
                 };
                 RecipeHeaders.Add(recipe);
             }
+
+            _recipeHeadersOrig.AddRange(RecipeHeaders);
+        }
+
+        public void RegisterFavorite(RecipeInfo recipe)
+        {
+            _contextManager.Apply(x =>
+            {
+                var favorite = new DbCookFavorites
+                {
+                    RecipeId = recipe.Id,
+                    CreateDate = DateTime.Now
+                };
+
+                x.Favorites.Add(favorite);
+            });
+
+            recipe.IsFavorite = true;
+        }
+
+        public void RemoveFavorite(RecipeInfo recipe)
+        {
+            var favorite = _contextManager.GetItem(x =>
+                x.Favorites.FirstOrDefault(m => m.RecipeId == recipe.Id));
+
+            if (favorite == null)
+                return;
+
+            _contextManager.Apply(x => x.Favorites.Remove(favorite));
+
+            recipe.IsFavorite = false;
+        }
+
+        public void NarrowDownRecipes(string searchWord)
+        {
+            if (string.IsNullOrEmpty(searchWord))
+            {
+                RecipeHeaders.Clear();
+                RecipeHeaders.AddRange(_recipeHeadersOrig);
+                return;
+            }
+
+            var narrowDownItems = _recipeHeadersOrig.Where(x => x.Recipe.Name.Contains(searchWord));
+
+            RecipeHeaders.Clear();
+            RecipeHeaders.AddRange(narrowDownItems);
         }
 
         private List<EffectInfo> SortEffectList(SearchStatusItem statusItem, List<EffectInfo> effects)

@@ -255,6 +255,15 @@ namespace CookInformationViewer.Models
             _recipeBaseItems = new List<RecipeHeader>(recipes);
         }
 
+        public void ChangeFavoriteFromRecipe(RecipeInfo recipe)
+        {
+            var targetRecipe = Recipes.FirstOrDefault(x => x.Recipe.Id == recipe.Id);
+            if (targetRecipe == null)
+                return;
+
+            targetRecipe.Recipe.IsFavorite = recipe.IsFavorite;
+        }
+
         public RecipeInfo? GetRecipe(int id)
         {
             var recipe = _contextManager.GetItem(x =>

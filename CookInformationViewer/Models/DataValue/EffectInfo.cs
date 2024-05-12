@@ -52,6 +52,10 @@ namespace CookInformationViewer.Models.DataValue
             Protection = effect.Protection;
             MagicDefense = effect.MagicDefense;
             MagicProtection = effect.MagicProtection;
+        }
+
+        public EffectInfo()
+        {
 
         }
     }
