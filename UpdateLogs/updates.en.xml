@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.7.7b">
+    1. Startup speed has been increased slightly.
+    2. A screen to check the total number of materials has been added.
+    3. Fixed an issue where tabs for effects could alternately disappear each time a food was selected.
+    4. A festival food calculator has been added.
+      It can be opened from “Tools->Festival Food Simulator”.
+  </update>
   <update version="1.0.6.6b">
     1. Fixed crash when selecting int in status search.
   </update>

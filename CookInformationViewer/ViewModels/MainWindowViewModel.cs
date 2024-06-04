@@ -33,6 +33,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using CommonExtensionLib.Extensions;
 using CookInformationViewer.Models.DataValue;
+using CookInformationViewer.Models.FestivalFood;
+using CookInformationViewer.ViewModels.FestivalFood;
 
 namespace CookInformationViewer.ViewModels
 {
@@ -81,10 +83,10 @@ namespace CookInformationViewer.ViewModels
         private OverlayModel? _overlayModel;
         private MainWindowWindowService? _overlayWindowService;
 
+        private SearchWindowModel? _searchWindowModel;
+
         private readonly Stack<RecipeInfo> _historyBack = new();
         private readonly Stack<RecipeInfo> _historyForward = new();
-
-        private readonly Dictionary<string, bool> _previousTabSelectedMap = new();
 
         private bool _isMemoChanged;
 
@@ -120,12 +122,14 @@ namespace CookInformationViewer.ViewModels
         #region Event Properties
 
         public ICommand OpenSettingCommand { get; set; }
+        public ICommand OpenCalcMaterialsCommand { get; set; }
         public ICommand OpenDatabaseCommand { get; set; }
         public ICommand OpenSearchWindowCommand { get; set; }
         public ICommand UpdateTableCommand { get; set; }
         public ICommand OpenUpdateProgramCommand { get; set; }
         public ICommand OpenListUpdateHistoryCommand { get; set; }
         public ICommand OpenVersionInfoCommand { get; set; }
+        public ICommand OpenFestivalFoodSimCommand { get; set; }
 
         public ICommand CategoriesSelectionChangedCommand { get; set; }
         public ICommand RecipesListSelectionChangedCommand { get; set; }
@@ -189,12 +193,14 @@ namespace CookInformationViewer.ViewModels
             IsMemoSelected = new ReactiveProperty<bool>();
 
             OpenSettingCommand = new DelegateCommand(OpenSetting);
+            OpenCalcMaterialsCommand = new DelegateCommand(OpenCalcMaterials);
             OpenDatabaseCommand = new DelegateCommand(OpenDatabase);
             OpenSearchWindowCommand = new DelegateCommand(OpenSearchWindow);
             UpdateTableCommand = new DelegateCommand(UpdateTable);
             OpenUpdateProgramCommand = new DelegateCommand(OpenUpdateProgram);
             OpenListUpdateHistoryCommand = new DelegateCommand(OpenListUpdateHistory);
             OpenVersionInfoCommand = new DelegateCommand(OpenVersionInfo);
+            OpenFestivalFoodSimCommand = new DelegateCommand(OpenFestivalFoodSim);
             CategoriesSelectionChangedCommand = new DelegateCommand<CategoryInfo?>(CategoriesSelectionChanged);
             RecipesListSelectionChangedCommand = new DelegateCommand<RecipeHeader>(RecipesListSelectionChanged);
             OpenOverlayCommand = new DelegateCommand(OpenOverlay);
@@ -257,6 +263,18 @@ namespace CookInformationViewer.ViewModels
             WindowManageService.ShowDialog<SettingView>(vm);
         }
 
+        public void OpenCalcMaterials()
+        {
+            if (SelectedRecipe.Value == null)
+                return;
+
+            var model = new CalcMaterialsModel();
+            var vm = new CalcMaterialsViewModel(new WindowService(), model, this);
+            WindowManageService.Show<CalcMaterials>(vm);
+
+            _ = model.Create(SelectedRecipe.Value);
+        }
+
         public void OpenDatabase()
         {
             using var p = Process.Start("C:\\Valve\\DB Browser for SQLite\\DB Browser for SQLite.exe", Constants.DatabaseFileName);
@@ -264,8 +282,13 @@ namespace CookInformationViewer.ViewModels
 
         public void OpenSearchWindow()
         {
-            var model = new SearchWindowModel();
-            var vm = new SearchWindowViewModel(new WindowService(), this, model);
+            _searchWindowModel ??= new SearchWindowModel();
+
+            if (_searchWindowModel.IsOpened)
+                return;
+
+            var vm = new SearchWindowViewModel(new WindowService(), this, _searchWindowModel);
+
             WindowManageService.ShowNonOwner<SearchWindow>(vm);
         }
 
@@ -313,6 +336,16 @@ namespace CookInformationViewer.ViewModels
             var model = new VersionInfoModel();
             var vm = new VersionInfoViewModel(new WindowService(), model);
             WindowManageService.ShowDialog<VersionInfo>(vm);
+        }
+
+        public void OpenFestivalFoodSim()
+        {
+            var model = new FestivalFoodSimulatorModel();
+            var vm = new FestivalFoodSimulatorViewModel(new WindowService(), model)
+            {
+                MainModel = _model
+            };
+            WindowManageService.Show<FestivalFoodSimulator>(vm);
         }
 
         public void CategoriesSelectionChanged(CategoryInfo? category)
@@ -537,10 +570,6 @@ namespace CookInformationViewer.ViewModels
             if (SelectedRecipe.Value.IsMaterial)
                 return;
 
-            // Save selected if no material is selected.
-            _previousTabSelectedMap.Put(nameof(IsEffectSelected), IsEffectSelected.Value);
-            _previousTabSelectedMap.Put(nameof(IsMemoSelected), IsMemoSelected.Value);
-
         }
 
         public void CopyRecipeName()
@@ -582,15 +611,15 @@ namespace CookInformationViewer.ViewModels
 
         private void SelectTabItem(RecipeInfo recipe)
         {
-            if (recipe.IsMaterial && IsEffectSelected.Value)
+            if (recipe.IsMaterial)
             {
                 IsEffectSelected.Value = false;
                 IsMemoSelected.Value = true;
             }
             else
             {
-                IsEffectSelected.Value = _previousTabSelectedMap.Get(nameof(IsEffectSelected), true);
-                IsMemoSelected.Value = _previousTabSelectedMap.Get(nameof(IsMemoSelected));
+                IsEffectSelected.Value = true;
+                IsMemoSelected.Value = false;
             }
         }
 

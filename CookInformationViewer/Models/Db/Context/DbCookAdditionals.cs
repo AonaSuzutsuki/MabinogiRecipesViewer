@@ -25,6 +25,9 @@ namespace CookInformationViewer.Models.Db.Context
         [Column("special")]
         public string? Special { get; set; }
 
+        [Column("can_not_make")]
+        public bool CanNotMake { get; set; }
+
 
         [Column("create_date")]
         public override DateTime? CreateDate { get; set; }
@@ -46,6 +49,7 @@ namespace CookInformationViewer.Models.Db.Context
             CheckStar = additional.CheckStar;
             IsMaterial = additional.IsMaterial;
             NotFestival = additional.NotFestival;
+            CanNotMake = additional.CanNotMake;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml.Linq;
 using CommonExtensionLib.Extensions;
 using CommonStyleLib.Models;
 using CookInformationViewer.Models.DataValue;
@@ -11,6 +12,7 @@ using CookInformationViewer.Models.Db.Manager;
 using CookInformationViewer.ViewModels.Searchers;
 using KimamaSqlExecutorLib.Db.Raw;
 using KimamaSqliteExecutorLib.Db.Raw;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Reactive.Bindings;
 
 namespace CookInformationViewer.Models.Searchers
@@ -37,12 +39,16 @@ namespace CookInformationViewer.Models.Searchers
         }
 
         public string Name { get; }
-        public SearchStatusEnum Value { get; }
+        
+        public string PhysicName { get; }
 
-        public SearchStatusItem(string name, SearchStatusEnum value)
+        public SearchStatusEnum Value { get; }
+        
+        public SearchStatusItem(SearchStatusEnum value)
         {
-            Name = name;
             Value = value;
+            Name = ConvertLogicStatus();
+            PhysicName = ConvertPhysicStatus();
         }
 
         public string ConvertLogicStatus()
@@ -67,6 +73,29 @@ namespace CookInformationViewer.Models.Searchers
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
+
+        public string ConvertPhysicStatus()
+        {
+            return Value switch
+            {
+                SearchStatusEnum.Hp => "hp",
+                SearchStatusEnum.Mp => "mana",
+                SearchStatusEnum.Sp => "stamina",
+                SearchStatusEnum.Str => "str",
+                SearchStatusEnum.Int => "inteli",
+                SearchStatusEnum.Dex => "dex",
+                SearchStatusEnum.Will => "will",
+                SearchStatusEnum.Luck => "luck",
+                SearchStatusEnum.MaxDamage => "damage",
+                SearchStatusEnum.MinDamage => "min_damage",
+                SearchStatusEnum.MagicDamage => "magic_damage",
+                SearchStatusEnum.Defense => "defense",
+                SearchStatusEnum.Protection => "protection",
+                SearchStatusEnum.MagicDefense => "magic_defense",
+                SearchStatusEnum.MagicProtection => "magic_protection",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
     }
 
     public class SearchNode
@@ -84,16 +113,50 @@ namespace CookInformationViewer.Models.Searchers
 
     public class SearchWindowModel : ModelBase
     {
+        #region Fields
+
+        public ObservableCollection<SearchStatusItem> StatusItems { get; set; } = new ObservableCollection<SearchStatusItem>
+        {
+            new(SearchStatusItem.SearchStatusEnum.Hp),
+            new(SearchStatusItem.SearchStatusEnum.Mp),
+            new(SearchStatusItem.SearchStatusEnum.Sp),
+            new(SearchStatusItem.SearchStatusEnum.Str),
+            new(SearchStatusItem.SearchStatusEnum.Int),
+            new(SearchStatusItem.SearchStatusEnum.Dex),
+            new(SearchStatusItem.SearchStatusEnum.Will),
+            new(SearchStatusItem.SearchStatusEnum.Luck),
+            new(SearchStatusItem.SearchStatusEnum.MaxDamage),
+            new(SearchStatusItem.SearchStatusEnum.MinDamage),
+            new(SearchStatusItem.SearchStatusEnum.MagicDamage),
+            new(SearchStatusItem.SearchStatusEnum.Defense),
+            new(SearchStatusItem.SearchStatusEnum.Protection),
+            new(SearchStatusItem.SearchStatusEnum.MagicDefense),
+            new(SearchStatusItem.SearchStatusEnum.MagicProtection)
+        };
+
         private readonly ContextManager _contextManager = new();
-        
+
         private ObservableCollection<RecipeHeader> _recipes = new();
-        
+
+        #endregion
+
+        #region Properties
+        public bool IsOpened { get; set; }
+
+        public SearchStatusItem? SelectedStatusItem { get; set; }
+
+        public string SearchText { get; set; } = string.Empty;
+        public bool IsMaterialSearch { get; set; }
+        public bool IsStatusSearch { get; set; }
+        public bool IgnoreNotFestival { get; set; }
 
         public ObservableCollection<RecipeHeader> Recipes
         {
             get => _recipes;
             set => SetProperty(ref _recipes, value);
         }
+
+        #endregion
 
         public SearchWindowModel()
         {
@@ -142,25 +205,7 @@ namespace CookInformationViewer.Models.Searchers
                               "rec2.name as recipe2, " +
                               "rec3.name as recipe3";
             var tableName = $"{Constants.CookEffectsTableName} eff";
-            var sql = statusItem.Value switch
-            {
-                SearchStatusItem.SearchStatusEnum.Hp => SqlCreator.Select(selectQuery.FormatString("hp"), tableName).Where("hp > 0"),
-                SearchStatusItem.SearchStatusEnum.Mp => SqlCreator.Select(selectQuery.FormatString("mana"), tableName).Where("mana > 0"),
-                SearchStatusItem.SearchStatusEnum.Sp => SqlCreator.Select(selectQuery.FormatString("stamina"), tableName).Where("stamina > 0"),
-                SearchStatusItem.SearchStatusEnum.Str => SqlCreator.Select(selectQuery.FormatString("str"), tableName).Where("str > 0"),
-                SearchStatusItem.SearchStatusEnum.Int => SqlCreator.Select(selectQuery.FormatString("inteli"), tableName).Where("inteli > 0"),
-                SearchStatusItem.SearchStatusEnum.Dex => SqlCreator.Select(selectQuery.FormatString("dex"), tableName).Where("dex > 0"),
-                SearchStatusItem.SearchStatusEnum.Will => SqlCreator.Select(selectQuery.FormatString("will"), tableName).Where("will > 0"),
-                SearchStatusItem.SearchStatusEnum.Luck => SqlCreator.Select(selectQuery.FormatString("luck"), tableName).Where("luck > 0"),
-                SearchStatusItem.SearchStatusEnum.MaxDamage => SqlCreator.Select(selectQuery.FormatString("damage"), tableName).Where("damage > 0"),
-                SearchStatusItem.SearchStatusEnum.MinDamage => SqlCreator.Select(selectQuery.FormatString("min_damage"), tableName).Where("min_damage > 0"),
-                SearchStatusItem.SearchStatusEnum.MagicDamage => SqlCreator.Select(selectQuery.FormatString("magic_damage"), tableName).Where("magic_damage > 0"),
-                SearchStatusItem.SearchStatusEnum.Defense => SqlCreator.Select(selectQuery.FormatString("defense"), tableName).Where("defense > 0"),
-                SearchStatusItem.SearchStatusEnum.Protection => SqlCreator.Select(selectQuery.FormatString("protection"), tableName).Where("protection > 0"),
-                SearchStatusItem.SearchStatusEnum.MagicDefense => SqlCreator.Select(selectQuery.FormatString("magic_defense"), tableName).Where("magic_defense > 0"),
-                SearchStatusItem.SearchStatusEnum.MagicProtection => SqlCreator.Select(selectQuery.FormatString("magic_protection"), tableName).Where("magic_protection > 0"),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            var sql = SqlCreator.Select(selectQuery.FormatString(statusItem.PhysicName), tableName).Where($"{statusItem.PhysicName} > 0");
 
             sql.InnerJoin($"{Constants.CookRecipesTableName} rec", "eff.recipe_id = rec.id");
             sql.LeftJoin($"{Constants.CookMaterialsTableName} mat1", "rec.item1_id = mat1.id");
