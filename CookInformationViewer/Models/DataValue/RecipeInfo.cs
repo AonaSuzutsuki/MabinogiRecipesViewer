@@ -64,6 +64,8 @@ public class RecipeInfo : BindableBase
 
     public string? Special { get; set; }
 
+    public bool CanNotMake { get; set; }
+
     public string OriginalMemo { get; set; } = string.Empty;
 
     public string Memo { get; set; } = string.Empty;
@@ -86,9 +88,6 @@ public class RecipeInfo : BindableBase
         {
             if (IsMaterial)
                 return "料理素材 専用 (食べられないよ)";
-
-            if (!string.IsNullOrEmpty(Special))
-                return Special;
 
             return Star switch
             {

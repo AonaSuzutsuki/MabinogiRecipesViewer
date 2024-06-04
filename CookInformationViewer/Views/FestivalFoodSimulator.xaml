@@ -12,7 +12,7 @@
         xmlns:local="clr-namespace:CookInformationViewer.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:FestivalFoodSimulatorViewModel}"
-        Title="Festival Food Simulator" Height="620" Width="710" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize">
+        Title="Festival Food Simulator" Height="650" Width="710" Style="{DynamicResource WindowStyle}" ResizeMode="CanMinimize">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding Loaded}" />
@@ -337,6 +337,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="5" />
+                                <RowDefinition Height="30" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
@@ -484,6 +485,10 @@
                             </Grid>
 
                             <Grid Grid.Row="2">
+                                <CheckBox Content="フードマスタリR1を適用する" IsChecked="{Binding IsApplyFoodMastery.Value}" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="90*" />
                                     <ColumnDefinition Width="90*" />

@@ -263,7 +263,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="30" />
                                     <RowDefinition Height="100" />
-                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="55" />
                                     <RowDefinition Height="2*" />
                                     <RowDefinition Height="Auto" />
@@ -288,7 +288,7 @@
                                     <Grid Width="300px" Margin="10,0,0,0">
                                         <Image Margin="0,-10,0,0" Width="300" Source="/Resources/gauge2.png" />
 
-                                        <Grid Margin="0,25,0,0" Name="PercentageGrid">
+                                        <Grid Margin="0,25,0,0" Name="PercentageGrid" Visibility="{Binding SelectedRecipe.Value.CanNotMake, Converter={converters:ReverseBooleanVisibilityConverter}}">
 
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Name="Item1Column" Width="25*" />
@@ -394,17 +394,21 @@
                                         </Grid>
                                     </Grid>
 
-                                    <Button Content="2" Margin="10,0,0,0" Width="30" Height="25" FontFamily="Marlett" Style="{StaticResource FlatButton}" Command="{Binding OpenOverlayCommand}" />
+                                    <Button Content="2" Margin="10,0,0,0" Width="30" Height="25" FontFamily="Marlett" Style="{StaticResource FlatButton}" IsEnabled="{Binding SelectedRecipe.Value.CanNotMake, Converter={converters:ReverseBooleanConverter}}" Command="{Binding OpenOverlayCommand}" />
                                 </StackPanel>
 
 
                                 <Grid Grid.Row="2">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding SelectedRecipe.Value.StarText}" Foreground="{Binding SelectedRecipe.Value.StarBrush}" />
-                                        <Label Content="{Binding SelectedRecipe.Value.StarMessage}"></Label>
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding SelectedRecipe.Value.StarText}" Foreground="{Binding SelectedRecipe.Value.StarBrush}" />
+                                            <Label Content="{Binding SelectedRecipe.Value.StarMessage}" />
+                                        </StackPanel>
+
+                                        <Label Content="{Binding SelectedRecipe.Value.Special}" Visibility="{Binding SelectedRecipe.Value.Special, Converter={converters:StringEmptyVisibilityConverter}}" />
                                     </StackPanel>
 
-                                    <Button Content="素材数確認" Width="100" Height="25" HorizontalAlignment="Right" Margin="0,0,25,0" Style="{StaticResource FlatButton}" Command="{Binding OpenCalcMaterialsCommand}" />
+                                    <Button Content="素材数確認" Width="100" Height="25" HorizontalAlignment="Right" Margin="0,0,25,0" IsEnabled="{Binding SelectedRecipe.Value.CanNotMake, Converter={converters:ReverseBooleanConverter}}" Style="{StaticResource FlatButton}" Command="{Binding OpenCalcMaterialsCommand}" />
                                 </Grid>
 
                                 <Grid Grid.Row="3">

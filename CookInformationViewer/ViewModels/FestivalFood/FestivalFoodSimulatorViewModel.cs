@@ -61,6 +61,8 @@ namespace CookInformationViewer.ViewModels.FestivalFood
 
         public ReactiveProperty<bool> AddRecipeToFestivalEnabled { get; set; }
 
+        public ReactiveProperty<bool> IsApplyFoodMastery { get; set; }
+
         public ReactiveProperty<EffectInfo> TotalEffect { get; set; }
 
         public ReactiveCollection<FestivalFoodSettingItem> SettingItems { get; set; }
@@ -102,6 +104,11 @@ namespace CookInformationViewer.ViewModels.FestivalFood
             TotalEffect = new ReactiveProperty<EffectInfo>();
             SettingItems = new ReactiveCollection<FestivalFoodSettingItem>();
             AddRecipeToFestivalEnabled = new ReactiveProperty<bool>();
+            IsApplyFoodMastery = new ReactiveProperty<bool>(true);
+            IsApplyFoodMastery.PropertyChanged += (sender, args) =>
+            {
+                ApplySettingItems();
+            };
             SelectedRecipe = new ReactiveProperty<RecipeInfo>();
 
             foreach (var i in Enumerable.Range(0, 10))
@@ -257,6 +264,25 @@ namespace CookInformationViewer.ViewModels.FestivalFood
                 TotalEffect.Value.Protection += item.EffectInfo?.Protection ?? 0;
                 TotalEffect.Value.MagicDefense += item.EffectInfo?.MagicDefense ?? 0;
                 TotalEffect.Value.MagicProtection += item.EffectInfo?.MagicProtection ?? 0;
+            }
+
+            if (IsApplyFoodMastery.Value)
+            {
+                TotalEffect.Value.Hp += TotalEffect.Value.Hp > 0 ? 10 : 0;
+                TotalEffect.Value.Mana += TotalEffect.Value.Mana > 0 ? 10 : 0;
+                TotalEffect.Value.Stamina += TotalEffect.Value.Stamina > 0 ? 10 : 0;
+                TotalEffect.Value.Str += TotalEffect.Value.Str > 0 ? 10 : 0;
+                TotalEffect.Value.Dex += TotalEffect.Value.Dex > 0 ? 10 : 0;
+                TotalEffect.Value.Int += TotalEffect.Value.Int > 0 ? 10 : 0;
+                TotalEffect.Value.Will += TotalEffect.Value.Will > 0 ? 10 : 0;
+                TotalEffect.Value.Luck += TotalEffect.Value.Luck > 0 ? 10 : 0;
+                TotalEffect.Value.MinDamage += TotalEffect.Value.MinDamage > 0 ? 10 : 0;
+                TotalEffect.Value.Damage += TotalEffect.Value.Damage > 0 ? 10 : 0;
+                TotalEffect.Value.MagicDamage += TotalEffect.Value.MagicDamage > 0 ? 10 : 0;
+                TotalEffect.Value.Defense += TotalEffect.Value.Defense > 0 ? 10 : 0;
+                TotalEffect.Value.Protection += TotalEffect.Value.Protection > 0 ? 10 : 0;
+                TotalEffect.Value.MagicDefense += TotalEffect.Value.MagicDefense > 0 ? 10 : 0;
+                TotalEffect.Value.MagicProtection += TotalEffect.Value.MagicProtection > 0 ? 10 : 0;
             }
         }
     }
