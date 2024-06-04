@@ -17,7 +17,7 @@ namespace CookInformationViewer.Models
     public class MainWindowModel : ModelBase, IDisposable
     {
 
-        private ContextManager _contextManager = new();
+        private ContextManager? _contextManager;
         private readonly UpdateContextManager _updateContextManager = new();
         private readonly SettingLoader _setting = SettingLoader.Instance;
 
@@ -63,6 +63,7 @@ namespace CookInformationViewer.Models
 
         public void Initialize()
         {
+            _contextManager = new();
             LoadCategories();
         }
 
@@ -255,6 +256,15 @@ namespace CookInformationViewer.Models
             _recipeBaseItems = new List<RecipeHeader>(recipes);
         }
 
+        public void ChangeFavoriteFromRecipe(RecipeInfo recipe)
+        {
+            var targetRecipe = Recipes.FirstOrDefault(x => x.Recipe.Id == recipe.Id);
+            if (targetRecipe == null)
+                return;
+
+            targetRecipe.Recipe.IsFavorite = recipe.IsFavorite;
+        }
+
         public RecipeInfo? GetRecipe(int id)
         {
             var recipe = _contextManager.GetItem(x =>
@@ -375,12 +385,16 @@ namespace CookInformationViewer.Models
             return locations;
         }
 
-        public void SaveMemo(string text)
+        public bool SaveMemo(string text)
         {
             if (_currentRecipeInfo == null)
-                return;
+                return false;
 
             var recipeId = _currentRecipeInfo.Id;
+            var originalMemo = _currentRecipeInfo.Memo;
+
+            if (originalMemo == text)
+                return false;
 
             _contextManager.Apply(context =>
             {
@@ -404,6 +418,8 @@ namespace CookInformationViewer.Models
                 }
 
             });
+
+            return true;
         }
 
         private void SetEffects(RecipeInfo recipe)
@@ -444,6 +460,7 @@ namespace CookInformationViewer.Models
             recipe.IsMaterial = isMaterials;
             recipe.IsNotFestival = isNotFestival;
             recipe.Special = item.Special;
+            recipe.CanNotMake = item.CanNotMake;
         }
 
         private void SetFavorite(RecipeInfo recipe)
@@ -465,6 +482,7 @@ namespace CookInformationViewer.Models
                 return;
 
             recipe.Memo = memo.Memo;
+            recipe.OriginalMemo = memo.Memo;
         }
 
         public RecipeHeader? GetRecipeInfo(UpdateRecipeItem item)
