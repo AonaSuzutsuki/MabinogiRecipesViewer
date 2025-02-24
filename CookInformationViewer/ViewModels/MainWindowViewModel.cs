@@ -29,7 +29,6 @@ using CookInformationViewer.Views.WindowServices;
 using Prism.Commands;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using CommonExtensionLib.Extensions;
 using CookInformationViewer.Models.DataValue;

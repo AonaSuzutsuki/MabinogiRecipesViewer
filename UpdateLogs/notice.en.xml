@@ -1,4 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <notices>
-  
+  <notice version="1.0.8.8b" mode="confirm">
+    The framework has been changed to .Net 8 from the next update.
+    Please make sure that the runtime is installed before updating.
+    If it is not installed, you will not be able to start.
+
+    If you want to update, please click "Yes".
+  </notice>
 </notices>

@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Media.Media3D;
 using CommonStyleLib.Models;
 using CookInformationViewer.Models.DataValue;
@@ -14,7 +13,6 @@ using CookInformationViewer.Models.Db.Context;
 using CookInformationViewer.Models.Db.Manager;
 using Newtonsoft.Json.Bson;
 using Reactive.Bindings;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace CookInformationViewer.Models
 {

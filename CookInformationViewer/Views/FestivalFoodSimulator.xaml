@@ -228,7 +228,7 @@
                                     <Button Margin="5,0,0,0" Content="追加" Width="100" IsEnabled="{Binding AddRecipeToFestivalEnabled.Value}" Style="{StaticResource FlatButton}" Command="{Binding AddRecipeToFestivalCommand}" />
                                 </StackPanel>
 
-                                <Button Content="{Binding SelectedRecipe.Value.IsFavorite, FallbackValue=☆, Converter={converters:BooleanFavoriteConverter}}" Width="25" Margin="0,5,5,0" Foreground="{Binding SelectedRecipe.Value.Foreground}" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding FavoriteCommand}" />
+                                <Button Content="{Binding SelectedRecipe.Value.IsFavorite, FallbackValue=☆, Converter={converters:BooleanFavoriteConverter}}"  IsEnabled="{Binding AddRecipeToFestivalEnabled.Value}" Width="25" Margin="0,5,5,0" Foreground="{Binding SelectedRecipe.Value.Foreground}" HorizontalAlignment="Right" Style="{StaticResource FlatButton}" Command="{Binding FavoriteCommand}" />
                             </Grid>
 
                             <Grid Grid.Row="1">
