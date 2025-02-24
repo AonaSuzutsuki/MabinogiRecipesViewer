@@ -17,7 +17,7 @@ namespace CookInformationViewer.Models
     public class MainWindowModel : ModelBase, IDisposable
     {
 
-        private ContextManager? _contextManager;
+        private ContextManager _contextManager = new();
         private readonly UpdateContextManager _updateContextManager = new();
         private readonly SettingLoader _setting = SettingLoader.Instance;
 
@@ -63,7 +63,6 @@ namespace CookInformationViewer.Models
 
         public void Initialize()
         {
-            _contextManager = new();
             LoadCategories();
         }
 
@@ -461,6 +460,11 @@ namespace CookInformationViewer.Models
             recipe.IsNotFestival = isNotFestival;
             recipe.Special = item.Special;
             recipe.CanNotMake = item.CanNotMake;
+
+            if (recipe.Star == 0)
+            {
+                recipe.Star = item.CheckStar;
+            }
         }
 
         private void SetFavorite(RecipeInfo recipe)

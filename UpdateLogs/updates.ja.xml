@@ -1,5 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.8.8b">
+    1. フェスティバルフードシミュレータで料理が未選択でもお気に入りボタンが押せる問題を修正
+    2. フレームワークを.Net 6から.Net 8に変更しました。
+    3. 制作不可の料理で100%出ない表記となる問題を修正
+
+    <br />
+
+    <font color="#ff0000">
+      ○お知らせ
+      .Net 8にフレームワークを変更しました。
+      インストールされていない方は公式よりDesktop Runtimeのインストールをお願いします。（インストール前に更新すると起動しなくなります）
+    </font>
+    <a href="https://dotnet.microsoft.com/download/dotnet/8.0">
+      <font color="#00ffff">https://dotnet.microsoft.com/download/dotnet/8.0</font>
+    </a>
+  </update>
   <update version="1.0.7.7b">
     1. 起動速度が少し速くなりました。
     2. 合計素材数を確認する画面を追加しました。

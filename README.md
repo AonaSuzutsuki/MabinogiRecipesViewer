@@ -4,7 +4,7 @@ This is the Offline application of [Mabinogi Cooking Recipes](https://mabicook.a
 
 # Development environment
 1. Visual Studio 2022
-2. [.Net 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+2. [.Net 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 
 # Build
 ## Visual Studio 2022

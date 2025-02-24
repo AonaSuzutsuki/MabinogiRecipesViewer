@@ -1,5 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
+  <update version="1.0.8.8b">
+    1. Fixed an issue in the festival food simulator where the favorite button could be pressed even if no dish was selected.
+    2. Changed framework from .Net 6 to .Net 8.
+    3. Fixed an issue where recipes that could not be crafted would say "Not 100%."
+
+    <br />
+
+    <font color="#ff0000">
+      ○ Notice
+      The target framework changed to .Net 6.
+      Please install Desktop Runtime if you don't install.
+      You cannot launch this app if you don't install runtime.
+    </font>
+    <a href="https://dotnet.microsoft.com/download/dotnet/8.0">
+      <font color="#00ffff">https://dotnet.microsoft.com/download/dotnet/8.0</font>
+    </a>
+  </update>
   <update version="1.0.7.7b">
     1. Startup speed has been increased slightly.
     2. A screen to check the total number of materials has been added.
